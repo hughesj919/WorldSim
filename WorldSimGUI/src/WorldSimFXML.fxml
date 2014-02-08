@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<children><Pane /><SplitPane dividerPositions="0.10485133020344288" focusTraversable="true" layoutX="242.0" layoutY="143.0" prefHeight="800.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns:fx="http://javafx.com/fxml">
+  <items>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+<children><Button layoutX="6.0" layoutY="8.0" mnemonicParsing="false" prefHeight="97.0" prefWidth="118.0" style="-fx-background-image: url(&quot;graphics/globe_icon.png&quot;);">
+<effect>
+<InnerShadow blurType="ONE_PASS_BOX" color="#2c2929" height="21.00000000000001" radius="10.000000000000004" />
+</effect></Button>
+<Button layoutX="6.0" layoutY="434.0" mnemonicParsing="false" prefHeight="97.0" prefWidth="118.0" style="-fx-background-image: url(&quot;graphics/globe_icon.png&quot;);" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<effect>
+<InnerShadow blurType="ONE_PASS_BOX" color="#2c2929" height="21.00000000000001" radius="10.000000000000004" />
+</effect>
+</Button>
+<Button layoutX="6.0" layoutY="327.0" mnemonicParsing="false" prefHeight="97.0" prefWidth="118.0" style="-fx-background-image: url(&quot;graphics/globe_icon.png&quot;);" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<effect>
+<InnerShadow blurType="ONE_PASS_BOX" color="#2c2929" height="21.00000000000001" radius="10.000000000000004" />
+</effect>
+</Button>
+<Button layoutX="6.0" layoutY="115.0" mnemonicParsing="false" prefHeight="97.0" prefWidth="118.0" style="-fx-background-image: url(&quot;graphics/globe_icon.png&quot;);" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<effect>
+<InnerShadow blurType="ONE_PASS_BOX" color="#2c2929" height="21.00000000000001" radius="10.000000000000004" />
+</effect>
+</Button>
+<Button layoutX="6.0" layoutY="218.0" mnemonicParsing="false" prefHeight="97.0" prefWidth="118.0" style="-fx-background-image: url(&quot;graphics/globe_icon.png&quot;);" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<effect>
+<InnerShadow blurType="ONE_PASS_BOX" color="#2c2929" height="21.00000000000001" radius="10.000000000000004" />
+</effect>
+</Button>
+<Button layoutX="6.0" layoutY="687.0" mnemonicParsing="false" prefHeight="97.0" prefWidth="118.0" style="-fx-background-image: url(&quot;graphics/globe_icon.png&quot;);" textFill="#070707" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<effect>
+<InnerShadow blurType="ONE_PASS_BOX" color="#2c2929" height="21.00000000000001" radius="10.000000000000004" />
+</effect>
+</Button>
+</children></AnchorPane>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+  </items>
+</SplitPane>
+</children></AnchorPane>
