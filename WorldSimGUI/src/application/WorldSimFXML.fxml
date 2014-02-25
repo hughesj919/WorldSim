@@ -5,11 +5,12 @@
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.UIController">
 <children><Pane /><SplitPane dividerPositions="0.10485133020344288" focusTraversable="true" layoutX="242.0" layoutY="143.0" prefHeight="800.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns:fx="http://javafx.com/fxml">
   <items>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: #181018;">
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
 <children>
 <GridPane layoutX="6.0" layoutY="8.0" vgap="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 <columnConstraints>
@@ -22,7 +23,7 @@
 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
 </rowConstraints>
-<children><Button layoutX="6.0" layoutY="8.0" mnemonicParsing="false" prefHeight="97.0" prefWidth="118.0" style="-fx-background-color: #4C5456;">
+<children><Button fx:id="gameButton" layoutX="6.0" layoutY="8.0" mnemonicParsing="false" onAction="#gameButtonClick" prefHeight="97.0" prefWidth="118.0">
 <effect>
 <InnerShadow blurType="ONE_PASS_BOX" color="#2c2929" height="21.00000000000001" radius="10.000000000000004" />
 </effect>
@@ -33,43 +34,7 @@
 </image>
 </ImageView>
 </graphic></Button>
-<Button layoutX="6.0" layoutY="327.0" mnemonicParsing="false" prefHeight="97.0" prefWidth="118.0" style="-fx-background-color: #4c5456;" GridPane.rowIndex="3" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-<effect>
-<InnerShadow blurType="ONE_PASS_BOX" color="#2c2929" height="21.00000000000001" radius="10.000000000000004" />
-</effect>
-<graphic>
-<ImageView fitHeight="76.0" fitWidth="76.0" layoutX="142.0" layoutY="189.0" GridPane.rowIndex="3" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-<image>
-<Image url="@graphics/Budget_Icon.png" />
-</image>
-</ImageView>
-</graphic>
-</Button>
-<Button contentDisplay="GRAPHIC_ONLY" layoutX="6.0" layoutY="434.0" mnemonicParsing="false" prefHeight="97.0" prefWidth="118.0" style="-fx-background-color: #4c5456;" GridPane.rowIndex="4" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-<effect>
-<InnerShadow blurType="ONE_PASS_BOX" color="#2c2929" height="21.00000000000001" radius="10.000000000000004" />
-</effect>
-<graphic>
-<ImageView fitHeight="78.0" fitWidth="96.0" layoutX="348.0" layoutY="251.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-<image>
-<Image url="@graphics/Award_Icon.png" />
-</image>
-</ImageView>
-</graphic>
-</Button>
-<Button contentDisplay="GRAPHIC_ONLY" layoutX="6.0" layoutY="218.0" mnemonicParsing="false" prefHeight="97.0" prefWidth="118.0" style="-fx-background-color: #4c5456;" GridPane.rowIndex="2" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-<effect>
-<InnerShadow blurType="ONE_PASS_BOX" color="#2c2929" height="21.00000000000001" radius="10.000000000000004" />
-</effect>
-<graphic>
-<ImageView fitHeight="68.0" fitWidth="90.0" layoutX="152.0" layoutY="63.0" GridPane.rowIndex="1" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-<image>
-<Image url="@graphics/Team_Icon.png" />
-</image>
-</ImageView>
-</graphic>
-</Button>
-<Button layoutX="6.0" layoutY="115.0" mnemonicParsing="false" prefHeight="97.0" prefWidth="118.0" style="-fx-background-color: #4c5456;" GridPane.rowIndex="1" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<Button fx:id="nationButton" layoutX="6.0" layoutY="115.0" mnemonicParsing="false" onAction="#nationButtonClick" prefHeight="97.0" prefWidth="118.0" GridPane.rowIndex="1" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 <effect>
 <InnerShadow blurType="ONE_PASS_BOX" color="#2c2929" height="21.00000000000001" radius="10.000000000000004" />
 </effect>
@@ -81,9 +46,45 @@
 </ImageView>
 </graphic>
 </Button>
+<Button fx:id="teamButton" contentDisplay="GRAPHIC_ONLY" layoutX="6.0" layoutY="218.0" mnemonicParsing="false" onAction="#teamButtonClick" prefHeight="97.0" prefWidth="118.0" GridPane.rowIndex="2" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<effect>
+<InnerShadow blurType="ONE_PASS_BOX" color="#2c2929" height="21.00000000000001" radius="10.000000000000004" />
+</effect>
+<graphic>
+<ImageView fitHeight="68.0" fitWidth="90.0" layoutX="152.0" layoutY="63.0" GridPane.rowIndex="1" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<image>
+<Image url="@graphics/Team_Icon.png" />
+</image>
+</ImageView>
+</graphic>
+</Button>
+<Button fx:id="budgetButton" layoutX="6.0" layoutY="327.0" mnemonicParsing="false" onAction="#budgetButtonClick" prefHeight="97.0" prefWidth="118.0" GridPane.rowIndex="3" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<effect>
+<InnerShadow blurType="ONE_PASS_BOX" color="#2c2929" height="21.00000000000001" radius="10.000000000000004" />
+</effect>
+<graphic>
+<ImageView fitHeight="76.0" fitWidth="76.0" layoutX="142.0" layoutY="189.0" GridPane.rowIndex="3" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<image>
+<Image url="@graphics/Budget_Icon.png" />
+</image>
+</ImageView>
+</graphic>
+</Button>
+<Button fx:id="leaderboardButton" contentDisplay="GRAPHIC_ONLY" layoutX="6.0" layoutY="434.0" mnemonicParsing="false" onAction="#leaderboardButtonClick" prefHeight="97.0" prefWidth="118.0" GridPane.rowIndex="4" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<graphic>
+<ImageView fitHeight="78.0" fitWidth="96.0" layoutX="348.0" layoutY="251.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<image>
+<Image url="@graphics/Award_Icon.png" />
+</image>
+</ImageView>
+</graphic>
+<effect>
+<InnerShadow blurType="ONE_PASS_BOX" color="#2c2929" height="21.00000000000001" radius="10.000000000000004" />
+</effect>
+</Button>
 </children>
 </GridPane>
-<Button layoutX="6.0" layoutY="687.0" mnemonicParsing="false" prefHeight="97.0" prefWidth="118.0" style="-fx-background-color: #4c5456;" textFill="#070707" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<Button fx:id="advanceButton" layoutX="6.0" layoutY="687.0" mnemonicParsing="false" prefHeight="97.0" prefWidth="118.0" textFill="#070707" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 <effect>
 <InnerShadow blurType="ONE_PASS_BOX" color="#2c2929" height="21.00000000000001" radius="10.000000000000004" />
 </effect>
@@ -97,12 +98,107 @@
 </Button>
 </children></AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-<children><SplitPane dividerPositions="0.13693467336683418" focusTraversable="true" layoutX="397.0" layoutY="155.0" orientation="VERTICAL" prefHeight="798.0" prefWidth="1140.0" style="-fx-background-color: #181018;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<children><SplitPane dividerPositions="0.13693467336683418" focusTraversable="true" layoutX="397.0" layoutY="155.0" orientation="VERTICAL" prefHeight="798.0" prefWidth="1140.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <items>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="183.0" prefWidth="1138.0">
-<children><Label layoutX="57.0" layoutY="22.0" text="Label" />
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="183.0" prefWidth="1138.0" SplitPane.resizableWithParent="false" />
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="601.0" prefWidth="1138.0">
+<children><TitledPane fx:id="gamePane" animated="false" collapsible="false" layoutX="196.0" layoutY="117.5" prefHeight="683.0" prefWidth="1138.0" text="Game Setup" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns:fx="http://javafx.com/fxml">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+  </content>
+</TitledPane>
+<TitledPane fx:id="budgetPane" animated="false" collapsible="false" layoutX="20.0" layoutY="20.0" prefHeight="683.0" prefWidth="1138.0" text="Budgets" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<content>
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+</content>
+</TitledPane>
+<TitledPane fx:id="leaderboardPane" animated="false" collapsible="false" layoutX="10.0" layoutY="10.0" prefHeight="683.0" prefWidth="1138.0" text="Leaderboard" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<content>
+<AnchorPane disable="true" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+</content>
+</TitledPane><TitledPane fx:id="nationPane" animated="false" collapsible="false" layoutX="103.0" layoutY="56.5" prefHeight="683.0" prefWidth="1138.0" text="Nations" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns:fx="http://javafx.com/fxml">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+<children><TitledPane animated="false" collapsible="false" layoutX="336.0" layoutY="26.0" prefHeight="611.0" prefWidth="783.0" text="Country Name" xmlns:fx="http://javafx.com/fxml">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+<children><Label layoutX="34.0" layoutY="28.0" text="Current GNP:">
+<font>
+<Font size="14.0" />
+</font></Label><Label layoutX="142.0" layoutY="28.0" text="Label">
+<font>
+<Font size="14.0" />
+</font></Label>
+<Label layoutX="569.0" layoutY="28.0" text="Starting GNP:" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<font>
+<Font size="14.0" />
+</font>
+</Label>
+<Label layoutX="688.0" layoutY="28.0" text="Label" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<font>
+<Font size="14.0" />
+</font>
+</Label>
 </children></AnchorPane>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="601.0" prefWidth="1138.0" />
+  </content>
+</TitledPane><Accordion layoutX="24.0" layoutY="26.0" prefHeight="612.0" prefWidth="290.0" xmlns:fx="http://javafx.com/fxml">
+  <panes>
+    <TitledPane animated="false" prefHeight="26.0" prefWidth="269.0" text="Nations In Use">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+<children><ListView fx:id="nationsList" editable="true" layoutX="-21.0" layoutY="-73.0" prefHeight="559.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+</children></AnchorPane>
+      </content>
+    </TitledPane>
+    <TitledPane animated="false" prefHeight="43.0" prefWidth="290.0" text="Available Nations">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+<children><ListView editable="true" layoutX="-21.0" layoutY="-73.0" prefHeight="559.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+</children></AnchorPane>
+      </content>
+    </TitledPane>
+  </panes>
+</Accordion>
+</children></AnchorPane>
+  </content>
+</TitledPane>
+<TitledPane fx:id="teamPane" animated="false" collapsible="false" layoutX="10.0" layoutY="10.0" prefHeight="683.0" prefWidth="1138.0" text="Teams" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<content>
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+<children><TitledPane animated="false" collapsible="false" layoutX="341.0" layoutY="26.0" prefHeight="275.0" prefWidth="786.0" text="Player Info" xmlns:fx="http://javafx.com/fxml">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="508.0" prefWidth="784.0">
+<children><TextField fx:id="playerName" layoutX="129.0" layoutY="40.0" /><Label layoutX="26.0" layoutY="45.0" text="Player Name:" /><Label layoutX="613.0" layoutY="45.0" text="Period:" /><TextField fx:id="playerPeriod" layoutX="692.0" layoutY="40.0" prefHeight="26.0" prefWidth="46.0" /><Label layoutX="26.0" layoutY="91.0" text="Position:" /><ComboBox fx:id="playerPosition" layoutX="129.5" layoutY="86.0" prefWidth="150.0" xmlns:fx="http://javafx.com/fxml" /><Separator layoutX="28.0" layoutY="74.0" prefHeight="3.0" prefWidth="738.0" />
+<Label layoutX="500.0" layoutY="93.0" text="Nation:" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+<ComboBox fx:id="playerNation" layoutX="588.0" layoutY="88.0" prefWidth="150.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" /><Button fx:id="savePlayerButton" layoutX="287.0" layoutY="198.0" mnemonicParsing="false" onAction="#playerSaveButtonClick" text="Save" /><Button fx:id="deletePlayerButton" layoutX="350.0" layoutY="198.0" mnemonicParsing="false" onAction="#playerDeleteButtonClick" text="Delete" />
+</children></AnchorPane>
+  </content>
+</TitledPane><Accordion layoutX="24.0" layoutY="26.0" prefHeight="612.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<panes>
+<TitledPane animated="false" prefHeight="26.0" prefWidth="269.0" text="Active Players">
+<content>
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+<children>
+<ListView fx:id="playersList" editable="true" layoutX="-21.0" layoutY="-73.0" prefHeight="559.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+</children>
+</AnchorPane>
+</content>
+</TitledPane>
+<TitledPane animated="false" prefHeight="43.0" prefWidth="290.0" text="Inactive Players">
+<content>
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+<children>
+<ListView editable="true" layoutX="-21.0" layoutY="-73.0" prefHeight="559.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+</children>
+</AnchorPane>
+</content>
+</TitledPane>
+</panes>
+</Accordion>
+</children></AnchorPane>
+</content>
+</TitledPane>
+</children></AnchorPane>
   </items>
 </SplitPane>
 </children></AnchorPane>

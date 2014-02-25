@@ -129,7 +129,7 @@ Nigeria,19800
 North Korea,5500
 Norway,15700
 Oman,6700
-Pakistan, 23500
+Pakistan,23500
 Palau,750
 Panama,5800
 Papua New Guinea,3340
@@ -194,4 +194,3 @@ Vietnam,15700
 Yemen,6030
 Zambia,3590
 Zimbabwe,5500
-

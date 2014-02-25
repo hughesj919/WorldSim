@@ -1,4 +1,5 @@
 package application;
+
 import java.util.ArrayList;
 
 public class Nation {
@@ -8,6 +9,7 @@ public class Nation {
 	private String name;
 	private ArrayList<Commodity> exports;
 	private ArrayList<Commodity> imports;
+	private ArrayList<Player> team;
 
 	public Nation(int num) {
 		id = num;
@@ -34,6 +36,10 @@ public class Nation {
 
 	public void addImport(Commodity c) {
 		imports.add(c);
+	}
+
+	public int teamSize() {
+		return team.size();
 	}
 
 	public float gnp() {

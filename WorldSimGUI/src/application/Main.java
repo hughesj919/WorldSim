@@ -12,6 +12,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+
+	public static Game currGame;
+
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -19,18 +22,27 @@ public class Main extends Application {
 			System.out.println("Working Directory = "
 					+ System.getProperty("user.dir"));
 
-			URL test = Main.class.getResource("WorldSimFXML.fxml");
+			FXMLLoader fxmlLoader = new FXMLLoader();
+			URL location = Main.class.getResource("WorldSimFXML.fxml");
+			fxmlLoader.setLocation(location);
 
-			// System.out.println(test);
-			AnchorPane page = (AnchorPane) FXMLLoader.load(Main.class
-					.getResource("WorldSimFXML.fxml"));
-
+			AnchorPane page = (AnchorPane) fxmlLoader.load(Main.class
+					.getResource("WorldSimFXML.fxml").openStream());
+			UIController UICont = fxmlLoader.getController();
 			Scene scene = new Scene(page);
-
-			// scene.getStylesheets().add(
-			// getClass().getResource("application.css").toExternalForm());
+			primaryStage.setTitle("World Simulation");
 			primaryStage.setScene(scene);
 			primaryStage.show();
+
+			populateNationsList(UICont);
+
+			// ArrayList<Nation> nations = currGame.getNations();
+
+			// ArrayList<String> UINations = UICont.nationsArray();
+			// UICont.addNationToUI("#3 nation");
+			// for (Nation nation : nations) {
+			// UICont.addNationToUI(nation.name());
+			// }
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -39,11 +51,16 @@ public class Main extends Application {
 
 	public static void main(String[] args) {
 
-		launch(args);
 		System.out.println("Working Directory = "
 				+ System.getProperty("user.dir"));
-		initialize();
+		createNewGame();
+		// initialize();
+		launch(args);
 
+	}
+
+	public static void populateNationsList(UIController UICont) {
+		UICont.setNations(currGame.getNations());
 	}
 
 	public static void initialize() {
@@ -79,8 +96,8 @@ public class Main extends Application {
 	}
 
 	public static void createNewGame() {
-		Game newGame = new Game();
-		importNations(newGame);
+		currGame = new Game();
+		importNations(currGame);
 
 	}
 
@@ -109,5 +126,53 @@ public class Main extends Application {
 		}
 
 	}
+
+	public void teamButtonClick() {
+
+		System.out.println("team clicke");
+
+	}
+
+	/*
+	 * public static void nationButtonClick() {
+	 * 
+	 * System.out.println("nation clicke");
+	 * 
+	 * }
+	 * 
+	 * public static void gameButtonClick() {
+	 * 
+	 * System.out.println("game clicke");
+	 * 
+	 * }
+	 * 
+	 * @FXML private TitledPane gamePane;
+	 * 
+	 * public void teamButtonClick() {
+	 * 
+	 * gamePane.setVisible(false);
+	 * 
+	 * System.out.println("team clicke");
+	 * 
+	 * }
+	 * 
+	 * public static void budgetButtonClick() {
+	 * 
+	 * System.out.println("budget clicke");
+	 * 
+	 * }
+	 * 
+	 * public static void leaderboardButtonClick() {
+	 * 
+	 * System.out.println("leaderboard clicke");
+	 * 
+	 * }
+	 * 
+	 * public static void advanceButtonClick() {
+	 * 
+	 * System.out.println("advance clicke");
+	 * 
+	 * }
+	 */
 
 }
