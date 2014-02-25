@@ -17,6 +17,11 @@ public class Nation {
 		imports = new ArrayList<Commodity>();
 		gnp = 0;
 	}
+	
+	@Override
+	public String toString(){
+		return name;
+	}
 
 	public void setGNP(float g) {
 		gnp = g;

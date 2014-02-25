@@ -7,7 +7,7 @@ enum playerType {
 public class Player {
 	private int period;
 	private String name;
-	private int nationID;
+	private Nation nation;
 	private playerType type;
 
 	Player(String n) {
@@ -22,8 +22,8 @@ public class Player {
 		period = p;
 	}
 
-	public void setNation(int id) {
-		nationID = id;
+	public void setNation(Nation n) {
+		nation = n;
 	}
 
 	public void setType(playerType p) {

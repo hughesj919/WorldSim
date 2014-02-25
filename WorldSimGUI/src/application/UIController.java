@@ -15,7 +15,8 @@ import javafx.scene.control.TitledPane;
 public class UIController {
 
 	private ObservableList<Nation> obsNations;
-	private ObservableList<String> obsPlayers;
+	private ObservableList<Player> obsPlayers;
+	private ObservableList<Game> obsGames;
 
 	@FXML
 	private TitledPane gamePane;
@@ -70,16 +71,28 @@ public class UIController {
 	private ComboBox<String> playerPosition;
 
 	@FXML
-	private ComboBox<String> playerNation;
+	private ComboBox<Nation> playerNation;
 
 	@FXML
-	private ListView<String> playersList;
+	private ListView<Player> playersList;
+	
+	
+	/**
+	 * Game Tab
+	 */
+
+    @FXML
+    private ComboBox<Game> gamesList;
+	
+	
 
 	@FXML
 	private ListView<Nation> nationsList;
 
 	@FXML
-	private ListView<String> inUseNationsList;
+	private ListView<Nation> inUseNationsList;
+	
+	
 
 	@FXML
 	public void gameButtonClick(ActionEvent event) {
@@ -132,10 +145,18 @@ public class UIController {
 	@FXML
 	public void playerSaveButtonClick(ActionEvent event) {
 		String pName = playerName.getText();
-		String pPeriod = playerPeriod.getText();
-		obsPlayers.add(pName);
-
+		//String pType = playerPosition.getValue();
+		Integer pPeriod = Integer.getInteger(playerPeriod.getText());
+		Nation pNation = playerNation.getValue();
+		
 		Player newPlayer = new Player(pName);
+		newPlayer.setPeriod(pPeriod);
+		newPlayer.setNation(pNation);
+		//newPlayer.setType(pType);
+		
+		obsPlayers.add(newPlayer);
+		Main.currGame.addPlayer(newPlayer);
+
 
 	}
 
@@ -172,6 +193,9 @@ public class UIController {
 
 		obsNations = FXCollections.observableArrayList();
 		obsPlayers = FXCollections.observableArrayList();
+		obsGames = FXCollections.observableArrayList();
+		
+		gamesList.setItems(obsGames);
 
 		// playerNation.setItems(obsNations);
 
