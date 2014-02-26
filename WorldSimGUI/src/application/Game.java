@@ -1,5 +1,7 @@
 package application;
 
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -24,6 +26,7 @@ public class Game implements Serializable{
 		currRound = 1;
 		// teams = new ArrayList<Team>();
 		availableNations = new ArrayList<Nation>();
+		allPlayers = new ArrayList<Player>();
 	}
 	
 	@Override public String toString(){
@@ -41,5 +44,20 @@ public class Game implements Serializable{
 	public void addPlayer(Player p) {
 		allPlayers.add(p);
 	}
-
+	
+	public boolean saveGame(String filename){
+		FileOutputStream fos = null;
+	    ObjectOutputStream out = null;
+	    try {
+	      fos = new FileOutputStream(filename);
+	      out = new ObjectOutputStream(fos);
+	      out.writeObject(this);
+	      out.close();
+	      return true;
+	    } 
+	    catch (Exception ex) {
+	      ex.printStackTrace();
+	      return false;
+	    }
+	}
 }

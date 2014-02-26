@@ -10,12 +10,11 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.UIController">
+<AnchorPane id="baseAnchor" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" opacity="1.0" prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: rgba(255,255,255,0)" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.UIController">
   <children>
-    <Pane />
-    <SplitPane dividerPositions="0.10485133020344288" focusTraversable="true" prefHeight="800.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <SplitPane disable="false" dividerPositions="0.10485133020344288" focusTraversable="true" prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: rgba(255,255,255,0)" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <items>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: rgba(255,255,255,0)">
           <children>
             <GridPane layoutX="6.0" layoutY="8.0" vgap="5.0">
               <children>
@@ -109,7 +108,7 @@
             </Button>
           </children>
         </AnchorPane>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="">
           <children>
             <SplitPane dividerPositions="0.13693467336683418" focusTraversable="true" orientation="VERTICAL" prefHeight="798.0" prefWidth="1140.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <items>
@@ -246,9 +245,9 @@
                               </items>
                             </ComboBox>
                             <Label layoutX="384.0" layoutY="70.0" text="Current Game:" textAlignment="LEFT" />
-                            <TextField layoutX="472.0" layoutY="113.0" prefWidth="193.0" />
+                            <TextField fx:id="newGameText" layoutX="472.0" layoutY="113.0" prefWidth="193.0" />
                             <Label layoutX="365.0" layoutY="116.0" text="New Game Name:" />
-                            <Button layoutX="530.0" layoutY="173.0" mnemonicParsing="false" text="Add Game" />
+                            <Button fx:id="saveGameButton" layoutX="530.0" layoutY="173.0" mnemonicParsing="false" onAction="#saveGameButtonClick" text="Add Game" />
                           </children>
                         </AnchorPane>
                       </content>

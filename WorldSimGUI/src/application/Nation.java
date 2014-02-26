@@ -1,9 +1,11 @@
 package application;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Nation {
+public class Nation implements Serializable{
 
+	private static final long serialVersionUID = 569741334000068828L;
 	private int id;
 	private float gnp;
 	private String name;

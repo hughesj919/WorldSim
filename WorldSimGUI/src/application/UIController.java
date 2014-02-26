@@ -13,48 +13,111 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 
 public class UIController {
-
-	private ObservableList<Nation> obsNations;
-	private ObservableList<Player> obsPlayers;
-	private ObservableList<Game> obsGames;
-
+	
+	/***********************************************
+	 * Game Tab
+	 **********************************************/
+	private ObservableList<Game> obsGames;	
+	
+	@FXML
+	private Button gameButton;
+	
 	@FXML
 	private TitledPane gamePane;
+	
+	@FXML
+    private ComboBox<Game> gamesList;
+    
+    @FXML
+    private Button saveGameButton;
+
+    @FXML
+    private TextField newGameText;
+    
 
 	@FXML
-	private TitledPane budgetPane;
+	public void gameButtonClick(ActionEvent event) {
+		gamePane.setVisible(true);
+		teamPane.setVisible(false);
+		budgetPane.setVisible(false);
+		leaderboardPane.setVisible(false);
+		nationPane.setVisible(false);
 
+	}
+    
+    @FXML
+    void saveGameButtonClick(ActionEvent event) {
+    	
+    	String name = newGameText.getText();
+    	if(name.matches("\\s*\\w+(\\w|\\s)*"))
+    	{
+        	Game newGame = new Game(name);
+        	String saveName = "Game" + name.replaceAll("\\s+", "") + ".wsm";
+        	if(newGame.saveGame(saveName))
+        	{
+        		System.out.println("Game Saved");
+        		
+        	}
+        	else{
+        		System.out.println("Error saving game");
+        	}
+    	}
+    	else{
+    		System.out.println("Letters and numbers only please!");
+    	}
+    	
+    }
+
+	/***********************************************
+	 * Nation Tab
+	 ***********************************************/	
+	private ObservableList<Nation> obsNations;
+	
 	@FXML
-	private TitledPane teamPane;
-
+	private Button nationButton;
+	
 	@FXML
 	private TitledPane nationPane;
 
 	@FXML
-	private TitledPane leaderboardPane;
+	private ListView<Nation> nationsList;
 
 	@FXML
-	private Button gameButton;
-
+	private ListView<Nation> inUseNationsList;
+	
 	@FXML
-	private Button advanceButton;
+	public void nationButtonClick(ActionEvent event) {
+		gamePane.setVisible(false);
+		teamPane.setVisible(false);
+		budgetPane.setVisible(false);
+		leaderboardPane.setVisible(false);
+		nationPane.setVisible(true);
 
-	@FXML
-	private Button nationButton;
+	}
+	
+	public void addNationToUI(Nation nat) {
+		obsNations.add(nat);
+	}
 
-	@FXML
-	private Button budgetButton;
-
-	@FXML
-	private Button leaderboardButton;
+	public void setNations(ArrayList<Nation> nats) {
+		for (Nation n : nats) {
+			obsNations.add(n);
+			// obsNations.
+		}
+	}
+	
+	
+	/***********************************************
+	 * Team/Player Tab
+	 ***********************************************/
+	private ObservableList<Player> obsPlayers;
 
 	@FXML
 	private Button teamButton;
-
-	/**
-	 * Player Tab
-	 */
-
+	
+	@FXML
+	private TitledPane teamPane;
+	
 	@FXML
 	private Button savePlayerButton;
 
@@ -76,53 +139,6 @@ public class UIController {
 	@FXML
 	private ListView<Player> playersList;
 	
-	
-	/**
-	 * Game Tab
-	 */
-
-    @FXML
-    private ComboBox<Game> gamesList;
-	
-	
-
-	@FXML
-	private ListView<Nation> nationsList;
-
-	@FXML
-	private ListView<Nation> inUseNationsList;
-	
-	
-
-	@FXML
-	public void gameButtonClick(ActionEvent event) {
-		gamePane.setVisible(true);
-		teamPane.setVisible(false);
-		budgetPane.setVisible(false);
-		leaderboardPane.setVisible(false);
-		nationPane.setVisible(false);
-
-	}
-
-	@FXML
-	public void budgetButtonClick(ActionEvent event) {
-		gamePane.setVisible(false);
-		teamPane.setVisible(false);
-		budgetPane.setVisible(true);
-		leaderboardPane.setVisible(false);
-		nationPane.setVisible(false);
-
-	}
-
-	@FXML
-	public void leaderboardButtonClick(ActionEvent event) {
-		gamePane.setVisible(false);
-		teamPane.setVisible(false);
-		budgetPane.setVisible(false);
-		leaderboardPane.setVisible(true);
-		nationPane.setVisible(false);
-
-	}
 
 	public void teamButtonClick(ActionEvent event) {
 		gamePane.setVisible(false);
@@ -131,17 +147,7 @@ public class UIController {
 		leaderboardPane.setVisible(false);
 		nationPane.setVisible(false);
 	}
-
-	@FXML
-	public void nationButtonClick(ActionEvent event) {
-		gamePane.setVisible(false);
-		teamPane.setVisible(false);
-		budgetPane.setVisible(false);
-		leaderboardPane.setVisible(false);
-		nationPane.setVisible(true);
-
-	}
-
+	
 	@FXML
 	public void playerSaveButtonClick(ActionEvent event) {
 		String pName = playerName.getText();
@@ -165,35 +171,67 @@ public class UIController {
 
 	}
 
+	/***********************************************
+	 * Budget Tab
+	 ***********************************************/
+
+	@FXML
+	private TitledPane budgetPane;
+	
+	@FXML
+	private Button budgetButton;
+	
+	@FXML
+	public void budgetButtonClick(ActionEvent event) {
+		gamePane.setVisible(false);
+		teamPane.setVisible(false);
+		budgetPane.setVisible(true);
+		leaderboardPane.setVisible(false);
+		nationPane.setVisible(false);
+
+	}
+
+	/***********************************************
+	 * Leaderboard Tab
+	 ***********************************************/
+
+	@FXML
+	private TitledPane leaderboardPane;
+	
+	@FXML
+	private Button leaderboardButton;
+	
+	
+	@FXML
+	public void leaderboardButtonClick(ActionEvent event) {
+		gamePane.setVisible(false);
+		teamPane.setVisible(false);
+		budgetPane.setVisible(false);
+		leaderboardPane.setVisible(true);
+		nationPane.setVisible(false);
+
+	}
+
+	/***********************************************
+	 * Initialization/Round Advancement
+	 ***********************************************/
+	@FXML
+	private Button advanceButton;
+
 	@FXML
 	public void advanceButtonClick(ActionEvent event) {
 
 	}
-
-	/*
-	 * public ArrayList<String> nationsArray() { return nationsArrList; }
-	 * 
-	 * public void setNationsArray(ArrayList<String> arr) { nationsArrList =
-	 * arr; }
-	 */
-
-	public void addNationToUI(Nation nat) {
-		obsNations.add(nat);
-	}
-
-	public void setNations(ArrayList<Nation> nats) {
-		for (Nation n : nats) {
-			obsNations.add(n);
-			// obsNations.
-		}
-	}
-
+	
 	public void initialize() {
 		System.out.println("Initializing UI...");
+		
 
 		obsNations = FXCollections.observableArrayList();
 		obsPlayers = FXCollections.observableArrayList();
 		obsGames = FXCollections.observableArrayList();
+		
+		obsGames.setAll(Main.allGames);
 		
 		gamesList.setItems(obsGames);
 

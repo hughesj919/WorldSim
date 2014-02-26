@@ -1,7 +1,11 @@
 package application;
 
-public class Commodity {
+import java.io.Serializable;
+
+public class Commodity implements Serializable{
 	
+
+	private static final long serialVersionUID = 4271645914023542084L;
 	private int type;
 	private String name;
 	

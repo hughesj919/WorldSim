@@ -1,24 +1,35 @@
 package application;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Main extends Application {
 
 	public static Game currGame;
+	public static ArrayList<Game> allGames;
 
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 
+			//primaryStage.initStyle(StageStyle.TRANSPARENT);
+			
+			
 			System.out.println("Working Directory = "
 					+ System.getProperty("user.dir"));
 
@@ -29,7 +40,13 @@ public class Main extends Application {
 			AnchorPane page = (AnchorPane) fxmlLoader.load(Main.class
 					.getResource("WorldSimFXML.fxml").openStream());
 			UIController UICont = fxmlLoader.getController();
+
+			
+			
 			Scene scene = new Scene(page);
+		//	Color c = Color.rgb((int)Color.BLACK.getRed(),(int)Color.BLACK.getGreen(), (int)Color.BLACK.getBlue(), .90);
+
+		//	scene.setFill(c);
 			primaryStage.setTitle("World Simulation");
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -53,11 +70,50 @@ public class Main extends Application {
 
 		System.out.println("Working Directory = "
 				+ System.getProperty("user.dir"));
+		
+		allGames = new ArrayList<Game>();
+
+		loadGames();
+		
 		createNewGame();
 		// initialize();
 		launch(args);
 
 	}
+	
+	public static void loadGames(){
+		File[] gameFiles = null;
+		FileInputStream fis = null;
+		ObjectInputStream ois = null;
+		Game g;
+
+		gameFiles = findFilesStartAndEndWith("Game",".wsm");
+		
+		for(File f: gameFiles){
+			try{
+				fis = new FileInputStream(f);
+				ois = new ObjectInputStream(fis);
+				g = (Game) ois.readObject();
+				allGames.add(g);
+				ois.close();
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static File[] findFilesStartAndEndWith(final String beg, final String end){
+		File workingDir = new File(System.getProperty("user.dir"));
+		FilenameFilter filter = new FilenameFilter(){
+			public boolean accept(File dir,String filename)
+			{
+				return (filename.startsWith(beg) && filename.endsWith(end));
+			}
+		};
+		return workingDir.listFiles(filter);
+	}
+	
 
 	public static void populateNationsList(UIController UICont) {
 		UICont.setNations(currGame.getNations());
@@ -65,34 +121,10 @@ public class Main extends Application {
 
 	public static void initialize() {
 
-		/*
-		 * try { // Set cross-platform Java L&F (also called "Metal")
-		 * UIManager.setLookAndFeel(UIManager
-		 * .getCrossPlatformLookAndFeelClassName()); } catch
-		 * (UnsupportedLookAndFeelException e) { // handle exception } catch
-		 * (ClassNotFoundException e) { // handle exception } catch
-		 * (InstantiationException e) { // handle exception } catch
-		 * (IllegalAccessException e) { // handle exception }
-		 */
 		String alaf2 = System.getProperty("apple.laf.useScreenMenuBar");
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		String alaf = System.getProperty("apple.laf.useScreenMenuBar");
 
-		/*
-		 * Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		 * int width = screenSize.width; int height = screenSize.height;
-		 * 
-		 * JFrame frame = new JFrame("World Simulation"); // final DesktopMain
-		 * dm = new DesktopMain();
-		 * frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); frame.pack();
-		 * frame.setSize(width, height);
-		 * 
-		 * JTabbedPane tabbedPane = new JTabbedPane(); JPanel newPanel = new
-		 * JPanel(); tabbedPane.addTab("Tab 1", newPanel); JPanel newPanel2 =
-		 * new JPanel(); tabbedPane.addTab("Tab 2", newPanel2);
-		 * 
-		 * frame.add(tabbedPane); frame.setVisible(true);
-		 */
 	}
 
 	public static void createNewGame() {
@@ -126,53 +158,4 @@ public class Main extends Application {
 		}
 
 	}
-
-	public void teamButtonClick() {
-
-		System.out.println("team clicke");
-
-	}
-
-	/*
-	 * public static void nationButtonClick() {
-	 * 
-	 * System.out.println("nation clicke");
-	 * 
-	 * }
-	 * 
-	 * public static void gameButtonClick() {
-	 * 
-	 * System.out.println("game clicke");
-	 * 
-	 * }
-	 * 
-	 * @FXML private TitledPane gamePane;
-	 * 
-	 * public void teamButtonClick() {
-	 * 
-	 * gamePane.setVisible(false);
-	 * 
-	 * System.out.println("team clicke");
-	 * 
-	 * }
-	 * 
-	 * public static void budgetButtonClick() {
-	 * 
-	 * System.out.println("budget clicke");
-	 * 
-	 * }
-	 * 
-	 * public static void leaderboardButtonClick() {
-	 * 
-	 * System.out.println("leaderboard clicke");
-	 * 
-	 * }
-	 * 
-	 * public static void advanceButtonClick() {
-	 * 
-	 * System.out.println("advance clicke");
-	 * 
-	 * }
-	 */
-
 }

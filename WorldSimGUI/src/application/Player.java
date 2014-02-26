@@ -1,10 +1,14 @@
 package application;
 
+import java.io.Serializable;
+
 enum playerType {
 	chiefOfState, budgetOffice
 };
 
-public class Player {
+public class Player implements Serializable{
+
+	private static final long serialVersionUID = 8601841937779455868L;
 	private int period;
 	private String name;
 	private Nation nation;
