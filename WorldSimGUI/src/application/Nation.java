@@ -17,6 +17,7 @@ public class Nation implements Serializable{
 		id = num;
 		exports = new ArrayList<Commodity>();
 		imports = new ArrayList<Commodity>();
+		team = new ArrayList<Player>();
 		gnp = 0;
 	}
 	
@@ -44,9 +45,17 @@ public class Nation implements Serializable{
 	public void addImport(Commodity c) {
 		imports.add(c);
 	}
+	
+	public void addPlayer(Player p){
+		team.add(p);
+	}
 
 	public int teamSize() {
 		return team.size();
+	}
+	
+	public boolean inUse(){
+		return team.size() > 0;
 	}
 
 	public float gnp() {

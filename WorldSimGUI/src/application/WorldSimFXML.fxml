@@ -8,6 +8,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
 <AnchorPane id="baseAnchor" focusTraversable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="false" opacity="1.0" prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: rgba(255,255,255,0)" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="application.UIController">
@@ -112,61 +113,16 @@
           <children>
             <SplitPane dividerPositions="0.13693467336683418" focusTraversable="true" orientation="VERTICAL" prefHeight="798.0" prefWidth="1140.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <items>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="183.0" prefWidth="1138.0" SplitPane.resizableWithParent="false" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="183.0" prefWidth="1138.0" SplitPane.resizableWithParent="false">
+                  <children>
+                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="55.0" layoutX="944.0" layoutY="14.0" stroke="BLACK" strokeType="INSIDE" width="181.0" />
+                  </children>
+                </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="601.0" prefWidth="1138.0">
                   <children>
                     <TitledPane fx:id="budgetPane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Budgets" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                       <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                      </content>
-                    </TitledPane>
-                    <TitledPane fx:id="teamPane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Teams" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                      <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                          <children>
-                            <TitledPane animated="false" collapsible="false" layoutX="341.0" layoutY="26.0" prefHeight="275.0" prefWidth="786.0" text="Player Info">
-                              <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="508.0" prefWidth="784.0">
-                                  <children>
-                                    <TextField fx:id="playerName" layoutX="129.0" layoutY="40.0" />
-                                    <Label layoutX="26.0" layoutY="45.0" text="Player Name:" />
-                                    <Label layoutX="613.0" layoutY="45.0" text="Period:" />
-                                    <TextField fx:id="playerPeriod" layoutX="692.0" layoutY="40.0" prefHeight="26.0" prefWidth="46.0" />
-                                    <Label layoutX="26.0" layoutY="91.0" text="Position:" />
-                                    <ComboBox fx:id="playerPosition" layoutX="129.5" layoutY="86.0" prefWidth="150.0" />
-                                    <Separator layoutX="28.0" layoutY="74.0" prefHeight="3.0" prefWidth="738.0" />
-                                    <Label layoutX="500.0" layoutY="93.0" text="Nation:" />
-                                    <ComboBox fx:id="playerNation" layoutX="588.0" layoutY="88.0" prefWidth="150.0" />
-                                    <Button fx:id="savePlayerButton" layoutX="287.0" layoutY="198.0" mnemonicParsing="false" onAction="#playerSaveButtonClick" text="Save" />
-                                    <Button fx:id="deletePlayerButton" layoutX="350.0" layoutY="198.0" mnemonicParsing="false" onAction="#playerDeleteButtonClick" text="Delete" />
-                                  </children>
-                                </AnchorPane>
-                              </content>
-                            </TitledPane>
-                            <Accordion layoutX="24.0" layoutY="26.0" prefHeight="612.0" prefWidth="290.0">
-                              <panes>
-                                <TitledPane animated="false" prefHeight="26.0" prefWidth="269.0" text="Active Players">
-                                  <content>
-                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                      <children>
-                                        <ListView fx:id="playersList" editable="true" prefHeight="559.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                      </children>
-                                    </AnchorPane>
-                                  </content>
-                                </TitledPane>
-                                <TitledPane animated="false" prefHeight="43.0" prefWidth="290.0" text="Inactive Players">
-                                  <content>
-                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                      <children>
-                                        <ListView editable="true" prefHeight="559.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                      </children>
-                                    </AnchorPane>
-                                  </content>
-                                </TitledPane>
-                              </panes>
-                            </Accordion>
-                          </children>
-                        </AnchorPane>
                       </content>
                     </TitledPane>
                     <TitledPane fx:id="leaderboardPane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Leaderboard" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -181,6 +137,27 @@
                                 <NumberAxis side="LEFT" />
                               </yAxis>
                             </LineChart>
+                          </children>
+                        </AnchorPane>
+                      </content>
+                    </TitledPane>
+                    <TitledPane fx:id="gamePane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Game Setup" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                      <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                          <children>
+                            <ComboBox id="gameName" fx:id="gamesList" layoutX="470.0" layoutY="70.0" onAction="#gamesListChange" prefHeight="21.0" prefWidth="195.0">
+                              <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                  <String fx:value="Item 1" />
+                                  <String fx:value="Item 2" />
+                                  <String fx:value="Item 3" />
+                                </FXCollections>
+                              </items>
+                            </ComboBox>
+                            <Label layoutX="384.0" layoutY="70.0" text="Current Game:" textAlignment="LEFT" />
+                            <TextField fx:id="newGameText" layoutX="472.0" layoutY="113.0" prefWidth="193.0" />
+                            <Label layoutX="365.0" layoutY="116.0" text="New Game Name:" />
+                            <Button fx:id="saveGameButton" layoutX="530.0" layoutY="173.0" mnemonicParsing="false" onAction="#saveGameButtonClick" text="Add Game" />
                           </children>
                         </AnchorPane>
                       </content>
@@ -211,7 +188,7 @@
                                   <content>
                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                       <children>
-                                        <ListView fx:id="nationsList" editable="true" prefHeight="559.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                        <ListView id="nationsList" fx:id="nationsInUseList" editable="true" prefHeight="559.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                       </children>
                                     </AnchorPane>
                                   </content>
@@ -220,7 +197,7 @@
                                   <content>
                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                       <children>
-                                        <ListView editable="true" prefHeight="559.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                        <ListView fx:id="nationsAvailableList" editable="true" prefHeight="559.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                       </children>
                                     </AnchorPane>
                                   </content>
@@ -231,23 +208,38 @@
                         </AnchorPane>
                       </content>
                     </TitledPane>
-                    <TitledPane fx:id="gamePane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Game Setup" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <TitledPane fx:id="teamPane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Teams" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                       <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                           <children>
-                            <ComboBox id="gameName" fx:id="gamesList" layoutX="470.0" layoutY="70.0" prefHeight="21.0" prefWidth="195.0">
-                              <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                  <String fx:value="Item 1" />
-                                  <String fx:value="Item 2" />
-                                  <String fx:value="Item 3" />
-                                </FXCollections>
-                              </items>
-                            </ComboBox>
-                            <Label layoutX="384.0" layoutY="70.0" text="Current Game:" textAlignment="LEFT" />
-                            <TextField fx:id="newGameText" layoutX="472.0" layoutY="113.0" prefWidth="193.0" />
-                            <Label layoutX="365.0" layoutY="116.0" text="New Game Name:" />
-                            <Button fx:id="saveGameButton" layoutX="530.0" layoutY="173.0" mnemonicParsing="false" onAction="#saveGameButtonClick" text="Add Game" />
+                            <TitledPane animated="false" collapsible="false" layoutX="341.0" layoutY="26.0" prefHeight="275.0" prefWidth="786.0" text="Player Info">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="508.0" prefWidth="784.0">
+                                  <children>
+                                    <TextField fx:id="playerName" layoutX="129.0" layoutY="40.0" />
+                                    <Label layoutX="26.0" layoutY="45.0" text="Player Name:" />
+                                    <Label layoutX="613.0" layoutY="45.0" text="Period:" />
+                                    <TextField fx:id="playerPeriod" layoutX="692.0" layoutY="40.0" prefHeight="26.0" prefWidth="46.0" />
+                                    <Label layoutX="26.0" layoutY="91.0" text="Position:" />
+                                    <ComboBox fx:id="playerPosition" layoutX="129.5" layoutY="86.0" prefWidth="150.0" />
+                                    <Separator layoutX="28.0" layoutY="74.0" prefHeight="3.0" prefWidth="738.0" />
+                                    <Label layoutX="500.0" layoutY="93.0" text="Nation:" />
+                                    <ComboBox fx:id="playerNation" layoutX="588.0" layoutY="88.0" prefWidth="150.0" />
+                                    <Button fx:id="savePlayerButton" layoutX="287.0" layoutY="198.0" mnemonicParsing="false" onAction="#playerSaveButtonClick" text="Save" />
+                                    <Button fx:id="deletePlayerButton" layoutX="350.0" layoutY="198.0" mnemonicParsing="false" onAction="#playerDeleteButtonClick" text="Delete" />
+                                  </children>
+                                </AnchorPane>
+                              </content>
+                            </TitledPane>
+                            <TitledPane id="playersList" animated="false" collapsible="false" expanded="true" layoutX="28.0" layoutY="26.0" prefHeight="620.0" prefWidth="286.0" text="Players">
+                              <content>
+                                <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                  <children>
+                                    <ListView fx:id="playersList" editable="true" prefHeight="594.0" prefWidth="282.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                  </children>
+                                </AnchorPane>
+                              </content>
+                            </TitledPane>
                           </children>
                         </AnchorPane>
                       </content>

@@ -3,12 +3,16 @@ package application;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -40,6 +44,14 @@ public class Main extends Application {
 			AnchorPane page = (AnchorPane) fxmlLoader.load(Main.class
 					.getResource("WorldSimFXML.fxml").openStream());
 			UIController UICont = fxmlLoader.getController();
+			
+			String lastGame = getProperty("Last_Game_Name");
+			if(!changeGame(lastGame,UICont)){
+				System.out.println("Could not find game: " + lastGame);
+				UICont.gameButtonClick(null);
+			}
+			else
+				System.out.println("Loaded Game: " + lastGame);
 
 			
 			
@@ -51,7 +63,6 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 
-			populateNationsList(UICont);
 
 			// ArrayList<Nation> nations = currGame.getNations();
 
@@ -75,7 +86,7 @@ public class Main extends Application {
 
 		loadGames();
 		
-		createNewGame();
+		//createNewGame();
 		// initialize();
 		launch(args);
 
@@ -114,11 +125,6 @@ public class Main extends Application {
 		return workingDir.listFiles(filter);
 	}
 	
-
-	public static void populateNationsList(UIController UICont) {
-		UICont.setNations(currGame.getNations());
-	}
-
 	public static void initialize() {
 
 		String alaf2 = System.getProperty("apple.laf.useScreenMenuBar");
@@ -126,36 +132,88 @@ public class Main extends Application {
 		String alaf = System.getProperty("apple.laf.useScreenMenuBar");
 
 	}
-
-	public static void createNewGame() {
-		currGame = new Game();
-		importNations(currGame);
-
-	}
-
-	public static void importNations(Game g) {
-
-		try {
-			String line;
-			String[] values;
-			int id = 0;
-
-			BufferedReader br = new BufferedReader(new FileReader(
-					"NationsList.txt"));
-
-			while ((line = br.readLine()) != null) {
-				values = line.split(",");
-				Nation newNation = new Nation(id);
-				newNation.setName(values[0]);
-				newNation.setGNP(Integer.parseInt(values[1]));
-				g.addNation(newNation);
-				id++;
-			}
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	
+	public static void changeGame(Game g, UIController UI){
+		
+		currGame = g;
+		setProperty("Last_Game_Name",currGame.getName());
+		
+		for(Nation n:g.getNations()){
+			
+			if(n.inUse())
+				UI.addInUseNation(n);
+			else
+				UI.addAvailableNation(n);
 		}
-
+		
+		UI.setAllPlayers(g.getPlayers());
+		UI.setAllNations(g.getNations());
+		
+		
+	}
+	
+	public static boolean changeGame(String gameName, UIController UI){
+		Game foundGame = UI.findGame(gameName);
+		if(foundGame != null){
+			UI.setGame(foundGame);
+			return true;
+		}
+		else
+			return false;
+	}
+	
+	
+	public static void setProperty(String key, String value){
+		
+		Properties prop = new Properties();
+		OutputStream output = null;
+	 
+		try {
+	 
+			output = new FileOutputStream("config.properties"); 
+			prop.setProperty(key, value);
+			prop.store(output, null);
+	 
+		} 
+		catch (IOException io) {
+			io.printStackTrace();
+		} 
+		finally {
+			if (output != null) {
+				try {
+					output.close();
+				} 
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+	}
+	
+	public static String getProperty(String key){
+		
+		Properties prop = new Properties();
+		InputStream input = null;
+	 
+		try {	 
+			input = new FileInputStream("config.properties");
+			prop.load(input);
+			return prop.getProperty(key);	 
+		} 
+		catch (IOException ex) {
+			ex.printStackTrace();
+			return null;
+		} 
+		finally {
+			if (input != null) {
+				try {
+					input.close();
+				} 
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }

@@ -3,7 +3,7 @@ package application;
 import java.io.Serializable;
 
 enum playerType {
-	chiefOfState, budgetOffice
+	chiefOfState, budgetOffice;
 };
 
 public class Player implements Serializable{
@@ -16,6 +16,11 @@ public class Player implements Serializable{
 
 	Player(String n) {
 		name = n;
+	}
+	
+	@Override
+	public String toString(){
+		return name;
 	}
 
 	public void setName(String n) {

@@ -13,6 +13,12 @@ public class Commodity implements Serializable{
 		type = t;
 		name = n;
 	}
+	
+	@Override
+	public String toString(){
+		return name;
+	}
+	
 	public int getType(){
 		return type;
 	}
