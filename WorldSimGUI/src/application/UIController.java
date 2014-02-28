@@ -12,6 +12,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -188,14 +189,17 @@ public class UIController {
 	@FXML
 	public void playerSaveButtonClick(ActionEvent event) {
 		String pName = playerName.getText();
-		//String pType = playerPosition.getValue();
-		Integer pPeriod = Integer.parseInt(playerPeriod.getText());
+		String pType = playerPosition.getValue();
+		int pPeriod = Integer.parseInt(playerPeriod.getText());
 		Nation pNation = playerNation.getValue();
 		
 		Player newPlayer = new Player(pName);
 		newPlayer.setPeriod(pPeriod);
 		newPlayer.setNation(pNation);
-		//newPlayer.setType(pType);
+		if(pType.equals("Chief of State"))
+			newPlayer.setType(playerType.chiefOfState);
+		else if(pType.equals("Budget Office"))
+			newPlayer.setType(playerType.budgetOffice);
 		
 		pNation.addPlayer(newPlayer);
 		obsInUseNations.remove(pNation);
@@ -204,6 +208,8 @@ public class UIController {
 		
 		obsPlayers.add(newPlayer);
 		Main.currGame.addPlayer(newPlayer);
+		Main.currGame.saveGame();
+		
 		
 		/* Rectangle rect = new Rectangle (100, 40, 100, 100);
 	     rect.setArcHeight(50);
@@ -220,6 +226,17 @@ public class UIController {
 
 
 	}
+	
+    @FXML
+    void playersListClick(MouseEvent event) {
+    	Player p = playersList.getSelectionModel().getSelectedItem();
+    	playerName.setText(p.getName());
+    	playerPeriod.setText(p.getPeriodString());
+    	playerNation.setValue(p.getNation());
+    	
+    	
+    	
+    }
 	
 	public void updateNationsLists(){
 	

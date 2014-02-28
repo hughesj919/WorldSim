@@ -6,6 +6,7 @@ enum playerType {
 	chiefOfState, budgetOffice;
 };
 
+
 public class Player implements Serializable{
 
 	private static final long serialVersionUID = 8601841937779455868L;
@@ -35,8 +36,28 @@ public class Player implements Serializable{
 		nation = n;
 	}
 
-	public void setType(playerType p) {
-		type = p;
+	public void setType(playerType t) {
+		type = t;
+	}
+	
+	public String getName(){
+		return name;
+	}
+	
+	public int getPeriod(){
+		return period;
+	}
+	
+	public String getPeriodString(){
+		return Integer.toString(period);
+	}
+	
+	public Nation getNation(){
+		return nation;
+	}
+	
+	public playerType getType(){
+		return type;
 	}
 
 }

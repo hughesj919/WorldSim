@@ -13,6 +13,7 @@ public class Game implements Serializable{
 
 	private static final long serialVersionUID = -243860625637606695L;
 	private String name;
+	private String saveName;
 	private int currRound;
 	private ArrayList<Player> allPlayers;
 	private ArrayList<Nation> availableNations;
@@ -39,8 +40,16 @@ public class Game implements Serializable{
 		availableNations = n;
 	}
 	
+	public void setSaveName(String filename){
+		saveName = filename;
+	}
+	
 	public String getName(){
 		return name;		
+	}
+	
+	public String getSaveName(){
+		return saveName;
 	}
 	
 	public ArrayList<Nation> getNations() {
@@ -56,10 +65,27 @@ public class Game implements Serializable{
 	}
 	
 	public boolean saveGame(String filename){
+		setSaveName(filename);
 		FileOutputStream fos = null;
 	    ObjectOutputStream out = null;
 	    try {
 	      fos = new FileOutputStream(filename);
+	      out = new ObjectOutputStream(fos);
+	      out.writeObject(this);
+	      out.close();
+	      return true;
+	    } 
+	    catch (Exception ex) {
+	      ex.printStackTrace();
+	      return false;
+	    }
+	}
+	
+	public boolean saveGame(){
+		FileOutputStream fos = null;
+	    ObjectOutputStream out = null;
+	    try {
+	      fos = new FileOutputStream(saveName);
 	      out = new ObjectOutputStream(fos);
 	      out.writeObject(this);
 	      out.close();
