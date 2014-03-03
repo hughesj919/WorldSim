@@ -49,6 +49,10 @@ public class Nation implements Serializable{
 	public void addPlayer(Player p){
 		team.add(p);
 	}
+	
+	public void removePlayer(Player p){
+		team.remove(p);
+	}
 
 	public int teamSize() {
 		return team.size();

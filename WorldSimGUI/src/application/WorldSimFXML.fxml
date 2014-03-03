@@ -115,16 +115,24 @@
               <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="183.0" prefWidth="1138.0" SplitPane.resizableWithParent="false">
                   <children>
-                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="55.0" layoutX="944.0" layoutY="14.0" stroke="BLACK" strokeType="INSIDE" width="181.0" />
+                    <TitledPane animated="false" collapsible="false" expanded="true" minWidth="174.0" prefHeight="106.0" prefWidth="1139.0" text="World Sim" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                      <content>
+                        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                          <children>
+                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="55.0" layoutX="923.0" layoutY="13.0" stroke="BLACK" strokeType="INSIDE" width="181.0" />
+                            <Label layoutX="14.0" layoutY="16.0" text="country name | gnp">
+                              <font>
+                                <Font size="36.0" />
+                              </font>
+                            </Label>
+                          </children>
+                        </AnchorPane>
+                      </content>
+                    </TitledPane>
                   </children>
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="601.0" prefWidth="1138.0">
                   <children>
-                    <TitledPane fx:id="budgetPane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Budgets" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                      <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                      </content>
-                    </TitledPane>
                     <TitledPane fx:id="leaderboardPane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Leaderboard" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                       <content>
                         <AnchorPane disable="false" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
@@ -162,48 +170,69 @@
                         </AnchorPane>
                       </content>
                     </TitledPane>
-                    <TitledPane fx:id="nationPane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Nations" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <TitledPane fx:id="budgetPane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Budgets" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                       <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                           <children>
-                            <TitledPane animated="false" collapsible="false" layoutX="336.0" layoutY="26.0" prefHeight="611.0" prefWidth="783.0" text="Country Name">
-                              <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                  <children>
-                                    <Label layoutX="34.0" layoutY="28.0" text="Current GNP:">
-                                      <font>
-                                        <Font size="14.0" fx:id="x2" />
-                                      </font>
-                                    </Label>
-                                    <Label font="$x2" layoutX="142.0" layoutY="28.0" text="Label" />
-                                    <Label font="$x2" layoutX="569.0" layoutY="28.0" text="Starting GNP:" />
-                                    <Label font="$x2" layoutX="688.0" layoutY="28.0" text="Label" />
-                                  </children>
-                                </AnchorPane>
-                              </content>
-                            </TitledPane>
-                            <Accordion layoutX="24.0" layoutY="26.0" prefHeight="612.0" prefWidth="290.0">
-                              <panes>
-                                <TitledPane animated="false" collapsible="true" prefHeight="26.0" prefWidth="269.0" text="Nations In Use">
-                                  <content>
-                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                      <children>
-                                        <ListView id="nationsList" fx:id="nationsInUseList" editable="true" prefHeight="559.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                      </children>
-                                    </AnchorPane>
-                                  </content>
-                                </TitledPane>
-                                <TitledPane animated="false" collapsible="true" prefHeight="43.0" prefWidth="290.0" text="Available Nations">
-                                  <content>
-                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                      <children>
-                                        <ListView fx:id="nationsAvailableList" editable="true" prefHeight="559.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                      </children>
-                                    </AnchorPane>
-                                  </content>
-                                </TitledPane>
-                              </panes>
-                            </Accordion>
+                            <GridPane layoutX="14.0" layoutY="14.0" prefHeight="596.0" prefWidth="493.0">
+                              <children>
+                                <Label text="Current GNP:" GridPane.rowIndex="1" />
+                                <Label text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                                <Label text="Basic Goods:" GridPane.rowIndex="2" />
+                                <Label text="Conventional Forces:" GridPane.rowIndex="3" />
+                                <Label text="Nuclear Forces:" GridPane.rowIndex="4" />
+                                <TextField maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="91.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+                                <Label text="Imports:" GridPane.rowIndex="5" />
+                                <Label text="Max Exports:" GridPane.rowIndex="6" />
+                                <Label text="R&amp;D:" GridPane.rowIndex="7" />
+                                <Label prefHeight="16.0" prefWidth="77.0" text="Allocation %" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+                                <Label text="Budget Section" />
+                                <Label text="Allocation" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                                <Label text="Contingency Fund:" GridPane.rowIndex="8" />
+                                <Label text="Capital Goods:" GridPane.rowIndex="9" />
+                                <TextField maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="91.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+                                <TextField maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="91.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                                <TextField maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="91.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
+                                <TextField maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="91.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+                                <TextField maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="91.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+                                <TextField maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="91.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="9" />
+                                <TextField maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="91.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="8" />
+                                <Button fx:id="budgetSaveButton" mnemonicParsing="false" onAction="#budgetSaveButtonClick" prefHeight="26.0" prefWidth="114.0" text="Save" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="15" />
+                                <Label text="Sub-Total" GridPane.columnIndex="4" GridPane.halignment="CENTER" />
+                                <Label text="+/-" GridPane.columnIndex="3" GridPane.halignment="CENTER" />
+                                <Label text="Total:" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="10" />
+                                <Label text="Income Tax" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="11" />
+                                <Label text="Trade Tax" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="13" />
+                                <Label text="Political Tax" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="12" />
+                                <Label text="I.M.F Tax" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="14" />
+                              </children>
+                              <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="156.6910858154297" minWidth="10.0" prefWidth="132.90472412109375" />
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="126.44503784179688" minWidth="10.0" prefWidth="96.984130859375" />
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="110.94970703125" minWidth="10.0" prefWidth="100.97616577148438" />
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="123.53399658203125" minWidth="10.0" prefWidth="82.02383422851562" />
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.88134765625" minWidth="10.0" prefWidth="81.46600341796875" />
+                              </columnConstraints>
+                              <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              </rowConstraints>
+                            </GridPane>
+                            <PieChart fx:id="budgetPie" layoutX="519.0" layoutY="20.0" prefHeight="584.0" prefWidth="593.0" title="Budget Allocation" />
                           </children>
                         </AnchorPane>
                       </content>
@@ -240,6 +269,82 @@
                                 </AnchorPane>
                               </content>
                             </TitledPane>
+                          </children>
+                        </AnchorPane>
+                      </content>
+                    </TitledPane>
+                    <TitledPane fx:id="nationPane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Nations" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                      <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                          <children>
+                            <TitledPane animated="false" collapsible="false" layoutX="336.0" layoutY="26.0" prefHeight="611.0" prefWidth="783.0" text="Country Name">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                  <children>
+                                    <Label layoutX="34.0" layoutY="28.0" text="Current GNP:">
+                                      <font>
+                                        <Font size="14.0" fx:id="x2" />
+                                      </font>
+                                    </Label>
+                                    <Label font="$x2" layoutX="142.0" layoutY="28.0" text="Label" />
+                                    <Label font="$x2" layoutX="569.0" layoutY="28.0" text="Starting GNP:" />
+                                    <Label font="$x2" layoutX="688.0" layoutY="28.0" text="Label" />
+                                    <TitledPane animated="false" collapsible="false" layoutX="14.0" layoutY="195.0" prefHeight="291.0" prefWidth="315.0" text="Commodities">
+                                      <content>
+                                        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                          <children>
+                                            <TabPane prefHeight="218.0" prefWidth="255.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                              <tabs>
+                                                <Tab text="Imports">
+                                                  <content>
+                                                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                      <children>
+                                                        <ListView prefHeight="189.0" prefWidth="255.0" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                      </children>
+                                                    </AnchorPane>
+                                                  </content>
+                                                </Tab>
+                                                <Tab text="Exports">
+                                                  <content>
+                                                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                      <children>
+                                                        <ListView prefHeight="220.0" prefWidth="296.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                      </children>
+                                                    </AnchorPane>
+                                                  </content>
+                                                </Tab>
+                                              </tabs>
+                                            </TabPane>
+                                          </children>
+                                        </AnchorPane>
+                                      </content>
+                                    </TitledPane>
+                                  </children>
+                                </AnchorPane>
+                              </content>
+                            </TitledPane>
+                            <Accordion layoutX="24.0" layoutY="26.0" prefHeight="612.0" prefWidth="290.0">
+                              <panes>
+                                <TitledPane animated="true" collapsible="true" prefHeight="26.0" prefWidth="269.0" text="Nations In Use">
+                                  <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                      <children>
+                                        <ListView id="nationsList" fx:id="nationsInUseList" editable="true" prefHeight="559.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                      </children>
+                                    </AnchorPane>
+                                  </content>
+                                </TitledPane>
+                                <TitledPane animated="true" collapsible="true" prefHeight="43.0" prefWidth="290.0" text="Available Nations">
+                                  <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                      <children>
+                                        <ListView fx:id="nationsAvailableList" editable="true" prefHeight="559.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                      </children>
+                                    </AnchorPane>
+                                  </content>
+                                </TitledPane>
+                              </panes>
+                            </Accordion>
                           </children>
                         </AnchorPane>
                       </content>

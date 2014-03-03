@@ -25,6 +25,9 @@ import javafx.stage.StageStyle;
 public class Main extends Application {
 
 	public static Game currGame;
+	public static Player currPlayer;
+	public static Nation currNation;
+	
 	public static ArrayList<Game> allGames;
 
 	@Override

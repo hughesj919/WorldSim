@@ -64,6 +64,10 @@ public class Game implements Serializable{
 		allPlayers.add(p);
 	}
 	
+	public void removePlayer(Player p){
+		allPlayers.remove(p);
+	}
+	
 	public boolean saveGame(String filename){
 		setSaveName(filename);
 		FileOutputStream fos = null;

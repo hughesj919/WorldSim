@@ -3,7 +3,7 @@ package application;
 import java.io.Serializable;
 
 enum playerType {
-	chiefOfState, budgetOffice;
+	chiefOfState, foreignMinister;
 };
 
 
@@ -24,6 +24,18 @@ public class Player implements Serializable{
 		return name;
 	}
 
+	@Override
+	public boolean equals(Object o){
+		
+		if(o==null)
+			return false;
+		else if(o instanceof Player)
+			return ((Player) o).getName().equalsIgnoreCase(name);
+		else
+			return false;
+		
+	}
+	
 	public void setName(String n) {
 		name = n;
 	}
