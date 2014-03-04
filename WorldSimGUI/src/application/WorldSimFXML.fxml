@@ -120,7 +120,7 @@
                         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                           <children>
                             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="55.0" layoutX="923.0" layoutY="13.0" stroke="BLACK" strokeType="INSIDE" width="181.0" />
-                            <Label layoutX="14.0" layoutY="16.0" text="country name | gnp">
+                            <Label fx:id="titleLabel" layoutX="14.0" layoutY="16.0" text="country name | gnp">
                               <font>
                                 <Font size="36.0" />
                               </font>
@@ -133,43 +133,6 @@
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="601.0" prefWidth="1138.0">
                   <children>
-                    <TitledPane fx:id="leaderboardPane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Leaderboard" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                      <content>
-                        <AnchorPane disable="false" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                          <children>
-                            <LineChart id="LineChart" prefHeight="658.0" prefWidth="1135.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                              <xAxis>
-                                <CategoryAxis side="BOTTOM" />
-                              </xAxis>
-                              <yAxis>
-                                <NumberAxis side="LEFT" />
-                              </yAxis>
-                            </LineChart>
-                          </children>
-                        </AnchorPane>
-                      </content>
-                    </TitledPane>
-                    <TitledPane fx:id="gamePane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Game Setup" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                      <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                          <children>
-                            <ComboBox id="gameName" fx:id="gamesList" layoutX="470.0" layoutY="70.0" onAction="#gamesListChange" prefHeight="21.0" prefWidth="195.0">
-                              <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                  <String fx:value="Item 1" />
-                                  <String fx:value="Item 2" />
-                                  <String fx:value="Item 3" />
-                                </FXCollections>
-                              </items>
-                            </ComboBox>
-                            <Label layoutX="384.0" layoutY="70.0" text="Current Game:" textAlignment="LEFT" />
-                            <TextField fx:id="newGameText" layoutX="472.0" layoutY="113.0" prefWidth="193.0" />
-                            <Label layoutX="365.0" layoutY="116.0" text="New Game Name:" />
-                            <Button fx:id="saveGameButton" layoutX="530.0" layoutY="173.0" mnemonicParsing="false" onAction="#saveGameButtonClick" text="Add Game" />
-                          </children>
-                        </AnchorPane>
-                      </content>
-                    </TitledPane>
                     <TitledPane fx:id="budgetPane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Budgets" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                       <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
@@ -273,6 +236,27 @@
                         </AnchorPane>
                       </content>
                     </TitledPane>
+                    <TitledPane fx:id="gamePane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Game Setup" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                      <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                          <children>
+                            <ComboBox id="gameName" fx:id="gamesList" layoutX="470.0" layoutY="70.0" onAction="#gamesListChange" prefHeight="21.0" prefWidth="195.0">
+                              <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                  <String fx:value="Item 1" />
+                                  <String fx:value="Item 2" />
+                                  <String fx:value="Item 3" />
+                                </FXCollections>
+                              </items>
+                            </ComboBox>
+                            <Label layoutX="365.0" layoutY="73.0" text="Current Game:" textAlignment="LEFT" />
+                            <TextField fx:id="newGameText" layoutX="472.0" layoutY="113.0" prefWidth="193.0" />
+                            <Label layoutX="365.0" layoutY="116.0" text="New Game Name:" />
+                            <Button fx:id="saveGameButton" layoutX="530.0" layoutY="173.0" mnemonicParsing="false" onAction="#saveGameButtonClick" text="Add Game" />
+                          </children>
+                        </AnchorPane>
+                      </content>
+                    </TitledPane>
                     <TitledPane fx:id="nationPane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Nations" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                       <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
@@ -286,10 +270,10 @@
                                         <Font size="14.0" fx:id="x2" />
                                       </font>
                                     </Label>
-                                    <Label font="$x2" layoutX="142.0" layoutY="28.0" text="Label" />
+                                    <Label font="$x2" layoutX="125.0" layoutY="28.0" text="Label" />
                                     <Label font="$x2" layoutX="569.0" layoutY="28.0" text="Starting GNP:" />
-                                    <Label font="$x2" layoutX="688.0" layoutY="28.0" text="Label" />
-                                    <TitledPane animated="false" collapsible="false" layoutX="14.0" layoutY="195.0" prefHeight="291.0" prefWidth="315.0" text="Commodities">
+                                    <Label font="$x2" layoutX="662.0" layoutY="28.0" text="Label" />
+                                    <TitledPane animated="false" collapsible="false" layoutX="9.0" layoutY="261.0" prefHeight="319.0" prefWidth="381.0" text="Commodities">
                                       <content>
                                         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                           <children>
@@ -319,22 +303,36 @@
                                         </AnchorPane>
                                       </content>
                                     </TitledPane>
+                                    <TitledPane animated="false" collapsible="false" layoutX="11.0" layoutY="84.0" minWidth="377.0" prefHeight="145.0" prefWidth="378.0" text="Team Members">
+                                      <content>
+                                        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="115.9998779296875" prefWidth="374.0">
+                                          <children>
+                                            <TableView fx:id="nationPlayerTable" prefHeight="119.0" prefWidth="374.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                              <columns>
+                                                <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="189.0" resizable="false" text="Name" fx:id="nationPlayerNameColumn" />
+                                                <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="183.0" resizable="false" text="Position" fx:id="nationPlayerPositionColumn" />
+                                              </columns>
+                                            </TableView>
+                                          </children>
+                                        </AnchorPane>
+                                      </content>
+                                    </TitledPane>
                                   </children>
                                 </AnchorPane>
                               </content>
                             </TitledPane>
-                            <Accordion layoutX="24.0" layoutY="26.0" prefHeight="612.0" prefWidth="290.0">
+                            <Accordion disable="false" layoutX="24.0" layoutY="26.0" prefHeight="612.0" prefWidth="290.0">
                               <panes>
-                                <TitledPane animated="true" collapsible="true" prefHeight="26.0" prefWidth="269.0" text="Nations In Use">
+                                <TitledPane fx:id="nationsInUsePane" animated="true" collapsible="true" prefHeight="26.0" prefWidth="269.0" text="Nations In Use">
                                   <content>
                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                       <children>
-                                        <ListView id="nationsList" fx:id="nationsInUseList" editable="true" prefHeight="559.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                        <ListView id="nationsList" fx:id="nationsInUseList" editable="true" onMouseClicked="#nationsInUseListMouseClick" prefHeight="559.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                       </children>
                                     </AnchorPane>
                                   </content>
                                 </TitledPane>
-                                <TitledPane animated="true" collapsible="true" prefHeight="43.0" prefWidth="290.0" text="Available Nations">
+                                <TitledPane animated="true" collapsible="true" expanded="false" prefHeight="43.0" prefWidth="290.0" text="Available Nations">
                                   <content>
                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                       <children>
@@ -345,6 +343,22 @@
                                 </TitledPane>
                               </panes>
                             </Accordion>
+                          </children>
+                        </AnchorPane>
+                      </content>
+                    </TitledPane>
+                    <TitledPane fx:id="leaderboardPane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Leaderboard" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                      <content>
+                        <AnchorPane disable="false" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                          <children>
+                            <LineChart id="LineChartNxN" fx:id="leaderboardChart" prefHeight="658.0" prefWidth="1135.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <xAxis>
+                                <NumberAxis side="BOTTOM" />
+                              </xAxis>
+                              <yAxis>
+                                <NumberAxis side="LEFT" />
+                              </yAxis>
+                            </LineChart>
                           </children>
                         </AnchorPane>
                       </content>

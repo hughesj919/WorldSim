@@ -71,5 +71,14 @@ public class Player implements Serializable{
 	public playerType getType(){
 		return type;
 	}
+	
+	public String getTypeString(){
+		if(type == playerType.chiefOfState)
+			return "Chief of State";
+		else if(type == playerType.foreignMinister)
+			return "Foreign Minister";
+		else 
+			return "";
+	}
 
 }

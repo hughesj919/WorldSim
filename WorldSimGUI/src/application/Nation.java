@@ -54,7 +54,7 @@ public class Nation implements Serializable{
 		team.remove(p);
 	}
 
-	public int teamSize() {
+	public int getTeamSize() {
 		return team.size();
 	}
 	
@@ -62,16 +62,19 @@ public class Nation implements Serializable{
 		return team.size() > 0;
 	}
 
-	public float gnp() {
+	public float getGnp() {
 		return gnp;
 	}
 
-	public int id() {
+	public int getId() {
 		return id;
 	}
 
-	public String name() {
+	public String getName() {
 		return name;
 	}
-
+	
+	public ArrayList<Player> getTeam(){
+		return team;
+	}
 }
