@@ -2,13 +2,11 @@ package application;
 
 import java.util.ArrayList;
 
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
@@ -20,7 +18,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
@@ -29,7 +26,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Path;
-import javafx.util.Callback;
 
 public class UIController {
 
@@ -37,7 +33,6 @@ public class UIController {
 	 * Game Tab
 	 **********************************************/
 	private ObservableList<Game> obsGames;
-	
 
 	@FXML
 	private Button gameButton;
@@ -119,28 +114,48 @@ public class UIController {
 
 	@FXML
 	private TitledPane nationPane;
+
+	@FXML
+	private TitledPane nationsInUsePane;
+
+	@FXML
+	private Label titleLabel;
 	
     @FXML
-    private TitledPane nationsInUsePane;
-    
+    private Label nationConForcesLabel;
+
     @FXML
-    private Label titleLabel;
+    private Label nationCurrGDPLabel;
+
+    @FXML
+    private Label nationExportAmRemLabel;
+
+    @FXML
+    private Label nationImportRemLabel;
+
+    @FXML
+    private Label nationMaxExport;
+
+    @FXML
+    private Label nationMaxExportLabel;
+
+    @FXML
+    private Label nationNucForcesLabel;
 
 	@FXML
 	private ListView<Nation> nationsAvailableList;
 
 	@FXML
 	private ListView<Nation> nationsInUseList;
-	
-    @FXML
-    private TableView<Player> nationPlayerTable;
-    
-    @FXML
-    private TableColumn<Player,String> nationPlayerNameColumn;
 
-    @FXML
-    private TableColumn<Player,String> nationPlayerPositionColumn;
+	@FXML
+	private TableView<Player> nationPlayerTable;
 
+	@FXML
+	private TableColumn<Player, String> nationPlayerNameColumn;
+
+	@FXML
+	private TableColumn<Player, String> nationPlayerPositionColumn;
 
 	@FXML
 	public void nationButtonClick(ActionEvent event) {
@@ -151,28 +166,30 @@ public class UIController {
 		nationPane.setVisible(true);
 
 	}
-	
+
 	@FXML
 	void nationsInUseListMouseClick(MouseEvent event) {
-		
+
 		Nation n = nationsInUseList.getSelectionModel().getSelectedItem();
-		if(n!=null){
+		if (n != null) {
 			obsNationPlayers.clear();
 			obsNationPlayers.setAll(n.getTeam());
+
+			titleLabel.setText(n.getName().toLowerCase() + " | "
+					+ Double.toString(n.getGnp()));
 			
-			titleLabel.setText(n.getName().toLowerCase() + " | " + Float.toString(n.getGnp()));
-			
-			
-			/*playerName.setText(p.getName());
-			playerPeriod.setText(p.getPeriodString());
-			playerNation.setValue(p.getNation());
-			if(p.getType() == playerType.chiefOfState)
-				playerPosition.setValue("Chief of State");
-			else
-				playerPosition.setValue("Foreign Minister");*/
+			nationCurrGDPLabel.setText(n.getGnpString());
+
+			/*
+			 * playerName.setText(p.getName());
+			 * playerPeriod.setText(p.getPeriodString());
+			 * playerNation.setValue(p.getNation()); if(p.getType() ==
+			 * playerType.chiefOfState)
+			 * playerPosition.setValue("Chief of State"); else
+			 * playerPosition.setValue("Foreign Minister");
+			 */
 		}
-		
-	
+
 	}
 
 	public void addInUseNation(Nation nat) {
@@ -189,8 +206,6 @@ public class UIController {
 			// obsNations.
 		}
 	}
-	
-	
 
 	/***********************************************
 	 * Team/Player Tab
@@ -241,46 +256,45 @@ public class UIController {
 		Nation pNation = playerNation.getValue();
 
 		Player newPlayer = findPlayer(pName);
-		
-		if(newPlayer == null){
-			
+
+		if (newPlayer == null) {
+
 			newPlayer = new Player(pName);
-			
-			//add to nation list if newly in use
-			if(!pNation.inUse()){
+
+			// add to nation list if newly in use
+			if (!pNation.inUse()) {
 				obsAvailableNations.remove(pNation);
 				obsInUseNations.add(pNation);
 			}
-			
-			//add player to nation
+
+			// add player to nation
 			pNation.addPlayer(newPlayer);
-			
-			//add player to player list and curr game
+
+			// add player to player list and curr game
 			obsPlayers.add(newPlayer);
-			Main.currGame.addPlayer(newPlayer);			
-		}
-		else{
-			
-			//player does exist, assume a nation change, so update as necessary
+			Main.currGame.addPlayer(newPlayer);
+		} else {
+
+			// player does exist, assume a nation change, so update as necessary
 			Nation prevNation = newPlayer.getNation();
-			
-			if(prevNation !=null){
+
+			if (prevNation != null) {
 				prevNation.removePlayer(newPlayer);
-				if(!prevNation.inUse()){
+				if (!prevNation.inUse()) {
 					obsInUseNations.remove(prevNation);
 					obsAvailableNations.add(prevNation);
 				}
 			}
-			
-			if(!pNation.inUse()){
+
+			if (!pNation.inUse()) {
 				obsAvailableNations.remove(pNation);
 				obsInUseNations.add(pNation);
 			}
-			
+
 			pNation.addPlayer(newPlayer);
 		}
-		
-		//change values on the player
+
+		// change values on the player
 		newPlayer.setPeriod(pPeriod);
 		newPlayer.setNation(pNation);
 		if (pType.equals("Chief of State"))
@@ -288,7 +302,7 @@ public class UIController {
 		else if (pType.equals("Foreign Minister"))
 			newPlayer.setType(playerType.foreignMinister);
 
-		//save the state
+		// save the state
 		Main.currGame.saveGame();
 		clearPlayerScreen();
 
@@ -305,15 +319,15 @@ public class UIController {
 		 */
 
 	}
-	
+
 	@FXML
 	public void playerDeleteButtonClick(ActionEvent event) {
 		String pName = playerName.getText();
 		Player newPlayer = findPlayer(pName);
-		if(newPlayer!=null){
+		if (newPlayer != null) {
 			Nation pNation = newPlayer.getNation();
 			pNation.removePlayer(newPlayer);
-			if(!pNation.inUse()){
+			if (!pNation.inUse()) {
 				obsInUseNations.remove(pNation);
 				obsAvailableNations.add(pNation);
 			}
@@ -327,11 +341,11 @@ public class UIController {
 	@FXML
 	void playersListClick(MouseEvent event) {
 		Player p = playersList.getSelectionModel().getSelectedItem();
-		if(p!=null){
+		if (p != null) {
 			playerName.setText(p.getName());
 			playerPeriod.setText(p.getPeriodString());
 			playerNation.setValue(p.getNation());
-			if(p.getType() == playerType.chiefOfState)
+			if (p.getType() == playerType.chiefOfState)
 				playerPosition.setValue("Chief of State");
 			else
 				playerPosition.setValue("Foreign Minister");
@@ -345,26 +359,25 @@ public class UIController {
 	public void setAllNations(ArrayList<Nation> nations) {
 		obsAllNations.setAll(nations);
 	}
-	
-	private Player findPlayer(String playerName){
-		
+
+	private Player findPlayer(String playerName) {
+
 		Player newPlayer;
 		newPlayer = new Player(playerName);
-		
+
 		int pIndex = obsPlayers.indexOf(newPlayer);
-		if(pIndex > -1){	
+		if (pIndex > -1) {
 			newPlayer = obsPlayers.get(pIndex);
 			return newPlayer;
-		}
-		else
+		} else
 			return null;
 	}
-	
-	private void clearPlayerScreen(){
+
+	private void clearPlayerScreen() {
 		playerName.setText(null);
 		playerPeriod.setText(null);
 		playerNation.setValue(null);
-		playerPosition.setValue(null);		
+		playerPosition.setValue(null);
 	}
 
 	/***********************************************
@@ -379,9 +392,9 @@ public class UIController {
 
 	@FXML
 	private PieChart budgetPie;
-	
-    @FXML
-    private Button budgetSaveButton;
+
+	@FXML
+	private Button budgetSaveButton;
 
 	ObservableList<PieChart.Data> obsPieChartData;
 
@@ -394,7 +407,7 @@ public class UIController {
 		nationPane.setVisible(false);
 
 	}
-	
+
 	@FXML
 	public void budgetSaveButtonClick(ActionEvent event) {
 		obsPieChartData.add(new PieChart.Data("Allocated", 75));
@@ -405,16 +418,16 @@ public class UIController {
 	/***********************************************
 	 * Leaderboard Tab
 	 ***********************************************/
-	private ObservableList<Series<Number,Number>> obsRoundData;
-	
+	private ObservableList<Series<Number, Number>> obsRoundData;
+
 	@FXML
 	private TitledPane leaderboardPane;
 
 	@FXML
 	private Button leaderboardButton;
-	
+
 	@FXML
-    private LineChart<Number,Number> leaderboardChart;
+	private LineChart<Number, Number> leaderboardChart;
 
 	@FXML
 	public void leaderboardButtonClick(ActionEvent event) {
@@ -450,7 +463,6 @@ public class UIController {
 				"Unallocated", 100));
 		obsRoundData = FXCollections.observableArrayList();
 
-		
 		obsGames.setAll(Main.allGames);
 		gamesList.setItems(obsGames);
 
@@ -465,49 +477,51 @@ public class UIController {
 		playersList.setItems(obsPlayers);
 		playerNation.setItems(obsAllNations);
 		nationPlayerTable.setItems(obsNationPlayers);
-		nationPlayerNameColumn.setCellValueFactory(new PropertyValueFactory<Player,String>("name") );
-		nationPlayerPositionColumn.setCellValueFactory(new PropertyValueFactory<Player,String>("typeString"));
+		nationPlayerNameColumn
+				.setCellValueFactory(new PropertyValueFactory<Player, String>(
+						"name"));
+		nationPlayerPositionColumn
+				.setCellValueFactory(new PropertyValueFactory<Player, String>(
+						"typeString"));
 		leaderboardChart.setTitle("GNP Per Round");
 		leaderboardChart.setData(obsRoundData);
 		final XYChart.Series<Number, Number> series = new XYChart.Series<>();
 		series.setName("Ghana");
-        series.getData().add(new Data<Number, Number>(3, 15));
-        series.getData().add(new Data<Number, Number>(4, 24));
-        series.getData().add(new Data<Number, Number>(5, 34));
-        series.getData().add(new Data<Number, Number>(6, 36));
-        series.getData().add(new Data<Number, Number>(7, 22));
-        series.getData().add(new Data<Number, Number>(8, 45));
-        series.getData().add(new Data<Number, Number>(9, 43));
-        series.getData().add(new Data<Number, Number>(10, 17));
-        
-        obsRoundData.add(series);
-        
-     //   leaderboardChart.lo
-        
-        // make the first series in the chart glow when you mouse over it.
+		series.getData().add(new Data<Number, Number>(3, 15));
+		series.getData().add(new Data<Number, Number>(4, 24));
+		series.getData().add(new Data<Number, Number>(5, 34));
+		series.getData().add(new Data<Number, Number>(6, 36));
+		series.getData().add(new Data<Number, Number>(7, 22));
+		series.getData().add(new Data<Number, Number>(8, 45));
+		series.getData().add(new Data<Number, Number>(9, 43));
+		series.getData().add(new Data<Number, Number>(10, 17));
 
-        Node n = series.getNode();
-        //Node n = leaderboardChart.lookup(".chart-series-line.series0");
-        if (n != null && n instanceof Path) {
-          final Path path = (Path) n;
-          final Glow glow = new Glow(.8);
-          path.setEffect(null);
-          path.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override public void handle(MouseEvent e) {
-              path.setEffect(glow);
-              Tooltip t = new Tooltip("quote");
-              Tooltip.install(path, new Tooltip(series.getName()));
-            }
-          });
-          path.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override public void handle(MouseEvent e) {
-              path.setEffect(null);
-            }
-          });
-        }
+		obsRoundData.add(series);
 
-        
-		
+		// leaderboardChart.lo
+
+		// make the first series in the chart glow when you mouse over it.
+
+		Node n = series.getNode();
+		// Node n = leaderboardChart.lookup(".chart-series-line.series0");
+		if (n != null && n instanceof Path) {
+			final Path path = (Path) n;
+			final Glow glow = new Glow(.8);
+			path.setEffect(null);
+			path.setOnMouseEntered(new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent e) {
+					path.setEffect(glow);
+					Tooltip.install(path, new Tooltip(series.getName()));
+				}
+			});
+			path.setOnMouseExited(new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent e) {
+					path.setEffect(null);
+				}
+			});
+		}
 
 		/*
 		 * = FXCollections .observableArrayList(new PieChart.Data("Grapefruit",
@@ -518,8 +532,6 @@ public class UIController {
 
 		budgetPie.setData(obsPieChartData);
 		budgetPie.setAnimated(true);
-		
-		
 
 		gameButtonClick(null);
 

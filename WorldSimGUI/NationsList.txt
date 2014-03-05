@@ -1,4 +1,4 @@
-Afghanistan,5000
+Afghanistan,5000,EFRU,EWHT,ECRN,EVEG
 Albania,4700
 Algeria,16852
 Andorra,2150

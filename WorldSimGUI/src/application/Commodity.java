@@ -2,16 +2,25 @@ package application;
 
 import java.io.Serializable;
 
+enum CommodityType{
+	Food,Oil,Other;
+}
+
 public class Commodity implements Serializable{
 	
 
 	private static final long serialVersionUID = 4271645914023542084L;
-	private int type;
+	private CommodityType type;
 	private String name;
 	
-	public Commodity(int t, String n){
+	public Commodity( String n, CommodityType t){
 		type = t;
 		name = n;
+	}
+	
+	public Commodity(Commodity c){
+		type = c.getType();
+		name = c.getName();
 	}
 	
 	@Override
@@ -19,14 +28,14 @@ public class Commodity implements Serializable{
 		return name;
 	}
 	
-	public int getType(){
+	public CommodityType getType(){
 		return type;
 	}
-	public void setType(int t){
+	public void setType(CommodityType t){
 		type = t;
 	}
 	
-	public String name(){
+	public String getName(){
 		return name;
 	}
 	

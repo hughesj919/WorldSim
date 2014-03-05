@@ -7,8 +7,11 @@ public class Nation implements Serializable{
 
 	private static final long serialVersionUID = 569741334000068828L;
 	private int id;
-	private float gnp;
+	private double gnp;
+	private double conventionalForces;
+	private double nuclearForces;
 	private String name;
+	private ArrayList<Commodity> availableExports;
 	private ArrayList<Commodity> exports;
 	private ArrayList<Commodity> imports;
 	private ArrayList<Player> team;
@@ -17,8 +20,11 @@ public class Nation implements Serializable{
 		id = num;
 		exports = new ArrayList<Commodity>();
 		imports = new ArrayList<Commodity>();
+		availableExports = new ArrayList<Commodity>();
 		team = new ArrayList<Player>();
 		gnp = 0;
+		conventionalForces = 0;
+		nuclearForces = 0;
 	}
 	
 	@Override
@@ -26,7 +32,7 @@ public class Nation implements Serializable{
 		return name;
 	}
 
-	public void setGNP(float g) {
+	public void setGNP(double g) {
 		gnp = g;
 	}
 
@@ -62,8 +68,12 @@ public class Nation implements Serializable{
 		return team.size() > 0;
 	}
 
-	public float getGnp() {
+	public double getGnp() {
 		return gnp;
+	}
+	
+	public String getGnpString(){
+		return Double.toString(gnp);
 	}
 
 	public int getId() {

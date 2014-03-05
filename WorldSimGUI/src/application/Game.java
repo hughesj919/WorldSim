@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class Game implements Serializable{
 
@@ -15,6 +16,7 @@ public class Game implements Serializable{
 	private String name;
 	private String saveName;
 	private int currRound;
+	private Hashtable<String,Commodity> allCommodities;
 	private ArrayList<Player> allPlayers;
 	private ArrayList<Nation> availableNations;
 	private ArrayList<Round> allRounds;
@@ -127,6 +129,33 @@ public class Game implements Serializable{
 			e.printStackTrace();
 		}
 
+		
+	}
+	
+	private void importCommodities(){
+		try{
+			String line;
+			String[] values;
+			
+			BufferedReader br = new BufferedReader(new FileReader("CommoditiesList.txt"));
+			while((line = br.readLine()) != null){
+				values = line.split(",");
+				Commodity newCommod;
+				if(values[2].equals("F"))
+					newCommod = new Commodity(values[1], CommodityType.Food);
+				else if(values[2].equals("O"))
+					newCommod = new Commodity(values[1], CommodityType.Oil);
+				else if(values[2].equals("X"))
+					newCommod = new Commodity(values[1], CommodityType.Other);
+				
+				//if(allCommodities.get)
+				
+				
+			}
+			
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 		
 	}
 	
