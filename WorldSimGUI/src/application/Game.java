@@ -27,6 +27,8 @@ public class Game implements Serializable{
 		availableNations = new ArrayList<Nation>();
 		allPlayers = new ArrayList<Player>();
 		allRounds = new ArrayList<Round>();
+		allCommodities = new Hashtable<String,Commodity>();
+		importCommodities();
 		importNations();
 	}
 	
@@ -118,6 +120,22 @@ public class Game implements Serializable{
 				Nation newNation = new Nation(id);
 				newNation.setName(values[0]);
 				newNation.setGNP(Integer.parseInt(values[1]));
+				
+				for(int i=2;i<=values.length-3;i++){
+					String tempCommod = values[i];
+					Commodity c = allCommodities.get(tempCommod.substring(1, 4));
+					boolean isExport = tempCommod.substring(0, 1).equalsIgnoreCase("E");
+					boolean isImport = tempCommod.substring(0, 1).equalsIgnoreCase("I");
+					if(c!=null && (isExport || isImport)){
+						if(isExport)
+							newNation.addExport(c);
+						else if(isImport)
+							newNation.addImport(c);
+					}
+					else
+						System.out.println(values[0] + " invalid commodity: " + values[i]);
+				}
+
 				addNation(newNation);
 				id++;
 			}
@@ -125,7 +143,6 @@ public class Game implements Serializable{
 			br.close();
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -140,18 +157,19 @@ public class Game implements Serializable{
 			BufferedReader br = new BufferedReader(new FileReader("CommoditiesList.txt"));
 			while((line = br.readLine()) != null){
 				values = line.split(",");
-				Commodity newCommod;
-				if(values[2].equals("F"))
-					newCommod = new Commodity(values[1], CommodityType.Food);
-				else if(values[2].equals("O"))
-					newCommod = new Commodity(values[1], CommodityType.Oil);
-				else if(values[2].equals("X"))
-					newCommod = new Commodity(values[1], CommodityType.Other);
+				if(!allCommodities.containsKey(values[0])){
+					Commodity newCommod = null;
+					if(values[2].equals("F"))
+						newCommod = new Commodity(values[1], CommodityType.Food);
+					else if(values[2].equals("O"))
+						newCommod = new Commodity(values[1], CommodityType.Oil);
+					else if(values[2].equals("X"))
+						newCommod = new Commodity(values[1], CommodityType.Other);
 				
-				//if(allCommodities.get)
-				
-				
+					allCommodities.put(values[0], newCommod);
+				}
 			}
+			br.close();
 			
 		} catch (Exception e){
 			e.printStackTrace();

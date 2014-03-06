@@ -1,0 +1,141 @@
+FRU,Fruits,F
+HID,Hides,X
+CRP,Carpets,X
+WOL,Wool,X
+VEG,Vegetables,F
+WHT,Wheat,F
+RIC,Rice,F
+CRN,Corn,F
+NTS,Nuts,F
+CTN,Cotton,X
+GEM,Gems,X
+FDS,Foodstuffs,F
+SUG,Sugar,F
+IEQ,Industrial Equipment,X
+PET,Petroleum,O
+TEX,Textiles,X
+CON,Consumer Goods,X
+TRN,Transportation Equipment,X
+TBC,Tobacco,X
+ORE,Metals & Ores,X
+STL,Steel,X
+IMC,Industrial Machinery,X
+CHM,Chemicals,X
+GAS,Natural Gas,X
+IRN,Iron,X
+FRN,Furniture,X
+FSH,Fish,F
+DMD,Diamonds,X
+COF,Coffee,F
+TIM,Timber,X
+SIS,Sisal,X
+EEQ,Electrical Equipment,X
+SGC,Sugar Cane,F
+RUM,Rum,X
+FUL,Fuels,X
+BEF,Beef,F
+POT,Potatoes,F
+GRP,Grapes,F
+COP,Copper,X
+GLD,Gold,X
+ZNC,Zinc,X
+SIL,Silver,X
+COL,Coal,X
+PAP,Paper,X
+CLT,Clothing,X
+PPR,Paper Products,X
+MVC,Motor Vehicles,X
+FTW,Footwear,X
+LUM,Lumber,X
+RXS,Pharmaceuticals,x
+MET,Metals,X
+OIL,Oil,O
+SFS,Shellfish,F
+CEM,Cement,X
+ALM,Aluminum,X
+LIV,Livestock,X
+TEA,Tea,F
+LEA,Leather,X
+JUT,Jute,X
+ECM,Electrical Components,X
+CNT,Construction Materials,X
+EMC,Electrical Machinery,X
+GRN,Grains,F
+CIT,Citrus Fruits,F
+WOD,Wood,X
+MOL,Molasses,F
+CAC,Cacao,F
+HAN,Handicrafts,X
+SPI,Spices,F
+LED,Lead,X
+TIN,Tin,X
+NKL,Nickel,X
+RUB,Rubber,X
+COC,Cocoa,F
+FRZ,Fertilizers,X
+SOY,Soybeans,F
+COM,Communications Equipment,X
+BAN,Bananas,F
+SLT,Salt,F
+CPR,Copra,F
+CRK,Cork,X
+LEP,Leather Products,X
+COB,Cobalt,X
+VAN,Vanilla,F
+CLV,Cloves,F
+PRF,Perfume,X
+PIN,Pineapples,F
+WIN,Wine,F
+MEA,Meat,F
+DAP,Dairy Products,F
+SOP,Soap,X
+SEA,Seafood,F
+SHR,Shrimp,F
+SOR,Sorghum,F
+NMG,Nutmeg,F
+CNO,Coconut Oil,F
+URA,Uranium,X
+MNG,Manganese,X
+PNT,Peanuts,F
+MCN,Machinery,X
+BAX,Bauxite,X
+TUN,Tuna,F
+MAC,Mace,F
+CRD,Cardamom,F
+PLM,Palm Kernels,F
+CAS,Cashews,F
+ROP,Rope/Cord,X
+CAV,Caviar,F
+SUL,Sulfur,X
+SHP,Ships,X
+AIR,Aircraft,X
+IRO,Iron Ore,X
+PHO,Phosphates,X
+SEW,Seaweed,F
+CNU,Coconut,F
+BER,Berries,F
+BMA,Building Materials,X
+BEA,Beans,F
+PEA,Peas,F
+GLS,Glass,X
+AMC,Agricultural Machinery,X
+CER,Cereals,F
+PEP,Pepper,F
+IRS,Iron and Steel Products,X
+TEK,Teak,X
+PRW,Prawns,F
+CBE,Cocoa Beans,F
+BEV,Beverages,F
+OLO,Olive Oil,F
+PMO,Palm Oil,F
+PLA,Plastics,X
+CIN,Cinnamon,F
+PPP,Petroleum Products,X
+CCP,Coconut Products,x
+ARR,Arrowroot Starch,F
+SES,Sesame Seeds,F
+MIL,Millet,F
+SAN,Sandalwood,X
+MAR,Marble,X
+KER,Kerosene,X
+DAT,Dates,F
