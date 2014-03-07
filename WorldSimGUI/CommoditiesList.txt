@@ -47,7 +47,7 @@ PPR,Paper Products,X
 MVC,Motor Vehicles,X
 FTW,Footwear,X
 LUM,Lumber,X
-RXS,Pharmaceuticals,x
+RXS,Pharmaceuticals,X
 MET,Metals,X
 OIL,Oil,O
 SFS,Shellfish,F

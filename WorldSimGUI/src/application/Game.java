@@ -63,6 +63,9 @@ public class Game implements Serializable{
 	public ArrayList<Player> getPlayers(){
 		return allPlayers;
 	}
+	public Hashtable<String,Commodity> getCommodities(){
+		return allCommodities;
+	}
 
 	public void addPlayer(Player p) {
 		allPlayers.add(p);
@@ -121,16 +124,20 @@ public class Game implements Serializable{
 				newNation.setName(values[0]);
 				newNation.setGNP(Integer.parseInt(values[1]));
 				
-				for(int i=2;i<=values.length-3;i++){
+				for(int i=2;i<values.length;i++){
 					String tempCommod = values[i];
-					Commodity c = allCommodities.get(tempCommod.substring(1, 4));
-					boolean isExport = tempCommod.substring(0, 1).equalsIgnoreCase("E");
-					boolean isImport = tempCommod.substring(0, 1).equalsIgnoreCase("I");
-					if(c!=null && (isExport || isImport)){
-						if(isExport)
-							newNation.addExport(c);
-						else if(isImport)
-							newNation.addImport(c);
+					if(tempCommod.length()==4){
+						Commodity c = allCommodities.get(tempCommod.substring(1, 4).toUpperCase());
+						boolean isExport = tempCommod.substring(0, 1).equalsIgnoreCase("E");
+						boolean isImport = tempCommod.substring(0, 1).equalsIgnoreCase("I");
+						if(c!=null && (isExport || isImport)){
+							if(isExport)
+								newNation.addAvailableExport(c);
+							else if(isImport)
+								newNation.addRequiredImport(c);
+						}
+						else
+							System.out.println(values[0] + " invalid commodity: " + values[i]);
 					}
 					else
 						System.out.println(values[0] + " invalid commodity: " + values[i]);
@@ -159,12 +166,14 @@ public class Game implements Serializable{
 				values = line.split(",");
 				if(!allCommodities.containsKey(values[0])){
 					Commodity newCommod = null;
-					if(values[2].equals("F"))
+					if(values[2].equalsIgnoreCase("F"))
 						newCommod = new Commodity(values[1], CommodityType.Food);
-					else if(values[2].equals("O"))
+					else if(values[2].equalsIgnoreCase("O"))
 						newCommod = new Commodity(values[1], CommodityType.Oil);
-					else if(values[2].equals("X"))
+					else if(values[2].equalsIgnoreCase("X"))
 						newCommod = new Commodity(values[1], CommodityType.Other);
+					else
+						System.out.println("Error importing commodity: " + line);
 				
 					allCommodities.put(values[0], newCommod);
 				}

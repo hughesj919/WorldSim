@@ -57,6 +57,12 @@ public class Main extends Application {
 				System.out.println("Loaded Game: " + lastGame);
 
 			
+			Trade newTrade = new Trade(Main.currGame.getCommodities().get("FRU"),
+					Main.currGame.getNations().get(4),
+					Main.currGame.getNations().get(56),
+					200.0);
+			
+			UICont.obsNationImports.add(newTrade);
 			
 			Scene scene = new Scene(page);
 		//	Color c = Color.rgb((int)Color.BLACK.getRed(),(int)Color.BLACK.getGreen(), (int)Color.BLACK.getBlue(), .90);

@@ -31,6 +31,18 @@ public class Commodity implements Serializable{
 	public CommodityType getType(){
 		return type;
 	}
+	
+	public String getTypeString(){
+		if(type == CommodityType.Food)
+			return "Food";
+		else if(type == CommodityType.Oil)
+			return "Oil";
+		else if(type == CommodityType.Other)
+			return "Other";
+		else
+			return "";
+	}
+	
 	public void setType(CommodityType t){
 		type = t;
 	}

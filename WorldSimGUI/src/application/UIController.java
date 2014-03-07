@@ -108,7 +108,11 @@ public class UIController {
 	private ObservableList<Nation> obsInUseNations;
 	private ObservableList<Nation> obsAvailableNations;
 	private ObservableList<Player> obsNationPlayers;
-
+	private ObservableList<Commodity> obsRequiredImports;
+	private ObservableList<Commodity> obsAvailableExports;
+	public ObservableList<Trade> obsNationImports;
+	
+	
 	@FXML
 	private Button nationButton;
 
@@ -156,6 +160,27 @@ public class UIController {
 
 	@FXML
 	private TableColumn<Player, String> nationPlayerPositionColumn;
+	
+	@FXML
+    private ListView<Commodity> nationRequiredImports;
+	
+	@FXML
+    private ListView<Commodity> nationAvailableExports;
+	
+	@FXML
+    private TableView<Trade> nationImportTable;
+	
+	@FXML
+    private TableColumn<Trade, String> nationImportAmountColumn;
+
+    @FXML
+    private TableColumn<Trade, String> nationImportNameColumn;
+
+    @FXML
+    private TableColumn<Trade, String> nationImportNationColumn;
+
+    @FXML
+    private TableColumn<Trade, String> nationImportTypeColumn;
 
 	@FXML
 	public void nationButtonClick(ActionEvent event) {
@@ -172,8 +197,9 @@ public class UIController {
 
 		Nation n = nationsInUseList.getSelectionModel().getSelectedItem();
 		if (n != null) {
-			obsNationPlayers.clear();
 			obsNationPlayers.setAll(n.getTeam());
+			obsAvailableExports.setAll(n.getAvailableExports());
+			obsRequiredImports.setAll(n.getRequiredImports());
 
 			titleLabel.setText(n.getName().toLowerCase() + " | "
 					+ Double.toString(n.getGnp()));
@@ -205,6 +231,33 @@ public class UIController {
 			obsInUseNations.add(n);
 			// obsNations.
 		}
+	}
+	
+	public void initializeNationTab(){
+		obsNationPlayers = FXCollections.observableArrayList();
+		obsNationImports = FXCollections.observableArrayList();
+		obsInUseNations = FXCollections.observableArrayList();
+		obsAvailableNations = FXCollections.observableArrayList();
+		obsRequiredImports = FXCollections.observableArrayList();
+		obsAvailableExports = FXCollections.observableArrayList();
+		
+		nationPlayerNameColumn.setCellValueFactory(new PropertyValueFactory<Player, String>("name"));
+		nationPlayerPositionColumn.setCellValueFactory(new PropertyValueFactory<Player, String>("typeString"));
+		nationImportNationColumn.setCellValueFactory(new PropertyValueFactory<Trade, String>("exporter"));
+		nationImportNameColumn.setCellValueFactory(new PropertyValueFactory<Trade, String>("commodity"));
+		nationImportTypeColumn.setCellValueFactory(new PropertyValueFactory<Trade, String>("commodityType"));
+		nationImportAmountColumn.setCellValueFactory(new PropertyValueFactory<Trade,String>("amount"));
+		
+		nationsInUseList.setItems(obsInUseNations);
+		nationsAvailableList.setItems(obsAvailableNations);
+		nationPlayerTable.setItems(obsNationPlayers);
+		nationAvailableExports.setItems(obsAvailableExports);
+		nationRequiredImports.setItems(obsRequiredImports);
+		
+		//Trade newTrade = new Trade();
+		//obsNationImports.add(newTrade);
+		nationImportTable.setItems(obsNationImports);	
+		
 	}
 
 	/***********************************************
@@ -396,7 +449,7 @@ public class UIController {
 	@FXML
 	private Button budgetSaveButton;
 
-	ObservableList<PieChart.Data> obsPieChartData;
+	private ObservableList<PieChart.Data> obsPieChartData;
 
 	@FXML
 	public void budgetButtonClick(ActionEvent event) {
@@ -453,12 +506,9 @@ public class UIController {
 	public void initialize() {
 		System.out.println("Initializing UI...");
 
-		obsInUseNations = FXCollections.observableArrayList();
-		obsAvailableNations = FXCollections.observableArrayList();
 		obsPlayers = FXCollections.observableArrayList();
 		obsAllNations = FXCollections.observableArrayList();
 		obsGames = FXCollections.observableArrayList();
-		obsNationPlayers = FXCollections.observableArrayList();
 		obsPieChartData = FXCollections.observableArrayList(new PieChart.Data(
 				"Unallocated", 100));
 		obsRoundData = FXCollections.observableArrayList();
@@ -472,17 +522,10 @@ public class UIController {
 				"Chief of State", "Foreign Minister"));
 		// playerPosition.setItems();
 
-		nationsInUseList.setItems(obsInUseNations);
-		nationsAvailableList.setItems(obsAvailableNations);
+		
 		playersList.setItems(obsPlayers);
 		playerNation.setItems(obsAllNations);
-		nationPlayerTable.setItems(obsNationPlayers);
-		nationPlayerNameColumn
-				.setCellValueFactory(new PropertyValueFactory<Player, String>(
-						"name"));
-		nationPlayerPositionColumn
-				.setCellValueFactory(new PropertyValueFactory<Player, String>(
-						"typeString"));
+		initializeNationTab();
 		leaderboardChart.setTitle("GNP Per Round");
 		leaderboardChart.setData(obsRoundData);
 		final XYChart.Series<Number, Number> series = new XYChart.Series<>();

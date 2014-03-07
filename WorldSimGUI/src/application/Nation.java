@@ -12,15 +12,15 @@ public class Nation implements Serializable{
 	private double nuclearForces;
 	private String name;
 	private ArrayList<Commodity> availableExports;
-	private ArrayList<Commodity> exports;
-	private ArrayList<Commodity> imports;
+	private ArrayList<Commodity> requiredImports;
+	private ArrayList<Trade> currentTrades;
 	private ArrayList<Player> team;
 
 	public Nation(int num) {
 		id = num;
-		exports = new ArrayList<Commodity>();
-		imports = new ArrayList<Commodity>();
+		currentTrades = new ArrayList<Trade>();
 		availableExports = new ArrayList<Commodity>();
+		requiredImports = new ArrayList<Commodity>();
 		team = new ArrayList<Player>();
 		gnp = 0;
 		conventionalForces = 0;
@@ -43,13 +43,17 @@ public class Nation implements Serializable{
 	public void setName(String n) {
 		name = n;
 	}
-
-	public void addExport(Commodity c) {
-		exports.add(c);
+	
+	public void addAvailableExport(Commodity c){
+		availableExports.add(c);
+	}
+	
+	public void addRequiredImport(Commodity c){
+		requiredImports.add(c);
 	}
 
-	public void addImport(Commodity c) {
-		imports.add(c);
+	public void addTrade(Trade t) {
+		currentTrades.add(t);
 	}
 	
 	public void addPlayer(Player p){
@@ -86,5 +90,16 @@ public class Nation implements Serializable{
 	
 	public ArrayList<Player> getTeam(){
 		return team;
+	}
+	
+	public ArrayList<Commodity> getRequiredImports(){
+		return requiredImports;
+	}
+	
+	public ArrayList<Commodity> getAvailableExports(){
+		return availableExports;
+	}
+	public ArrayList<Trade> getTrades(){
+		return currentTrades;
 	}
 }
