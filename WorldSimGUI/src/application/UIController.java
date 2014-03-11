@@ -1,7 +1,10 @@
 package application;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,19 +16,26 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Path;
+import javafx.util.Callback;
 
 public class UIController {
 
@@ -111,8 +121,8 @@ public class UIController {
 	private ObservableList<Commodity> obsRequiredImports;
 	private ObservableList<Commodity> obsAvailableExports;
 	public ObservableList<Trade> obsNationImports;
-	
-	
+	private ObservableList<Commodity> obsCommodities;
+
 	@FXML
 	private Button nationButton;
 
@@ -125,26 +135,29 @@ public class UIController {
 	@FXML
 	private Label titleLabel;
 	
-    @FXML
-    private Label nationConForcesLabel;
+	@FXML
+	private Accordion nationAccordian;
 
-    @FXML
-    private Label nationCurrGDPLabel;
+	@FXML
+	private Label nationConForcesLabel;
 
-    @FXML
-    private Label nationExportAmRemLabel;
+	@FXML
+	private Label nationCurrGDPLabel;
 
-    @FXML
-    private Label nationImportRemLabel;
+	@FXML
+	private Label nationExportAmRemLabel;
 
-    @FXML
-    private Label nationMaxExport;
+	@FXML
+	private Label nationImportRemLabel;
 
-    @FXML
-    private Label nationMaxExportLabel;
+	@FXML
+	private Label nationMaxExport;
 
-    @FXML
-    private Label nationNucForcesLabel;
+	@FXML
+	private Label nationMaxExportLabel;
+
+	@FXML
+	private Label nationNucForcesLabel;
 
 	@FXML
 	private ListView<Nation> nationsAvailableList;
@@ -160,27 +173,28 @@ public class UIController {
 
 	@FXML
 	private TableColumn<Player, String> nationPlayerPositionColumn;
-	
-	@FXML
-    private ListView<Commodity> nationRequiredImports;
-	
-	@FXML
-    private ListView<Commodity> nationAvailableExports;
-	
-	@FXML
-    private TableView<Trade> nationImportTable;
-	
-	@FXML
-    private TableColumn<Trade, String> nationImportAmountColumn;
 
-    @FXML
-    private TableColumn<Trade, String> nationImportNameColumn;
+	@FXML
+	private ListView<Commodity> nationRequiredImports;
 
-    @FXML
-    private TableColumn<Trade, String> nationImportNationColumn;
+	@FXML
+	private ListView<Commodity> nationAvailableExports;
 
-    @FXML
-    private TableColumn<Trade, String> nationImportTypeColumn;
+	@FXML
+	private TableView<Trade> nationImportTable;
+
+	@FXML
+	private TableColumn<Trade, BigDecimal> nationImportAmountColumn;
+
+	@FXML
+	private TableColumn<Trade, Commodity> nationImportNameColumn;
+
+	@FXML
+	private TableColumn<Trade, Nation> nationImportNationColumn;
+
+	@FXML
+	private TableColumn<Trade, String> nationImportTypeColumn;
+	
 
 	@FXML
 	public void nationButtonClick(ActionEvent event) {
@@ -197,14 +211,22 @@ public class UIController {
 
 		Nation n = nationsInUseList.getSelectionModel().getSelectedItem();
 		if (n != null) {
-			obsNationPlayers.setAll(n.getTeam());
-			obsAvailableExports.setAll(n.getAvailableExports());
-			obsRequiredImports.setAll(n.getRequiredImports());
+			if(n.getTeam()!=null)
+				obsNationPlayers.setAll(n.getTeam());
+			if(n.getAvailableExports()!=null)
+				obsAvailableExports.setAll(n.getAvailableExports());
+			if(n.getRequiredImports()!=null)
+				obsRequiredImports.setAll(n.getRequiredImports());
+			if(n.getTrades()!=null)
+					obsNationImports.setAll(n.getTrades());
+			if(!obsNationImports.contains(null))
+				obsNationImports.add(obsNationImports.size(), null);
 
 			titleLabel.setText(n.getName().toLowerCase() + " | "
-					+ Double.toString(n.getGnp()));
-			
-			nationCurrGDPLabel.setText(n.getGnpString());
+					+ NumberFormat.getCurrencyInstance().format(n.getGnp()));
+
+			nationCurrGDPLabel.setText(NumberFormat.getCurrencyInstance()
+					.format(n.getGnp()));
 
 			/*
 			 * playerName.setText(p.getName());
@@ -232,32 +254,113 @@ public class UIController {
 			// obsNations.
 		}
 	}
+
+	/*@FXML
+	void nationImportTradeNationEdit(CellEditEvent<Trade, Nation> event) {
+		
+		boolean test = true;
+		Nation n = event.getNewValue();
+		if (n != null) {
+			obsCommodities.removeAll(obsCommodities);
+			obsCommodities.setAll(n.getAvailableExports());
 	
-	public void initializeNationTab(){
+		}
+	}*/
+	
+	 @FXML
+	 void nationImportNameColumnEditStart(CellEditEvent<Trade, Commodity> event) {
+		 Trade t = nationImportTable.getSelectionModel().getSelectedItem();
+	
+	//	 if(n!=null){
+		//	 obsCommodities.setAll(n.getAvailableExports());
+		// }
+	 }
+
+	public void initializeNationTab() {
+		
+		nationAccordian.setExpandedPane(nationsInUsePane);
+		
 		obsNationPlayers = FXCollections.observableArrayList();
 		obsNationImports = FXCollections.observableArrayList();
 		obsInUseNations = FXCollections.observableArrayList();
 		obsAvailableNations = FXCollections.observableArrayList();
 		obsRequiredImports = FXCollections.observableArrayList();
 		obsAvailableExports = FXCollections.observableArrayList();
+		obsCommodities = FXCollections.observableArrayList();
+
+		nationPlayerNameColumn
+				.setCellValueFactory(new PropertyValueFactory<Player, String>(
+						"name"));
+		nationPlayerPositionColumn
+				.setCellValueFactory(new PropertyValueFactory<Player, String>(
+						"typeString"));
+		nationImportNationColumn
+				.setCellValueFactory(new PropertyValueFactory<Trade, Nation>(
+						"exporter"));
+		nationImportNationColumn.setCellFactory(ComboBoxTableCell
+				.<Trade, Nation> forTableColumn(obsInUseNations));
+
+		// EventHandler<TableColumn.CellEditEvent<Trade, Nation>> e =
+		// nationImportNationColumn
+		// .getOnEditCommit();
+
+		nationImportNameColumn
+				.setCellValueFactory(new PropertyValueFactory<Trade, Commodity>(
+						"commodity"));
+		//nationImportNameColumn.setCellFactory(ComboBoxTableCell
+			//	.<Trade, Commodity> forTableColumn(obsCommodities));
 		
-		nationPlayerNameColumn.setCellValueFactory(new PropertyValueFactory<Player, String>("name"));
-		nationPlayerPositionColumn.setCellValueFactory(new PropertyValueFactory<Player, String>("typeString"));
-		nationImportNationColumn.setCellValueFactory(new PropertyValueFactory<Trade, String>("exporter"));
-		nationImportNameColumn.setCellValueFactory(new PropertyValueFactory<Trade, String>("commodity"));
-		nationImportTypeColumn.setCellValueFactory(new PropertyValueFactory<Trade, String>("commodityType"));
-		nationImportAmountColumn.setCellValueFactory(new PropertyValueFactory<Trade,String>("amount"));
+		nationImportNameColumn.setCellFactory(new Callback<TableColumn<Trade,Commodity>,TableCell<Trade,Commodity>>(){
+			@Override
+			public TableCell<Trade, Commodity> call(
+					TableColumn<Trade, Commodity> param) {				
+				return new ComboBoxTableCell<Trade, Commodity>(){				
+					@Override public void startEdit(){
+						super.startEdit();
+						Trade t = null;
+						if(this.getIndex() < this.getTableView().getItems().size()){
+							t = this.getTableView().getItems().get(this.getIndex());
+							if(t!=null){
+								this.getItems().setAll(t.getExporter().getAvailableExports());
+							}else{
+								this.getItems().clear();
+							}
+						}
+						
+					}
+				};
+			}
+		});
+		
+		
+
+		nationImportTypeColumn
+				.setCellValueFactory(new PropertyValueFactory<Trade, String>(
+						"commodityType"));
+		nationImportAmountColumn
+				.setCellValueFactory(new PropertyValueFactory<Trade, BigDecimal>(
+						"amount"));
+		
+		nationImportAmountColumn.setCellFactory(new Callback<TableColumn<Trade,BigDecimal>,TableCell<Trade,BigDecimal>>(){
+			@Override
+			public TableCell<Trade, BigDecimal> call(TableColumn<Trade, BigDecimal> arg0) {
+				return new CurrencyFieldTableCell<Trade,BigDecimal>();
+			}
+		});
+		
 		
 		nationsInUseList.setItems(obsInUseNations);
 		nationsAvailableList.setItems(obsAvailableNations);
 		nationPlayerTable.setItems(obsNationPlayers);
 		nationAvailableExports.setItems(obsAvailableExports);
 		nationRequiredImports.setItems(obsRequiredImports);
+
 		
-		//Trade newTrade = new Trade();
-		//obsNationImports.add(newTrade);
-		nationImportTable.setItems(obsNationImports);	
 		
+		nationImportTable.setItems(obsNationImports);
+		nationImportTable
+				.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
 	}
 
 	/***********************************************
@@ -466,6 +569,10 @@ public class UIController {
 		obsPieChartData.add(new PieChart.Data("Allocated", 75));
 		obsPieChartData.remove(0);
 		obsPieChartData.add(new PieChart.Data("UnAllocated", 25));
+		
+		Trade t = obsNationImports.get(0);
+		Nation n = t.getExporter();
+	
 	}
 
 	/***********************************************
@@ -522,7 +629,6 @@ public class UIController {
 				"Chief of State", "Foreign Minister"));
 		// playerPosition.setItems();
 
-		
 		playersList.setItems(obsPlayers);
 		playerNation.setItems(obsAllNations);
 		initializeNationTab();

@@ -122,7 +122,7 @@ public class Game implements Serializable{
 				values = line.split(",");
 				Nation newNation = new Nation(id);
 				newNation.setName(values[0]);
-				newNation.setGNP(Integer.parseInt(values[1]));
+				newNation.setGNP(values[1]);
 				
 				for(int i=2;i<values.length;i++){
 					String tempCommod = values[i];

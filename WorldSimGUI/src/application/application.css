@@ -1,0 +1,11 @@
+.table-row-cell:empty .table-cell {
+    -fx-border-width: 0px;
+}
+
+.table-row-cell:empty {
+    -fx-background-color: null;
+}
+
+.tab-content-area {
+    -fx-background-color: null;
+}
