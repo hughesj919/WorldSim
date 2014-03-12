@@ -1,29 +1,41 @@
 package application;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public class Trade {
+public class Trade implements Serializable{
 
+	private static final long serialVersionUID = 1622278305076421552L;
 	private SimpleObjectProperty<Commodity> c;
 	private SimpleObjectProperty<Nation> importer;
 	private SimpleObjectProperty<Nation> exporter;
 	private SimpleObjectProperty<BigDecimal> amount;
+	private SimpleStringProperty type;
 
 	public Trade(Commodity com, Nation e, Nation i, String amt) {
-		c = new SimpleObjectProperty<Commodity>(com);
+		
 		exporter = new SimpleObjectProperty<Nation>(e);
 		importer = new SimpleObjectProperty<Nation>(i);
 		BigDecimal newAmount = new BigDecimal(amt);
 		amount = new SimpleObjectProperty<BigDecimal>(newAmount);
+		type = new SimpleStringProperty(com.getTypeString());
+		
+		//Override the set method to set type every time the commodity is set
+		c = new SimpleObjectProperty<Commodity>(com){
+			@Override public void set(Commodity newCommod){
+				super.set(newCommod);
+				type.set(newCommod.getTypeString());
+			}
+		};
+		
 	}
 
 	public void setCommodity(Commodity com) {
 		c.set(com);
+		setType(c.get().getTypeString());
 	}
 
 	public void setExporter(Nation e) {
@@ -33,6 +45,10 @@ public class Trade {
 	public void setImporter(Nation i) {
 		importer.set(i);
 	}
+	
+	private void setType(String t){
+		type.set(t);
+	}
 
 	public void setAmount(String amt) {
 		BigDecimal newAmount = new BigDecimal(amt);
@@ -41,10 +57,6 @@ public class Trade {
 
 	public Commodity getCommodity() {
 		return c.get();
-	}
-
-	public String getCommodityType() {
-		return c.get().getTypeString();
 	}
 
 	public Nation getExporter() {
@@ -77,6 +89,10 @@ public class Trade {
 	
 	public SimpleObjectProperty <Commodity> commodityProperty(){
 		return c;
+	}
+	
+	public SimpleStringProperty typeProperty() {
+		return type;
 	}
 	
 }

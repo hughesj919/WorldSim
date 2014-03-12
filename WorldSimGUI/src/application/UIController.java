@@ -125,6 +125,9 @@ public class UIController {
 
 	@FXML
 	private Button nationButton;
+	
+	 @FXML
+	 private Button nationSaveButton;
 
 	@FXML
 	private TitledPane nationPane;
@@ -205,6 +208,18 @@ public class UIController {
 		nationPane.setVisible(true);
 
 	}
+	
+	@FXML
+    void nationSaveButtonClick(ActionEvent event) {
+		
+		for(Trade t:obsNationImports){
+			if(!Main.currNation.getTrades().contains(t)){
+				Main.currNation.getTrades().add(t);
+				t.getExporter().getTrades().add(t);
+			}
+		}
+		Main.currGame.saveGame();
+    }
 
 	@FXML
 	void nationsInUseListMouseClick(MouseEvent event) {
@@ -267,18 +282,19 @@ public class UIController {
 		}
 	}*/
 	
-	 @FXML
+	/* @FXML
 	 void nationImportNameColumnEditStart(CellEditEvent<Trade, Commodity> event) {
 		 Trade t = nationImportTable.getSelectionModel().getSelectedItem();
 	
-	//	 if(n!=null){
-		//	 obsCommodities.setAll(n.getAvailableExports());
-		// }
-	 }
+		 if(n!=null){
+			 obsCommodities.setAll(n.getAvailableExports());
+		 }
+	 }*/
 
 	public void initializeNationTab() {
 		
 		nationAccordian.setExpandedPane(nationsInUsePane);
+		
 		
 		obsNationPlayers = FXCollections.observableArrayList();
 		obsNationImports = FXCollections.observableArrayList();
@@ -297,8 +313,40 @@ public class UIController {
 		nationImportNationColumn
 				.setCellValueFactory(new PropertyValueFactory<Trade, Nation>(
 						"exporter"));
-		nationImportNationColumn.setCellFactory(ComboBoxTableCell
-				.<Trade, Nation> forTableColumn(obsInUseNations));
+		//nationImportNationColumn.setCellFactory(ComboBoxTableCell
+			//	.<Trade, Nation> forTableColumn(obsInUseNations));
+		nationImportNationColumn.setCellFactory(new Callback<TableColumn<Trade,Nation>,TableCell<Trade,Nation>>(){
+			@Override
+			public TableCell<Trade, Nation> call(
+					TableColumn<Trade, Nation> param) {				
+				return new ComboBoxTableCell<Trade, Nation>(obsInUseNations){	
+					@Override public void updateItem(Nation n, boolean empty){
+						//send false because we really have no empty cells, blank cells should be changeable
+						super.updateItem(n, false);
+					}
+					
+					
+					@Override public void commitEdit(Nation n){
+						super.commitEdit(n);
+						Trade t = null;
+					
+						if(this.getIndex() < this.getTableView().getItems().size()){
+							t = this.getTableView().getItems().get(this.getIndex());
+							if(t == null){
+								Trade newTrade = new Trade(n.getAvailableExports().get(0), n, Main.currNation, "0");
+								obsNationImports.remove(null);
+								obsNationImports.add(newTrade);
+								obsNationImports.add(null);
+								nationImportTable.getSelectionModel().select(this.getIndex());
+							}else{  //if the nation changes, we need to reset the whole trade
+								t.setExporter(n);
+								t.setCommodity(n.getAvailableExports().get(0));
+							}
+						}						
+					}
+				};
+			}
+		});
 
 		// EventHandler<TableColumn.CellEditEvent<Trade, Nation>> e =
 		// nationImportNationColumn
@@ -323,10 +371,16 @@ public class UIController {
 							if(t!=null){
 								this.getItems().setAll(t.getExporter().getAvailableExports());
 							}else{
-								this.getItems().clear();
+								this.getItems().clear();			
 							}
 						}
-						
+					}
+					
+					//Don't commit the edit if we have a null value. Clicking in the center of the cell does this for some reason.
+					@Override public void commitEdit(Commodity c){
+						if(c!=null){
+							super.commitEdit(c);								
+						}
 					}
 				};
 			}
@@ -336,7 +390,7 @@ public class UIController {
 
 		nationImportTypeColumn
 				.setCellValueFactory(new PropertyValueFactory<Trade, String>(
-						"commodityType"));
+						"type"));
 		nationImportAmountColumn
 				.setCellValueFactory(new PropertyValueFactory<Trade, BigDecimal>(
 						"amount"));
@@ -569,9 +623,6 @@ public class UIController {
 		obsPieChartData.add(new PieChart.Data("Allocated", 75));
 		obsPieChartData.remove(0);
 		obsPieChartData.add(new PieChart.Data("UnAllocated", 25));
-		
-		Trade t = obsNationImports.get(0);
-		Nation n = t.getExporter();
 	
 	}
 

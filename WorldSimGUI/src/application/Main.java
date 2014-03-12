@@ -50,11 +50,11 @@ public class Main extends Application {
 			} else
 				System.out.println("Loaded Game: " + lastGame);
 
-			Trade newTrade = new Trade(Main.currGame.getCommodities()
+			/*Trade newTrade = new Trade(Main.currGame.getCommodities()
 					.get("FRU"), Main.currGame.getNations().get(4),
 					Main.currGame.getNations().get(56), "200.00");
 
-			UICont.obsNationImports.add(newTrade);
+			UICont.obsNationImports.add(newTrade);*/
 
 			Scene scene = new Scene(page);
 			scene.getStylesheets().add(
