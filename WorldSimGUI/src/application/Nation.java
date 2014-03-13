@@ -14,12 +14,10 @@ public class Nation implements Serializable {
 	private String name;
 	private ArrayList<Commodity> availableExports;
 	private ArrayList<Commodity> requiredImports;
-	private ArrayList<Trade> currentTrades;
 	private ArrayList<Player> team;
 
 	public Nation(int num) {
 		id = num;
-		currentTrades = new ArrayList<Trade>();
 		availableExports = new ArrayList<Commodity>();
 		requiredImports = new ArrayList<Commodity>();
 		team = new ArrayList<Player>();
@@ -51,10 +49,6 @@ public class Nation implements Serializable {
 
 	public void addRequiredImport(Commodity c) {
 		requiredImports.add(c);
-	}
-
-	public void addTrade(Trade t) {
-		currentTrades.add(t);
 	}
 
 	public void addPlayer(Player p) {
@@ -99,9 +93,5 @@ public class Nation implements Serializable {
 
 	public ArrayList<Commodity> getAvailableExports() {
 		return availableExports;
-	}
-
-	public ArrayList<Trade> getTrades() {
-		return currentTrades;
 	}
 }

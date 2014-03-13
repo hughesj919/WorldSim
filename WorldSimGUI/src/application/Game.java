@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import javafx.scene.Node;
+
 public class Game implements Serializable{
 
 
@@ -19,11 +21,13 @@ public class Game implements Serializable{
 	private Hashtable<String,Commodity> allCommodities;
 	private ArrayList<Player> allPlayers;
 	private ArrayList<Nation> availableNations;
+	private ArrayList<TradeData> currentTrades;
 	private ArrayList<Round> allRounds;
 	
 	public Game(String n) {
 		name = n;
 		currRound = 1;
+		currentTrades = new ArrayList<TradeData>();
 		availableNations = new ArrayList<Nation>();
 		allPlayers = new ArrayList<Player>();
 		allRounds = new ArrayList<Round>();
@@ -65,6 +69,10 @@ public class Game implements Serializable{
 	}
 	public Hashtable<String,Commodity> getCommodities(){
 		return allCommodities;
+	}	
+
+	public ArrayList<TradeData>  getTrades() {
+		return currentTrades;
 	}
 
 	public void addPlayer(Player p) {
@@ -73,6 +81,14 @@ public class Game implements Serializable{
 	
 	public void removePlayer(Player p){
 		allPlayers.remove(p);
+	}
+	
+	public void addTrade(TradeData t) {
+		currentTrades.add(t);
+	}
+	
+	public void removeTrade(TradeData t) {
+		currentTrades.remove(t);
 	}
 	
 	public boolean saveGame(String filename){
@@ -185,5 +201,6 @@ public class Game implements Serializable{
 		}
 		
 	}
+
 	
 }

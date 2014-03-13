@@ -272,7 +272,7 @@
                       <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                           <children>
-                            <TitledPane animated="false" collapsible="false" layoutX="334.0" layoutY="281.0" prefHeight="319.0" prefWidth="454.0" text="Commodities">
+                            <TitledPane animated="false" collapsible="false" layoutX="334.0" layoutY="281.0" prefHeight="319.0" prefWidth="454.0" text="Trades">
                               <content>
                                 <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: null;">
                                   <children>
@@ -293,8 +293,8 @@
                                               <children>
                                                 <TableView fx:id="nationImportTable" editable="true" prefHeight="262.0" prefWidth="377.0" style="-fx-background-color: null;" tableMenuButtonVisible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                   <columns>
-                                                    <TableColumn maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="95.0" text="Nation" fx:id="nationImportNationColumn" />
-                                                    <TableColumn maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="102.0" text="Name" fx:id="nationImportNameColumn" />
+                                                    <TableColumn maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="90.0" text="Nation" fx:id="nationImportNationColumn" />
+                                                    <TableColumn maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="90.0" text="Name" fx:id="nationImportNameColumn" />
                                                     <TableColumn maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="90.0" text="Type" fx:id="nationImportTypeColumn" />
                                                     <TableColumn maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="90.0" text="Amount" fx:id="nationImportAmountColumn" />
                                                   </columns>
@@ -314,14 +314,14 @@
                                         </Tab>
                                         <Tab text="Current Exports">
                                           <content>
-                                            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: purple;">
+                                            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: null;">
                                               <children>
-                                                <TableView editable="true" prefHeight="262.0" prefWidth="377.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                <TableView fx:id="nationExportTable" editable="false" prefHeight="262.0" prefWidth="377.0" style="-fx-background-color: null;" tableMenuButtonVisible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                   <columns>
-                                                    <TableColumn maxWidth="5000.0" minWidth="0.0" prefWidth="95.0" text="Nation" />
-                                                    <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="102.0" text="Name" />
-                                                    <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="92.0" text="Type" />
-                                                    <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="89.0" text="Amount" />
+                                                    <TableColumn maxWidth="5000.0" minWidth="80.0" prefWidth="90.0" text="Nation" fx:id="nationExportNationColumn" />
+                                                    <TableColumn maxWidth="5000.0" minWidth="80.0" prefWidth="90.0" text="Name" fx:id="nationExportNameColumn" />
+                                                    <TableColumn maxWidth="5000.0" minWidth="80.0" prefWidth="90.0" text="Type" fx:id="nationExportTypeColumn" />
+                                                    <TableColumn maxWidth="5000.0" minWidth="80.0" prefWidth="90.0" text="Amount" fx:id="nationExportAmountColumn" />
                                                   </columns>
                                                 </TableView>
                                               </children>
@@ -357,7 +357,7 @@
                                         <Label text="Current GDP" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                                         <Label text="Starting GDP" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                                         <Label text="Import Amount Remaining" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                                        <Label fx:id="nationMaxExport" text="Max Export Amount" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                        <Label id="nationMaxExport" text="Max Export Amount" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                                         <Label text="Export Amount Remaining" GridPane.columnIndex="0" GridPane.rowIndex="4" />
                                         <Label text="Conventional Forces" GridPane.columnIndex="0" GridPane.rowIndex="5" />
                                         <Label text="Nuclear Forces" GridPane.columnIndex="0" GridPane.rowIndex="6" />
@@ -414,7 +414,7 @@
                                 </TitledPane>
                               </panes>
                             </Accordion>
-                            <Button layoutX="751.0" layoutY="612.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="75.0" text="Save" />
+                            <Button fx:id="nationSaveButton" layoutX="751.0" layoutY="612.0" mnemonicParsing="false" onAction="#nationSaveButtonClick" prefHeight="26.0" prefWidth="75.0" text="Save" />
                           </children>
                         </AnchorPane>
                       </content>
