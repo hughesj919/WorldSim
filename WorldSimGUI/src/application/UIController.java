@@ -1,15 +1,19 @@
 package application;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
@@ -21,6 +25,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
@@ -34,6 +39,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Path;
 import javafx.util.Callback;
 
@@ -134,6 +140,18 @@ public class UIController {
 
 	@FXML
 	private TitledPane nationsInUsePane;
+	
+	@FXML
+	private TitledPane nationInfoPane;
+	
+	@FXML
+	private TitledPane nationTeamMemberPane;
+	 
+	@FXML
+	private TitledPane nationPoliticalPane;
+	 
+	@FXML
+	private TitledPane nationTradePane;
 
 	@FXML
 	private Label titleLabel;
@@ -151,10 +169,19 @@ public class UIController {
 	private Label nationExportAmRemLabel;
 
 	@FXML
-	private Label nationImportRemLabel;
+	private Label nationRequiredImportsLabel;
+	
+	@FXML
+	private Label nationTotalImportsLabel;
+	
+	@FXML
+	private Label nationTotalExportsLabel;
 
 	@FXML
 	private Label nationMaxExportLabel;
+
+	@FXML
+    private TextField nationMaxExportField;
 
 	@FXML
 	private Label nationNucForcesLabel;
@@ -218,7 +245,13 @@ public class UIController {
 		budgetPane.setVisible(false);
 		leaderboardPane.setVisible(false);
 		nationPane.setVisible(true);
-
+		
+		if(Main.currNation == null){
+			nationInfoPane.setDisable(true);
+			nationTeamMemberPane.setDisable(true);
+			nationPoliticalPane.setDisable(true);
+			nationTradePane.setDisable(true);
+		}
 	}
 	
 	@FXML
@@ -241,8 +274,27 @@ public class UIController {
 		if (n != null) {
 			
 			Main.currNation = n;
+			if(n.getMaxExportSet()){
+				nationTradePane.setDisable(false);
+				nationMaxExportLabel.setText(NumberFormat.getCurrencyInstance().format(n.getMaxExports()));
+				nationMaxExportLabel.setVisible(true);
+				nationMaxExportField.setVisible(false);
+			}else{
+				nationTradePane.setDisable(true);
+				nationMaxExportLabel.setVisible(false);
+				nationMaxExportField.setText(null);
+				nationMaxExportField.setVisible(true);	
+			}
+			
+			nationInfoPane.setDisable(false);
+			nationTeamMemberPane.setDisable(false);
+			nationPoliticalPane.setDisable(false);
+			
 			obsNationImports.clear();
 			obsNationExports.clear();
+			
+			BigDecimal totalImports = BigDecimal.ZERO;
+			BigDecimal totalExports = BigDecimal.ZERO;
 			if(n.getTeam()!=null)
 				obsNationPlayers.setAll(n.getTeam());
 			if(n.getAvailableExports()!=null)
@@ -254,9 +306,11 @@ public class UIController {
 						if(t.getImporter() == n){
 							Trade newTrade = new Trade(t);
 							obsNationImports.add(newTrade);
+							totalImports = totalImports.add(t.getAmount());
 						}else if(t.getExporter() == n){
 							Trade newTrade = new Trade(t);
 							obsNationExports.add(newTrade);
+							totalExports = totalExports.add(t.getAmount());
 						}
 					}
 			}
@@ -265,11 +319,14 @@ public class UIController {
 
 			titleLabel.setText(n.getName().toLowerCase() + " | "
 					+ NumberFormat.getCurrencyInstance().format(n.getGnp()));
-
 			nationCurrGDPLabel.setText(NumberFormat.getCurrencyInstance()
 					.format(n.getGnp()));
+			nationTotalImportsLabel.setText(NumberFormat.getCurrencyInstance().format(totalImports));		
+			nationTotalExportsLabel.setText(NumberFormat.getCurrencyInstance().format(totalExports));
+			nationConForcesLabel.setText(NumberFormat.getCurrencyInstance().format(n.getConventionalForcesAllocation()));
+			nationNucForcesLabel.setText(NumberFormat.getCurrencyInstance().format(n.getNuclearForcesAllocation()));
 			
-
+			clearAllocationChart();
 			/*
 			 * playerName.setText(p.getName());
 			 * playerPeriod.setText(p.getPeriodString());
@@ -296,6 +353,20 @@ public class UIController {
 			// obsNations.
 		}
 	}
+	
+	@FXML
+    void nationMaxExportFieldAction(ActionEvent event) {
+		
+		BigDecimal b = new BigDecimal(nationMaxExportField.getText());
+    	if(b!=null)
+    		if(Main.currNation.setMaxExports(b)){
+    			nationMaxExportField.setVisible(false);
+    			nationMaxExportLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getMaxExports()));
+    			nationMaxExportLabel.setVisible(true);
+    			nationTradePane.setDisable(false);
+    			nationTradePane.requestFocus();
+    	}	
+    }
 
 	/*@FXML
 	void nationImportTradeNationEdit(CellEditEvent<Trade, Nation> event) {
@@ -636,6 +707,18 @@ public class UIController {
 	 * Budget Tab
 	 ***********************************************/
 
+	
+	private ObservableList<PieChart.Data> obsPieChartData;
+	private static final PieChart.Data unallocatedPiePiece = new PieChart.Data("Unallocated Funds", 0);
+	private static final PieChart.Data basicGoodsPiePiece = new PieChart.Data("Basic Goods", 0);
+	private static PieChart.Data conForcesPiePiece = new PieChart.Data("Conventional Forces", 0);
+	private static PieChart.Data nuclearForcesPiePiece = new PieChart.Data("Nuclear Forces", 0);
+	private static PieChart.Data importsPiePiece = new PieChart.Data("Imports", 0);
+	private static PieChart.Data researchPiePiece = new PieChart.Data("Research and Development", 0);
+	private static PieChart.Data contingencyPiePiece = new PieChart.Data("Contingency Funds", 0);
+	private static PieChart.Data capitalGoodsPiePiece = new PieChart.Data("Capital Goods", 0);
+	
+	
 	@FXML
 	private TitledPane budgetPane;
 
@@ -647,9 +730,56 @@ public class UIController {
 
 	@FXML
 	private Button budgetSaveButton;
+	
+	@FXML
+	private GridPane budgetGrid;
+	
+	@FXML
+	private TextField budgetCapitalGoodsField;
 
-	private ObservableList<PieChart.Data> obsPieChartData;
+	@FXML
+	private TextField budgetConForcesField;
 
+	@FXML
+	private TextField budgetContingencyField;
+	
+	@FXML
+	private TextField budgetNucForcesField;
+	
+    @FXML
+    private TextField budgetRDField;
+    
+    @FXML
+    private TextField budgetImportsField;
+
+    @FXML
+    private TextField budgetBasicGoodsField;
+    
+    @FXML
+    private Label budgetBasicGoodsLabel;
+    
+    @FXML
+    private Label budgetBasicGoodsPercentLabel;
+    
+    @FXML
+    private Label budgetConForcesLabel;
+    
+    @FXML
+    private Label budgetConForcesPercentLabel;
+    
+    @FXML
+    private Label budgetNucForcesLabel;
+    
+    @FXML
+    private Label budgetNucForcesPercentLabel;
+    
+    @FXML
+    private Label budgetImportsLabel;
+    
+    @FXML
+    private Label budgetImportsPercentLabel;
+    
+	
 	@FXML
 	public void budgetButtonClick(ActionEvent event) {
 		gamePane.setVisible(false);
@@ -657,21 +787,147 @@ public class UIController {
 		budgetPane.setVisible(true);
 		leaderboardPane.setVisible(false);
 		nationPane.setVisible(false);
-
+		updateAllocationChart();
 	}
-
+	
 	@FXML
 	public void budgetSaveButtonClick(ActionEvent event) {
-		obsPieChartData.add(new PieChart.Data("Allocated", 75));
+		/*obsPieChartData.add(new PieChart.Data("Allocated", 75));
 		obsPieChartData.remove(0);
-		obsPieChartData.add(new PieChart.Data("UnAllocated", 25));
+		obsPieChartData.add(new PieChart.Data("UnAllocated", 25));*/
 	
+	}	
+	
+    @FXML
+    public void budgetBasicGoodsFieldAction(ActionEvent event) {
+    	BigDecimal basicGoods = new BigDecimal(budgetBasicGoodsField.getText());
+    	if(basicGoods!=null){
+    		if(Main.currNation.setBasicGoodsAllocation(basicGoods)){
+    			budgetBasicGoodsLabel.setText(NumberFormat.getCurrencyInstance().format(basicGoods));
+    			budgetBasicGoodsField.setVisible(false);
+    			budgetBasicGoodsLabel.setVisible(true);
+    			budgetBasicGoodsPercentLabel.setText(NumberFormat.getPercentInstance().format(basicGoods.divide(Main.currNation.getGnp(), 2, RoundingMode.HALF_UP)));
+    			budgetBasicGoodsPercentLabel.setVisible(true);
+    			updateAllocationChart();			
+    		}
+    	}
+    }
+    
+    @FXML
+	void budgetConForcesAction(ActionEvent event) {
+		BigDecimal conForces = new BigDecimal(budgetConForcesField.getText());
+		if(conForces!=null){
+			if(Main.currNation.setConventionalForcesAllocation(conForces)){
+				budgetConForcesLabel.setText(NumberFormat.getCurrencyInstance().format(conForces));
+				budgetConForcesField.setVisible(false);
+				budgetConForcesLabel.setVisible(true);
+				budgetConForcesPercentLabel.setText(NumberFormat.getPercentInstance().format(conForces.divide(Main.currNation.getGnp(), 2, RoundingMode.HALF_UP)));
+				budgetConForcesPercentLabel.setVisible(true);
+				updateAllocationChart();
+			}
+		}
+	}
+    
+    @FXML
+    public void budgetNucForcesFieldAction(ActionEvent event) {
+    	BigDecimal nucForces = new BigDecimal(budgetNucForcesField.getText());
+    	if(nucForces!=null){
+    		if(Main.currNation.setNuclearForcesAllocation(nucForces)){
+    			budgetNucForcesLabel.setText(NumberFormat.getCurrencyInstance().format(nucForces));
+    			budgetNucForcesField.setVisible(false);
+    			budgetNucForcesLabel.setVisible(true);
+    			budgetNucForcesPercentLabel.setText(NumberFormat.getPercentInstance().format(nucForces.divide(Main.currNation.getGnp(), 2, RoundingMode.HALF_UP)));
+    			budgetNucForcesPercentLabel.setVisible(true);
+    			updateAllocationChart();
+    		}
+    	}
+    	
+    }
+    
+    @FXML
+    public void budgetImportsFieldAction(ActionEvent event) {
+    	BigDecimal imports = new BigDecimal(budgetImportsField.getText());
+    	if(imports!=null){
+    		if(Main.currNation.setImportsAllocation(imports)){
+    			budgetImportsLabel.setText(NumberFormat.getCurrencyInstance().format(imports));
+    			budgetImportsField.setVisible(false);
+    			budgetImportsLabel.setVisible(true);
+    			budgetImportsPercentLabel.setText(NumberFormat.getPercentInstance().format(imports.divide(Main.currNation.getGnp(), 2,RoundingMode.HALF_UP)));
+    			budgetImportsPercentLabel.setVisible(true);
+    			updateAllocationChart();
+    		}
+    	}
+    }
+    
+    public void clearAllocationChart(){
+    	obsPieChartData.clear();
+    	unallocatedPiePiece.setPieValue(0);
+    	basicGoodsPiePiece.setPieValue(0);
+    	conForcesPiePiece.setPieValue(0);
+    	nuclearForcesPiePiece.setPieValue(0);
+    	importsPiePiece.setPieValue(0);
+    	researchPiePiece.setPieValue(0);
+    	contingencyPiePiece.setPieValue(0);
+    	capitalGoodsPiePiece.setPieValue(0);
+    	obsPieChartData.add(unallocatedPiePiece);	
+    }
+    
+    
+    public void updateAllocationChart(){
+    	
+    	
+    	if(Main.currNation!=null){
+    		
+    		BigDecimal totalAllocation = BigDecimal.ZERO;    		
+    		if(Main.currNation.getBasicGoodsSet()){
+    			totalAllocation = totalAllocation.add(Main.currNation.getBasicGoodsAllocation());
+   				basicGoodsPiePiece.setPieValue(Main.currNation.getBasicGoodsAllocation().doubleValue());
+   				if(!obsPieChartData.contains(basicGoodsPiePiece))
+   					obsPieChartData.add(basicGoodsPiePiece);
+    		}
+    		
+    		if(Main.currNation.getConventionalForcesSet()){
+    			totalAllocation = totalAllocation.add(Main.currNation.getConventionalForcesAllocation());
+    			conForcesPiePiece.setPieValue(Main.currNation.getConventionalForcesAllocation().doubleValue());
+    			if(!obsPieChartData.contains(conForcesPiePiece))
+    				obsPieChartData.add(conForcesPiePiece);
+    		}
+    		
+    		if(Main.currNation.getNuclearForcesSet()){
+    			totalAllocation = totalAllocation.add(Main.currNation.getNuclearForcesAllocation());
+    			nuclearForcesPiePiece.setPieValue(Main.currNation.getNuclearForcesAllocation().doubleValue());
+    			if(!obsPieChartData.contains(nuclearForcesPiePiece))
+    				obsPieChartData.add(nuclearForcesPiePiece);
+    		}
+    		
+    		if(Main.currNation.getImportsSet()){
+    			totalAllocation = totalAllocation.add(Main.currNation.getImportsAllocation());
+    			importsPiePiece.setPieValue(Main.currNation.getImportsAllocation().doubleValue());
+    			if(!obsPieChartData.contains(importsPiePiece))
+    				obsPieChartData.add(importsPiePiece);
+    		}
+    		
+    		if(totalAllocation.compareTo(Main.currNation.getGnp())<0){
+    			unallocatedPiePiece.setPieValue(Main.currNation.getGnp().subtract(totalAllocation).doubleValue());
+    		}		
+    	}
+    }
+    
+	
+	public void initializeBudgetTab(){
+	
+		obsPieChartData = FXCollections.observableArrayList();
+		obsPieChartData.add(unallocatedPiePiece);
+
+		budgetPie.setData(obsPieChartData);
+		budgetPie.setAnimated(true);
 	}
 
 	/***********************************************
 	 * Leaderboard Tab
 	 ***********************************************/
 	private ObservableList<Series<Number, Number>> obsRoundData;
+	private Hashtable <String, Series<Number,Number>> allSeries;
 
 	@FXML
 	private TitledPane leaderboardPane;
@@ -691,40 +947,25 @@ public class UIController {
 		nationPane.setVisible(false);
 
 	}
-
-	/***********************************************
-	 * Initialization/Round Advancement
-	 ***********************************************/
-	@FXML
-	private Button advanceButton;
-
-	@FXML
-	public void advanceButtonClick(ActionEvent event) {
-
+	
+	public void changeLeaderboard(){
+		
+		if(Main.currGame!=null){
+			
+			for(Nation nat:Main.currGame.getRounds().get(0).getNations()){
+				if(Main.currGame.getNation(nat.getCountryCode()).inUse()){
+					final XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
+					newSeries.setName(nat.getName());
+					newSeries.getData().add(new Data<Number, Number>(0, nat.getGnp()));
+					obsRoundData.add(newSeries);
+				}
+			}
+		}
+		
 	}
+	
+	public void initializeLeaderBoardTab(){	
 
-	public void initialize() {
-		System.out.println("Initializing UI...");
-
-		obsPlayers = FXCollections.observableArrayList();
-		obsAllNations = FXCollections.observableArrayList();
-		obsGames = FXCollections.observableArrayList();
-		obsPieChartData = FXCollections.observableArrayList(new PieChart.Data(
-				"Unallocated", 100));
-		obsRoundData = FXCollections.observableArrayList();
-
-		obsGames.setAll(Main.allGames);
-		gamesList.setItems(obsGames);
-
-		// playerNation.setItems(obsNations);
-
-		playerPosition.setItems(FXCollections.observableArrayList(
-				"Chief of State", "Foreign Minister"));
-		// playerPosition.setItems();
-
-		playersList.setItems(obsPlayers);
-		playerNation.setItems(obsAllNations);
-		initializeNationTab();
 		leaderboardChart.setTitle("GNP Per Round");
 		leaderboardChart.setData(obsRoundData);
 		final XYChart.Series<Number, Number> series = new XYChart.Series<>();
@@ -740,10 +981,7 @@ public class UIController {
 
 		obsRoundData.add(series);
 
-		// leaderboardChart.lo
-
 		// make the first series in the chart glow when you mouse over it.
-
 		Node n = series.getNode();
 		// Node n = leaderboardChart.lookup(".chart-series-line.series0");
 		if (n != null && n instanceof Path) {
@@ -764,17 +1002,39 @@ public class UIController {
 				}
 			});
 		}
+		
+		
+	}
 
-		/*
-		 * = FXCollections .observableArrayList(new PieChart.Data("Grapefruit",
-		 * 13), new PieChart.Data("Oranges", 25), new PieChart.Data( "Plums",
-		 * 10), new PieChart.Data("Pears", 22), new PieChart.Data("Apples",
-		 * 30));
-		 */
+	/***********************************************
+	 * Initialization/Round Advancement
+	 ***********************************************/
+	@FXML
+	private Button advanceButton;
 
-		budgetPie.setData(obsPieChartData);
-		budgetPie.setAnimated(true);
+	@FXML
+	public void advanceButtonClick(ActionEvent event) {
 
+	}
+
+	public void initialize() {
+		System.out.println("Initializing UI...");
+
+		obsPlayers = FXCollections.observableArrayList();
+		obsAllNations = FXCollections.observableArrayList();
+		obsGames = FXCollections.observableArrayList();
+		obsRoundData = FXCollections.observableArrayList();
+
+		obsGames.setAll(Main.allGames);
+		gamesList.setItems(obsGames);
+		playerPosition.setItems(FXCollections.observableArrayList(
+				"Chief of State", "Foreign Minister"));
+
+		playersList.setItems(obsPlayers);
+		playerNation.setItems(obsAllNations);
+		initializeNationTab();
+		initializeLeaderBoardTab();
+		initializeBudgetTab();
 		gameButtonClick(null);
 
 	}

@@ -49,6 +49,8 @@ public class Main extends Application {
 				UICont.gameButtonClick(null);
 			} else
 				System.out.println("Loaded Game: " + lastGame);
+			
+			
 
 			/*Trade newTrade = new Trade(Main.currGame.getCommodities()
 					.get("FRU"), Main.currGame.getNations().get(4),
@@ -151,6 +153,7 @@ public class Main extends Application {
 
 		UI.setAllPlayers(g.getPlayers());
 		UI.setAllNations(g.getNations());
+		UI.changeLeaderboard();
 
 	}
 

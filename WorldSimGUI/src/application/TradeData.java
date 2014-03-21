@@ -19,6 +19,22 @@ public class TradeData implements Serializable{
 		amount = amt;
 	}
 	
+	public TradeData(TradeData t){
+		c = t.c;
+		importer = t.importer;
+		exporter = t.exporter;
+		amount = t.amount;
+	}
+	
+	public static TradeData copyTradeData(TradeData t){
+		TradeData newData = new TradeData(t);
+		newData.setAmount(new BigDecimal(t.getAmount().toPlainString()));
+		newData.setCommodity(t.getCommodity());
+		newData.setExporter(Nation.copyNation(t.getExporter()));
+		newData.setImporter(Nation.copyNation(t.getImporter()));
+		return newData;
+	}
+	
 	public void setCommodity(Commodity com){
 		c = com;
 	}

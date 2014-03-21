@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
 
 import javafx.scene.Node;
@@ -17,35 +18,30 @@ public class Game implements Serializable{
 	private static final long serialVersionUID = -243860625637606695L;
 	private String name;
 	private String saveName;
-	private int currRound;
 	private Hashtable<String,Commodity> allCommodities;
 	private ArrayList<Player> allPlayers;
-	private ArrayList<Nation> availableNations;
+	private Hashtable<String, Nation> allNations;
 	private ArrayList<TradeData> currentTrades;
 	private ArrayList<Round> allRounds;
 	
 	public Game(String n) {
 		name = n;
-		currRound = 1;
 		currentTrades = new ArrayList<TradeData>();
-		availableNations = new ArrayList<Nation>();
 		allPlayers = new ArrayList<Player>();
 		allRounds = new ArrayList<Round>();
 		allCommodities = new Hashtable<String,Commodity>();
+		allNations = new Hashtable<String,Nation>();
 		importCommodities();
 		importNations();
+		initializeRounds();
 	}
 	
 	@Override public String toString(){
 		return name;
 	}
 
-	public void addNation(Nation n) {
-		availableNations.add(n);
-	}
-	
-	public void setNation(ArrayList<Nation> n) {
-		availableNations = n;
+	public void addNation(Nation n, String key) {
+		allNations.put(key, n);
 	}
 	
 	public void setSaveName(String filename){
@@ -60,19 +56,28 @@ public class Game implements Serializable{
 		return saveName;
 	}
 	
-	public ArrayList<Nation> getNations() {
-		return availableNations;
+	public ArrayList<Nation> getNations() {	
+		return new ArrayList<Nation>(allNations.values());
+	}
+	
+	public Nation getNation(String key){
+		return allNations.get(key);
 	}
 	
 	public ArrayList<Player> getPlayers(){
 		return allPlayers;
 	}
+	
 	public Hashtable<String,Commodity> getCommodities(){
 		return allCommodities;
 	}	
 
-	public ArrayList<TradeData>  getTrades() {
+	public ArrayList<TradeData> getTrades() {
 		return currentTrades;
+	}
+	
+	public ArrayList<Round> getRounds(){
+		return allRounds;
 	}
 
 	public void addPlayer(Player p) {
@@ -89,6 +94,10 @@ public class Game implements Serializable{
 	
 	public void removeTrade(TradeData t) {
 		currentTrades.remove(t);
+	}
+	
+	public int currentRound(){
+		return allRounds.size();
 	}
 	
 	public boolean saveGame(String filename){
@@ -129,18 +138,18 @@ public class Game implements Serializable{
 		try {
 			String line;
 			String[] values;
-			int id = 0;
 
 			BufferedReader br = new BufferedReader(new FileReader(
 					"NationsList.txt"));
 
 			while ((line = br.readLine()) != null) {
 				values = line.split(",");
-				Nation newNation = new Nation(id);
-				newNation.setName(values[0]);
-				newNation.setGNP(values[1]);
+				Nation newNation = new Nation();
+				newNation.setCountryCode(values[0]);
+				newNation.setName(values[1]);
+				newNation.setGNP(values[2]);
 				
-				for(int i=2;i<values.length;i++){
+				for(int i=3;i<values.length;i++){
 					String tempCommod = values[i];
 					if(tempCommod.length()==4){
 						Commodity c = allCommodities.get(tempCommod.substring(1, 4).toUpperCase());
@@ -153,14 +162,13 @@ public class Game implements Serializable{
 								newNation.addRequiredImport(c);
 						}
 						else
-							System.out.println(values[0] + " invalid commodity: " + values[i]);
+							System.out.println(values[1] + " invalid commodity: " + values[i]);
 					}
 					else
-						System.out.println(values[0] + " invalid commodity: " + values[i]);
+						System.out.println(values[1] + " invalid commodity: " + values[i]);
 				}
 
-				addNation(newNation);
-				id++;
+				addNation(newNation,values[0]);
 			}
 			
 			br.close();
@@ -201,6 +209,9 @@ public class Game implements Serializable{
 		}
 		
 	}
-
 	
+	private void initializeRounds(){
+		Round firstRound = new Round(allNations, currentTrades);
+		allRounds.add(firstRound);	
+	}
 }
