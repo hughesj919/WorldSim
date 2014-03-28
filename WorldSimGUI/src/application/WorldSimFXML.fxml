@@ -169,23 +169,231 @@
                         </AnchorPane>
                       </content>
                     </TitledPane>
-                    <TitledPane fx:id="gamePane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Game Setup" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <TitledPane fx:id="leaderboardPane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Leaderboard" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                      <content>
+                        <AnchorPane disable="false" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                          <children>
+                            <LineChart fx:id="leaderboardChart" alternativeColumnFillVisible="false" horizontalGridLinesVisible="true" prefHeight="658.0" prefWidth="1135.0" verticalGridLinesVisible="true" verticalZeroLineVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <xAxis>
+                                <NumberAxis minorTickCount="0" minorTickLength="0.0" side="BOTTOM" tickLabelsVisible="true" tickLength="10.0" tickMarkVisible="true" tickUnit="1.0" upperBound="20.0" />
+                              </xAxis>
+                              <yAxis>
+                                <NumberAxis side="LEFT" />
+                              </yAxis>
+                            </LineChart>
+                          </children>
+                        </AnchorPane>
+                      </content>
+                    </TitledPane>
+                    <TitledPane fx:id="budgetPane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Finances" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                       <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                           <children>
-                            <ComboBox id="gameName" fx:id="gamesList" layoutX="470.0" layoutY="70.0" onAction="#gamesListChange" prefHeight="21.0" prefWidth="195.0">
-                              <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                  <String fx:value="Item 1" />
-                                  <String fx:value="Item 2" />
-                                  <String fx:value="Item 3" />
-                                </FXCollections>
-                              </items>
-                            </ComboBox>
-                            <Label layoutX="365.0" layoutY="73.0" text="Current Game:" textAlignment="LEFT" />
-                            <TextField fx:id="newGameText" layoutX="472.0" layoutY="113.0" prefWidth="193.0" />
-                            <Label layoutX="365.0" layoutY="116.0" text="New Game Name:" />
-                            <Button fx:id="saveGameButton" layoutX="530.0" layoutY="173.0" mnemonicParsing="false" onAction="#saveGameButtonClick" text="Add Game" />
+                            <Button fx:id="budgetSaveButton" layoutX="199.0" layoutY="609.0" mnemonicParsing="false" onAction="#budgetSaveButtonClick" prefHeight="26.0" prefWidth="114.0" text="Save" />
+                            <TitledPane animated="false" collapsible="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="356.0" prefWidth="484.0" text="Current Budget" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="23.0">
+                              <content>
+                                <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                  <children>
+                                    <GridPane fx:id="budgetGrid" hgap="5.0" layoutX="4.0" layoutY="17.0" prefHeight="317.0" prefWidth="472.0" vgap="2.0">
+                                      <children>
+                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" GridPane.valignment="BASELINE" />
+                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" GridPane.valignment="BASELINE" />
+                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" GridPane.valignment="BASELINE" />
+                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="7" GridPane.valignment="BASELINE" />
+                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="8" GridPane.valignment="BASELINE" />
+                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" GridPane.valignment="BASELINE" />
+                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="9" GridPane.rowSpan="2147483647" GridPane.valignment="BASELINE" />
+                                        <Label text="Allocation" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                                        <Label text="Allocation %" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                                        <Label text="+/-" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                                        <Label text="Budget Section" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                        <Label text="Sub-Total" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                                        <Label text="Basic Goods" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                        <Label text="Conventional Forces" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                        <Label text="Nuclear Forces" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                        <Label text="Imports" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                        <Label text="R&amp;D" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                                        <Label text="Contingency Fund" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                                        <Label text="Capital Goods" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.rowSpan="2147483647" />
+                                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.rowSpan="2147483647" />
+                                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.rowSpan="2147483647" />
+                                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.rowSpan="2147483647" />
+                                        <TextField fx:id="budgetBasicGoodsField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetBasicGoodsFieldAction" prefWidth="65.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                                        <TextField fx:id="budgetConForcesField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetConForcesAction" prefWidth="65.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                                        <TextField fx:id="budgetNucForcesField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetNucForcesFieldAction" prefWidth="65.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                                        <TextField id="budgetReqImportsField" fx:id="budgetImportsField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetImportsFieldAction" prefWidth="65.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                                        <TextField fx:id="budgetRDField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetRDFieldAction" prefWidth="65.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+                                        <TextField fx:id="budgetContingencyField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetContingencyFieldAction" prefWidth="65.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+                                        <TextField fx:id="budgetCapitalGoodsField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetCapitalGoodsFieldAction" prefWidth="65.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="8" />
+                                        <Label fx:id="budgetBasicGoodsPercentLabel" text="" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                                        <Label fx:id="budgetConForcesPercentLabel" text="" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                                        <Label fx:id="budgetNucForcesPercentLabel" text="" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                                        <Label fx:id="budgetImportsPercentLabel" text="" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                                        <Label fx:id="budgetRDPercentLabel" text="" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+                                        <Label fx:id="budgetContingencyPercentLabel" text="" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+                                        <Label fx:id="budgetCapitalGoodsPercentLabel" text="" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="8" />
+                                        <Label fx:id="budgetPlusMinusConFundLabel" text="See Below" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+                                        <Label fx:id="budgetBasicGoodsLabel" alignment="CENTER" text="" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                                        <Label id="bu" fx:id="budgetConForcesLabel" text="" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                                        <Label fx:id="budgetNucForcesLabel" text="" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                                        <Label fx:id="budgetImportsLabel" text="" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                                        <Label fx:id="budgetRDLabel" text="" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+                                        <Label fx:id="budgetContingencyLabel" text="" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+                                        <Label fx:id="budgetCapitalGoodsLabel" text="" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="8" />
+                                        <Label id="budgetBasicGoodsSubTotalLabel" fx:id="budgetPlusMinusBasicGoodsSubTotalLabel" text="Label" visible="false" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                                        <Label fx:id="budgetPlusMinusConForcesSubTotalLabel" text="Label" visible="false" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                                        <Label fx:id="budgetPlusMinusNucForcesSubTotalLabel" text="Label" visible="false" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                                        <Label fx:id="budgetPlusMinusImportsSubTotalLabel" text="Label" visible="false" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                                        <Label fx:id="budgetPlusMinusRDSubTotalLabel" text="Label" visible="false" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+                                        <Label fx:id="budgetPlusMinusConFundSubTotalLabel" text="N/A" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+                                        <Label fx:id="budgetPlusMinusCapitalGoodsSubTotalLabel" text="Label" visible="false" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="8" />
+                                        <Label id="budgetBasicGoods" fx:id="budgetPlusMinusBasicGoodsLabel" text="Label" visible="false" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                                        <Label fx:id="budgetPlusMinusConForcesLabel" text="Label" visible="false" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                                        <Label id="budgetPlusMinusNucForcessLabel" fx:id="budgetPlusMinusNucForcesLabel" text="Label" visible="false" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                                        <Label fx:id="budgetPlusMinusImportsLabel" text="Label" visible="false" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                                        <Label fx:id="budgetPlusMinusRDLabel" text="Label" visible="false" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+                                        <Label fx:id="budgetPlusMinusCapitalGoodsLabel" text="Label" visible="false" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="8" />
+                                        <TextField id="budgetBasicGoodsField" fx:id="budgetPlusMinusBasicGoodsField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetPlusMinusBasicGoodsFieldAction" prefWidth="65.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                        <TextField id="budgetBasicGoodsField" fx:id="budgetPlusMinusConForcesField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetPlusMinusConForcesFieldAction" prefWidth="65.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                        <TextField id="budgetBasicGoodsField" fx:id="budgetPlusMinusNucForcesField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetPlusMinusNucForcesFieldAction" prefWidth="65.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                                        <TextField id="budgetBasicGoodsField" fx:id="budgetPlusMinusImportsField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetPlusMinusImportsFieldAction" prefWidth="65.0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                                        <Label text="Exports" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                                        <TextField id="budgetReqImportsField" fx:id="budgetExportsField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetExportsFieldAction" prefWidth="65.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+                                        <Label text="N/A" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+                                        <TextField id="budgetBasicGoodsField" fx:id="budgetPlusMinusExportsField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetPlusMinusExportsFieldAction" prefWidth="65.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                                        <Label id="budgetPlusMinusImportsSubTotalLabel" fx:id="budgetPlusMinusExportsSubTotalLabel" text="" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+                                        <TextField id="budgetBasicGoodsField" fx:id="budgetPlusMinusRDField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetPlusMinusRDFieldAction" prefWidth="65.0" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" GridPane.valignment="TOP" />
+                                        <Label fx:id="budgetExportsLabel" text="" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+                                        <Label fx:id="budgetPlusMinusExportsLabel" text="" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+                                        <TextField id="budgetBasicGoodsField" fx:id="budgetPlusMinusCapitalGoodsField" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetPlusMinusCapitalGoodsFieldAction" prefWidth="65.0" GridPane.columnIndex="3" GridPane.rowIndex="8" />
+                                      </children>
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="10.0" prefWidth="110.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="91.0" minWidth="10.0" prefWidth="89.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="116.0" minWidth="10.0" prefWidth="92.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="87.0" minWidth="10.0" prefWidth="67.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="87.0" minWidth="10.0" prefWidth="74.0" />
+                                      </columnConstraints>
+                                      <padding>
+                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                      </padding>
+                                      <rowConstraints>
+                                        <RowConstraints maxHeight="32.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="32.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="32.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                    </GridPane>
+                                  </children>
+                                </AnchorPane>
+                              </content>
+                            </TitledPane>
+                            <TitledPane animated="false" collapsible="false" layoutX="222.0" minWidth="235.0" prefHeight="195.0" prefWidth="279.0" text="Taxes" AnchorPane.topAnchor="385.0">
+                              <content>
+                                <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="169.0" prefWidth="484.9998779296875">
+                                  <children>
+                                    <GridPane layoutX="7.0" layoutY="9.0" prefHeight="157.0" prefWidth="268.0">
+                                      <children>
+                                        <Label text="Income Tax" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                        <Label text="Tax" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                                        <Label text="Sub-Total" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                                        <Label text="\%" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                                        <Label text="New Sub-Total" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                                        <Label text="Political Tax" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                        <Label text="Trade Tax" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                        <Label text="I.M.F Tax" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                        <Label text="New GNP" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" GridPane.valignment="TOP" />
+                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" GridPane.valignment="TOP" />
+                                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.rowSpan="2147483647" />
+                                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.rowSpan="2147483647" />
+                                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.rowSpan="2147483647" />
+                                      </children>
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="67.0" minWidth="10.0" prefWidth="67.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="63.0" minWidth="10.0" prefWidth="61.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="63.0" minWidth="10.0" prefWidth="44.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="96.0" minWidth="10.0" prefWidth="96.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                    </GridPane>
+                                  </children>
+                                </AnchorPane>
+                              </content>
+                            </TitledPane>
+                            <TitledPane animated="false" collapsible="false" prefHeight="621.9999000000025" prefWidth="610.0" text="Charting" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="513.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="24.0">
+                              <content>
+                                <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="577.0" prefWidth="549.0">
+                                  <children>
+                                    <PieChart fx:id="budgetPie" prefHeight="378.0" prefWidth="549.0" title="Budget Allocation" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                  </children>
+                                </AnchorPane>
+                              </content>
+                            </TitledPane>
+                            <TitledPane animated="false" collapsible="false" layoutX="14.0" minWidth="203.0" prefHeight="195.0" prefWidth="203.0" text="Contingency Fund" AnchorPane.topAnchor="385.0">
+                              <content>
+                                <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="169.0" prefWidth="242.0">
+                                  <children>
+                                    <GridPane layoutX="4.0" layoutY="16.0" prefWidth="188.0">
+                                      <children>
+                                        <Separator prefWidth="200.0" valignment="CENTER" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" GridPane.rowSpan="2147483647" GridPane.valignment="TOP" />
+                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.rowSpan="2147483647" />
+                                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.rowSpan="2147483647" />
+                                        <Label text="Aid" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                        <Label text="Loan" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                        <Label text="I.M.F." GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                        <Label text="Received" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                                        <Label text="Given" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+                                        <TextField fx:id="budgetAidReceivedField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetAidReceivedFieldAction" prefWidth="53.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                                        <TextField fx:id="budgetLoanReceivedField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetLoanReceivedFieldAction" prefWidth="53.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                                        <TextField fx:id="budgetIMFReceivedField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetIMFReceivedFieldAction" prefWidth="53.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                                        <TextField fx:id="budgetAidGivenField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetAidGivenFieldAction" prefWidth="53.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                                        <TextField fx:id="budgetLoanGivenField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetLoanGivenFieldAction" prefWidth="53.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                                        <TextField fx:id="budgetIMFGivenField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetIMFGivenFieldAction" prefWidth="53.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                                        <Label fx:id="budgetAidGivenLabel" contentDisplay="TOP" text="Label" visible="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                                        <Label fx:id="budgetLoanGivenLabel" contentDisplay="TOP" text="Label" visible="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                                        <Label fx:id="budgetIMFGivenLabel" contentDisplay="TOP" text="Label" visible="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                                        <Label fx:id="budgetAidReceivedLabel" contentDisplay="TOP" text="Label" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                                        <Label fx:id="budgetLoanReceivedLabel" contentDisplay="TOP" text="Label" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                                        <Label fx:id="budgetIMFReceivedLabel" contentDisplay="TOP" text="Label" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                                      </children>
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="68.0" minWidth="10.0" prefWidth="41.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" prefWidth="87.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="83.0" minWidth="10.0" prefWidth="81.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                    </GridPane>
+                                  </children>
+                                </AnchorPane>
+                              </content>
+                            </TitledPane>
                           </children>
                         </AnchorPane>
                       </content>
@@ -194,7 +402,7 @@
                       <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                           <children>
-                            <TitledPane fx:id="nationTradePane" animated="false" collapsible="false" layoutX="334.0" layoutY="281.0" prefHeight="319.0" prefWidth="454.0" text="Trades">
+                            <TitledPane fx:id="nationTradePane" animated="false" collapsible="false" layoutX="334.0" layoutY="281.0" prefHeight="319.0" prefWidth="428.0" text="Trades">
                               <content>
                                 <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: null;">
                                   <children>
@@ -256,7 +464,7 @@
                                 </AnchorPane>
                               </content>
                             </TitledPane>
-                            <TitledPane fx:id="nationTeamMemberPane" animated="false" collapsible="false" layoutX="798.0" layoutY="26.0" minWidth="323.0" prefHeight="145.0" prefWidth="323.0" text="Team Members">
+                            <TitledPane fx:id="nationTeamMemberPane" animated="false" collapsible="false" layoutX="782.0" layoutY="26.0" minWidth="323.0" prefHeight="117.0" prefWidth="339.0" text="Team Members">
                               <content>
                                 <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="115.9998779296875" prefWidth="374.0">
                                   <children>
@@ -270,9 +478,9 @@
                                 </AnchorPane>
                               </content>
                             </TitledPane>
-                            <TitledPane fx:id="nationInfoPane" animated="false" collapsible="false" layoutX="336.0" layoutY="26.0" prefHeight="237.0" prefWidth="449.0" text="Nation Info">
+                            <TitledPane fx:id="nationInfoPane" animated="false" collapsible="false" layoutX="336.0" layoutY="26.0" prefHeight="237.0" prefWidth="425.0" text="Nation Info">
                               <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="211.0" prefWidth="285.0">
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="211.0" prefWidth="419.0">
                                   <children>
                                     <GridPane alignment="CENTER_RIGHT" gridLinesVisible="false" layoutX="14.0" layoutY="14.0" prefHeight="193.0" prefWidth="245.0">
                                       <children>
@@ -284,13 +492,12 @@
                                         <Label text="Conventional Forces" GridPane.columnIndex="0" GridPane.rowIndex="6" />
                                         <Label text="Nuclear Forces" GridPane.columnIndex="0" GridPane.rowIndex="7" />
                                         <Label fx:id="nationCurrGDPLabel" alignment="CENTER_RIGHT" contentDisplay="LEFT" graphicTextGap="4.0" style="&#10;" text="Label" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
-                                        <Label fx:id="nationStartGDPLAbel" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                                        <Label id="nationStartGDPLAbel" fx:id="nationStartGDPLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                                         <Label id="nationImportRem" fx:id="nationRequiredImportsLabel" text="N/A" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
                                         <Label id="nationExportAmRem" fx:id="nationTotalExportsLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
                                         <Label fx:id="nationConForcesLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
                                         <Label fx:id="nationNucForcesLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
-                                        <Label fx:id="nationMaxExportLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-                                        <TextField fx:id="nationMaxExportField" alignment="CENTER_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" onAction="#nationMaxExportFieldAction" prefWidth="65.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+                                        <Label fx:id="nationMaxExportLabel" text="N/A" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
                                         <Label text="Current Total Imports" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                                         <Label id="nationImportRem" fx:id="nationTotalImportsLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
                                       </children>
@@ -313,9 +520,44 @@
                                 </AnchorPane>
                               </content>
                             </TitledPane>
-                            <TitledPane fx:id="nationPoliticalPane" animated="false" collapsible="false" layoutX="795.0" layoutY="186.0" prefHeight="414.0" prefWidth="326.0" text="Political Relationships">
+                            <TitledPane fx:id="nationPoliticalPane" animated="false" collapsible="false" layoutX="776.0" layoutY="150.0" prefHeight="449.0" prefWidth="347.0" text="Political Relationships">
                               <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                  <children>
+                                    <TabPane prefHeight="388.0" prefWidth="341.0" side="RIGHT" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <tabs>
+                                        <Tab text="Alliances">
+                                          <content>
+                                            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                              <children>
+                                                <ListView prefHeight="315.0" prefWidth="310.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                              </children>
+                                            </AnchorPane>
+                                          </content>
+                                        </Tab>
+                                        <Tab text="Neutrality">
+                                          <content>
+                                            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                              <children>
+                                                <ListView prefHeight="237.0" prefWidth="326.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                              </children>
+                                            </AnchorPane>
+                                          </content>
+                                        </Tab>
+                                        <Tab text="Non-Aggression Pacts">
+                                          <content>
+                                            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                          </content>
+                                        </Tab>
+                                        <Tab text="International Orgs.">
+                                          <content>
+                                            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                          </content>
+                                        </Tab>
+                                      </tabs>
+                                    </TabPane>
+                                  </children>
+                                </AnchorPane>
                               </content>
                             </TitledPane>
                             <Accordion id="NationsAccordian" fx:id="nationAccordian" disable="false" layoutX="24.0" layoutY="26.0" prefHeight="612.0" prefWidth="290.0">
@@ -345,119 +587,59 @@
                         </AnchorPane>
                       </content>
                     </TitledPane>
-                    <TitledPane fx:id="leaderboardPane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Leaderboard" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                      <content>
-                        <AnchorPane disable="false" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                          <children>
-                            <LineChart fx:id="leaderboardChart" alternativeColumnFillVisible="false" horizontalGridLinesVisible="true" prefHeight="658.0" prefWidth="1135.0" verticalGridLinesVisible="true" verticalZeroLineVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                              <xAxis>
-                                <NumberAxis minorTickCount="0" minorTickLength="0.0" side="BOTTOM" tickLabelsVisible="true" tickLength="10.0" tickMarkVisible="true" tickUnit="1.0" upperBound="20.0" />
-                              </xAxis>
-                              <yAxis>
-                                <NumberAxis side="LEFT" />
-                              </yAxis>
-                            </LineChart>
-                          </children>
-                        </AnchorPane>
-                      </content>
-                    </TitledPane>
-                    <TitledPane fx:id="budgetPane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Finances" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <TitledPane fx:id="gamePane" animated="false" collapsible="false" prefHeight="683.0" prefWidth="1138.0" text="Game Setup" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                       <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                           <children>
-                            <Button fx:id="budgetSaveButton" layoutX="199.0" layoutY="609.0" mnemonicParsing="false" onAction="#budgetSaveButtonClick" prefHeight="26.0" prefWidth="114.0" text="Save" />
-                            <TitledPane animated="false" collapsible="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="356.0" prefWidth="484.0" text="Current Budget" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="23.0">
+                            <TitledPane animated="false" collapsible="false" layoutX="580.0" layoutY="305.0" prefHeight="235.0" prefWidth="281.0" text="International Organizations">
                               <content>
                                 <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                   <children>
-                                    <GridPane fx:id="budgetGrid" hgap="5.0" layoutX="4.0" layoutY="17.0" prefHeight="317.0" prefWidth="472.0" vgap="2.0">
-                                      <children>
-                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" GridPane.valignment="BASELINE" />
-                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" GridPane.valignment="BASELINE" />
-                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" GridPane.valignment="BASELINE" />
-                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" GridPane.valignment="BASELINE" />
-                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="7" GridPane.valignment="BASELINE" />
-                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" GridPane.valignment="TOP" />
-                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" GridPane.valignment="BASELINE" />
-                                        <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="8" GridPane.rowSpan="2147483647" GridPane.valignment="BASELINE" />
-                                        <Label text="Allocation" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
-                                        <Label text="Allocation %" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
-                                        <Label text="+/-" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
-                                        <Label text="Budget Section" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                                        <Label text="Sub-Total" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
-                                        <Label text="Basic Goods" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                                        <Label text="Conventional Forces" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                                        <Label text="Nuclear Forces" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                                        <Label text="Imports" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                                        <Label text="R&amp;D" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                                        <Label text="Contingency Fund" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-                                        <Label text="Capital Goods" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-                                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.rowSpan="2147483647" />
-                                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.rowSpan="2147483647" />
-                                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.rowSpan="2147483647" />
-                                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.rowSpan="2147483647" />
-                                        <TextField fx:id="budgetBasicGoodsField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetBasicGoodsFieldAction" prefWidth="65.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                                        <TextField fx:id="budgetConForcesField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetConForcesAction" prefWidth="65.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                                        <TextField fx:id="budgetNucForcesField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetNucForcesFieldAction" prefWidth="65.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                                        <TextField id="budgetReqImportsField" fx:id="budgetImportsField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#budgetImportsFieldAction" prefWidth="65.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-                                        <TextField fx:id="budgetRDField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="65.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-                                        <TextField fx:id="budgetContingencyField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="65.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
-                                        <TextField fx:id="budgetCapitalGoodsField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="65.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
-                                        <Label fx:id="budgetBasicGoodsPercentLabel" text="Label" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                                        <Label fx:id="budgetConForcesPercentLabel" text="Label" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                                        <Label fx:id="budgetNucForcesPercentLabel" text="Label" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                                        <Label fx:id="budgetImportsPercentLabel" text="Label" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-                                        <Label text="Label" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-                                        <Label text="Label" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
-                                        <Label text="Label" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
-                                        <Label text="Label" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                                        <Label text="Label" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                                        <Label text="Label" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                                        <Label text="Label" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-                                        <Label text="Label" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-                                        <Label text="Label" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
-                                        <Label text="Label" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
-                                        <Label fx:id="budgetBasicGoodsLabel" alignment="CENTER" text="" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                                        <Label id="bu" fx:id="budgetConForcesLabel" text="" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                                        <Label fx:id="budgetNucForcesLabel" text="" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                                        <Label fx:id="budgetImportsLabel" text="" visible="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-                                      </children>
-                                      <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="10.0" prefWidth="110.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="91.0" minWidth="10.0" prefWidth="89.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="116.0" minWidth="10.0" prefWidth="92.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="87.0" minWidth="10.0" prefWidth="67.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="87.0" minWidth="10.0" prefWidth="74.0" />
-                                      </columnConstraints>
-                                      <padding>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                      </padding>
-                                      <rowConstraints>
-                                        <RowConstraints maxHeight="32.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="32.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="32.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                                      </rowConstraints>
-                                    </GridPane>
+                                    <ListView prefHeight="180.0" prefWidth="271.0" AnchorPane.bottomAnchor="31.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    <ToolBar minHeight="31.0" prefHeight="33.0" prefWidth="274.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="178.0">
+                                      <items>
+                                        <Button alignment="CENTER_RIGHT" mnemonicParsing="false" text="Add" textAlignment="LEFT" />
+                                        <Button mnemonicParsing="false" text="Delete" />
+                                        <TextField prefWidth="151.0" />
+                                      </items>
+                                    </ToolBar>
                                   </children>
                                 </AnchorPane>
                               </content>
                             </TitledPane>
-                            <TitledPane animated="false" collapsible="false" layoutX="12.0" prefHeight="195.0" prefWidth="487.0" text="Taxes" AnchorPane.topAnchor="385.0">
+                            <TitledPane animated="false" collapsible="false" layoutX="403.0" layoutY="43.0" prefHeight="233.0" prefWidth="265.0" text="Games">
                               <content>
-                                <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="261.0" prefWidth="326.0">
+                                  <children>
+                                    <ComboBox id="gameName" fx:id="gamesList" layoutX="119.0" layoutY="39.0" onAction="#gamesListChange" prefHeight="21.0" prefWidth="195.0">
+                                      <items>
+                                        <FXCollections fx:factory="observableArrayList">
+                                          <String fx:value="Item 1" />
+                                          <String fx:value="Item 2" />
+                                          <String fx:value="Item 3" />
+                                        </FXCollections>
+                                      </items>
+                                    </ComboBox>
+                                    <Label layoutX="14.0" layoutY="42.0" text="Current Game:" textAlignment="LEFT" />
+                                    <TextField fx:id="newGameText" layoutX="121.0" layoutY="82.0" prefWidth="193.0" />
+                                    <Label layoutX="14.0" layoutY="85.0" text="New Game Name:" />
+                                    <Button fx:id="saveGameButton" layoutX="125.0" layoutY="142.0" mnemonicParsing="false" onAction="#saveGameButtonClick" text="Add Game" />
+                                  </children>
+                                </AnchorPane>
                               </content>
                             </TitledPane>
-                            <TitledPane animated="false" collapsible="false" prefHeight="621.9999000000025" prefWidth="610.0" text="Charting" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="513.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="24.0">
+                            <TitledPane animated="false" collapsible="false" layoutX="286.0" layoutY="305.0" prefHeight="235.0" prefWidth="281.0" text="Teachers">
                               <content>
-                                <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="577.0" prefWidth="549.0">
+                                <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                   <children>
-                                    <PieChart fx:id="budgetPie" prefHeight="378.0" prefWidth="549.0" title="Budget Allocation" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    <ListView prefHeight="178.0" prefWidth="275.0" AnchorPane.bottomAnchor="31.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    <ToolBar minHeight="31.0" prefHeight="31.0" prefWidth="274.0" AnchorPane.bottomAnchor="-1.5" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="179.5">
+                                      <items>
+                                        <Button alignment="CENTER_RIGHT" mnemonicParsing="false" text="Add" textAlignment="LEFT" />
+                                        <Button mnemonicParsing="false" text="Delete" />
+                                        <TextField prefWidth="151.0" />
+                                      </items>
+                                    </ToolBar>
                                   </children>
                                 </AnchorPane>
                               </content>

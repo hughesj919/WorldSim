@@ -118,9 +118,9 @@ public class UIController {
 		return null;
 	}
 
-	/***********************************************
+	/****************************************************************************************************************************
 	 * Nation Tab
-	 ***********************************************/
+	 ****************************************************************************************************************************/
 	private ObservableList<Nation> obsInUseNations;
 	private ObservableList<Nation> obsAvailableNations;
 	private ObservableList<Player> obsNationPlayers;
@@ -164,6 +164,9 @@ public class UIController {
 
 	@FXML
 	private Label nationCurrGDPLabel;
+	
+	@FXML
+	private Label nationStartGDPLabel;
 
 	@FXML
 	private Label nationExportAmRemLabel;
@@ -179,9 +182,6 @@ public class UIController {
 
 	@FXML
 	private Label nationMaxExportLabel;
-
-	@FXML
-    private TextField nationMaxExportField;
 
 	@FXML
 	private Label nationNucForcesLabel;
@@ -274,18 +274,10 @@ public class UIController {
 		if (n != null) {
 			
 			Main.currNation = n;
-			if(n.getMaxExportSet()){
-				nationTradePane.setDisable(false);
-				nationMaxExportLabel.setText(NumberFormat.getCurrencyInstance().format(n.getMaxExports()));
-				nationMaxExportLabel.setVisible(true);
-				nationMaxExportField.setVisible(false);
-			}else{
-				nationTradePane.setDisable(true);
-				nationMaxExportLabel.setVisible(false);
-				nationMaxExportField.setText(null);
-				nationMaxExportField.setVisible(true);	
-			}
-			
+			if(n.fullyAllocated())
+				nationTradePane.setDisable(false);		
+			else
+				nationTradePane.setDisable(true);			
 			nationInfoPane.setDisable(false);
 			nationTeamMemberPane.setDisable(false);
 			nationPoliticalPane.setDisable(false);
@@ -321,7 +313,10 @@ public class UIController {
 					+ NumberFormat.getCurrencyInstance().format(n.getGnp()));
 			nationCurrGDPLabel.setText(NumberFormat.getCurrencyInstance()
 					.format(n.getGnp()));
-			nationTotalImportsLabel.setText(NumberFormat.getCurrencyInstance().format(totalImports));		
+			nationStartGDPLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currGame.getRounds().get(0).getNation(Main.currNation.getCountryCode()).getGnp()));
+			nationRequiredImportsLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getImportsAllocation()));
+			nationTotalImportsLabel.setText(NumberFormat.getCurrencyInstance().format(totalImports));
+			nationMaxExportLabel.setText(NumberFormat.getCurrencyInstance().format(n.getMaxExports()));
 			nationTotalExportsLabel.setText(NumberFormat.getCurrencyInstance().format(totalExports));
 			nationConForcesLabel.setText(NumberFormat.getCurrencyInstance().format(n.getConventionalForcesAllocation()));
 			nationNucForcesLabel.setText(NumberFormat.getCurrencyInstance().format(n.getNuclearForcesAllocation()));
@@ -354,19 +349,6 @@ public class UIController {
 		}
 	}
 	
-	@FXML
-    void nationMaxExportFieldAction(ActionEvent event) {
-		
-		BigDecimal b = new BigDecimal(nationMaxExportField.getText());
-    	if(b!=null)
-    		if(Main.currNation.setMaxExports(b)){
-    			nationMaxExportField.setVisible(false);
-    			nationMaxExportLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getMaxExports()));
-    			nationMaxExportLabel.setVisible(true);
-    			nationTradePane.setDisable(false);
-    			nationTradePane.requestFocus();
-    	}	
-    }
 
 	/*@FXML
 	void nationImportTradeNationEdit(CellEditEvent<Trade, Nation> event) {
@@ -751,6 +733,9 @@ public class UIController {
     
     @FXML
     private TextField budgetImportsField;
+    
+    @FXML
+    private TextField budgetExportsField;
 
     @FXML
     private TextField budgetBasicGoodsField;
@@ -777,9 +762,137 @@ public class UIController {
     private Label budgetImportsLabel;
     
     @FXML
+    private Label budgetExportsLabel;
+    
+    @FXML
     private Label budgetImportsPercentLabel;
     
+    @FXML
+    private Label budgetRDLabel;
+    
+    @FXML
+    private Label budgetRDPercentLabel;
+    
+    @FXML
+    private Label budgetContingencyLabel;
+    
+    @FXML
+    private Label budgetContingencyPercentLabel;
+    
+    @FXML
+    private Label budgetCapitalGoodsLabel;
+    
+    @FXML
+    private Label budgetCapitalGoodsPercentLabel;
+    
+    @FXML
+	private TextField budgetPlusMinusCapitalGoodsField;
+
+	@FXML
+	private TextField budgetPlusMinusConForcesField;
+
+	@FXML
+	private TextField budgetPlusMinusContingencyField;
 	
+	@FXML
+	private TextField budgetPlusMinusNucForcesField;
+	
+    @FXML
+    private TextField budgetPlusMinusRDField;
+    
+    @FXML
+    private TextField budgetPlusMinusImportsField;
+    
+    @FXML
+    private TextField budgetPlusMinusExportsField;
+
+    @FXML
+    private TextField budgetPlusMinusBasicGoodsField;
+    
+    @FXML
+    private Label budgetPlusMinusBasicGoodsLabel;
+    
+    @FXML
+    private Label budgetPlusMinusConForcesLabel;
+    
+    @FXML
+    private Label budgetPlusMinusNucForcesLabel;
+    
+    @FXML
+    private Label budgetPlusMinusImportsLabel;
+    
+    @FXML
+    private Label budgetPlusMinusExportsLabel;
+    
+    @FXML
+    private Label budgetPlusMinusRDLabel;
+    
+    @FXML
+    private Label budgetPlusMinusConFundLabel;
+    
+    @FXML
+    private Label budgetPlusMinusCapitalGoodsLabel;
+    
+    @FXML
+    private Label budgetPlusMinusBasicGoodsSubTotalLabel;
+    
+    @FXML
+    private Label budgetPlusMinusConForcesSubTotalLabel;
+    
+    @FXML
+    private Label budgetPlusMinusNucForcesSubTotalLabel;
+    
+    @FXML
+    private Label budgetPlusMinusImportsSubTotalLabel;
+    
+    @FXML
+    private Label budgetPlusMinusExportsSubTotalLabel;
+    
+    @FXML
+    private Label budgetPlusMinusRDSubTotalLabel;
+    
+    @FXML
+    private Label budgetPlusMinusConFundSubTotalLabel;
+    
+    @FXML
+    private Label budgetPlusMinusCapitalGoodsSubTotalLabel;
+    
+    @FXML
+    private TextField budgetAidReceivedField;
+    
+    @FXML
+    private TextField budgetAidGivenField;
+    
+    @FXML
+    private TextField budgetLoanReceivedField;
+    
+    @FXML
+    private TextField budgetLoanGivenField;
+    
+    @FXML
+    private TextField budgetIMFReceivedField;
+    
+    @FXML
+    private TextField budgetIMFGivenField;
+   
+    @FXML
+    private Label budgetAidGivenLabel;
+    
+    @FXML
+    private Label budgetAidReceivedLabel;
+    
+    @FXML
+    private Label budgetLoanGivenLabel;
+    
+    @FXML
+    private Label budgetLoanReceivedLabel;
+    
+    @FXML
+    private Label budgetIMFGivenLabel;
+    
+    @FXML
+    private Label budgetIMFReceivedLabel;   
+    
 	@FXML
 	public void budgetButtonClick(ActionEvent event) {
 		gamePane.setVisible(false);
@@ -787,15 +900,12 @@ public class UIController {
 		budgetPane.setVisible(true);
 		leaderboardPane.setVisible(false);
 		nationPane.setVisible(false);
-		updateAllocationChart();
+		setBudgetData();
 	}
 	
 	@FXML
 	public void budgetSaveButtonClick(ActionEvent event) {
-		/*obsPieChartData.add(new PieChart.Data("Allocated", 75));
-		obsPieChartData.remove(0);
-		obsPieChartData.add(new PieChart.Data("UnAllocated", 25));*/
-	
+		Main.currGame.saveGame();	
 	}	
 	
     @FXML
@@ -805,6 +915,7 @@ public class UIController {
     		if(Main.currNation.setBasicGoodsAllocation(basicGoods)){
     			budgetBasicGoodsLabel.setText(NumberFormat.getCurrencyInstance().format(basicGoods));
     			budgetBasicGoodsField.setVisible(false);
+    			budgetBasicGoodsField.setText(null);
     			budgetBasicGoodsLabel.setVisible(true);
     			budgetBasicGoodsPercentLabel.setText(NumberFormat.getPercentInstance().format(basicGoods.divide(Main.currNation.getGnp(), 2, RoundingMode.HALF_UP)));
     			budgetBasicGoodsPercentLabel.setVisible(true);
@@ -820,6 +931,7 @@ public class UIController {
 			if(Main.currNation.setConventionalForcesAllocation(conForces)){
 				budgetConForcesLabel.setText(NumberFormat.getCurrencyInstance().format(conForces));
 				budgetConForcesField.setVisible(false);
+				budgetConForcesField.setText(null);
 				budgetConForcesLabel.setVisible(true);
 				budgetConForcesPercentLabel.setText(NumberFormat.getPercentInstance().format(conForces.divide(Main.currNation.getGnp(), 2, RoundingMode.HALF_UP)));
 				budgetConForcesPercentLabel.setVisible(true);
@@ -835,8 +947,9 @@ public class UIController {
     		if(Main.currNation.setNuclearForcesAllocation(nucForces)){
     			budgetNucForcesLabel.setText(NumberFormat.getCurrencyInstance().format(nucForces));
     			budgetNucForcesField.setVisible(false);
+    			budgetNucForcesField.setText(null);
     			budgetNucForcesLabel.setVisible(true);
-    			budgetNucForcesPercentLabel.setText(NumberFormat.getPercentInstance().format(nucForces.divide(Main.currNation.getGnp(), 2, RoundingMode.HALF_UP)));
+    			budgetNucForcesPercentLabel.setText(NumberFormat.getPercentInstance().format(nucForces.divide(Main.currNation.getGnp(),2,RoundingMode.HALF_UP)));
     			budgetNucForcesPercentLabel.setVisible(true);
     			updateAllocationChart();
     		}
@@ -851,12 +964,74 @@ public class UIController {
     		if(Main.currNation.setImportsAllocation(imports)){
     			budgetImportsLabel.setText(NumberFormat.getCurrencyInstance().format(imports));
     			budgetImportsField.setVisible(false);
+    			budgetImportsField.setText(null);
     			budgetImportsLabel.setVisible(true);
-    			budgetImportsPercentLabel.setText(NumberFormat.getPercentInstance().format(imports.divide(Main.currNation.getGnp(), 2,RoundingMode.HALF_UP)));
+    			budgetImportsPercentLabel.setText(NumberFormat.getPercentInstance().format(imports.divide(Main.currNation.getGnp(),2,RoundingMode.HALF_UP)));
     			budgetImportsPercentLabel.setVisible(true);
     			updateAllocationChart();
     		}
     	}
+    }
+    
+    @FXML
+    public void budgetExportsFieldAction(ActionEvent event) {
+    	BigDecimal b = new BigDecimal(budgetExportsField.getText());
+    	if(b!=null)
+    		if(Main.currNation.setMaxExports(b)){
+    			budgetExportsField.setVisible(false);
+    			budgetExportsField.setText(null);
+    			budgetExportsLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getMaxExports()));
+    			budgetExportsLabel.setVisible(true);
+    	}	
+    	
+    }
+    
+    @FXML
+    public void budgetRDFieldAction(ActionEvent event) {
+    	BigDecimal rd = new BigDecimal(budgetRDField.getText());
+    	if(rd!=null){
+    		if(Main.currNation.setRDAllocation(rd)){
+    			budgetRDLabel.setText(NumberFormat.getCurrencyInstance().format(rd));
+    			budgetRDField.setVisible(false);
+    			budgetRDField.setText(null);
+    			budgetRDLabel.setVisible(true);
+    			budgetRDPercentLabel.setText(NumberFormat.getPercentInstance().format(rd.divide(Main.currNation.getGnp(),2,RoundingMode.HALF_UP)));
+    			budgetRDPercentLabel.setVisible(true);
+    			updateAllocationChart();
+    		}
+    	}    
+    }
+    
+    @FXML
+    public void budgetContingencyFieldAction(ActionEvent event) {
+    	BigDecimal cont = new BigDecimal(budgetContingencyField.getText());
+    	if(cont!=null){
+    		if(Main.currNation.setContingencyAllocation(cont)){
+    			budgetContingencyLabel.setText(NumberFormat.getCurrencyInstance().format(cont));
+    			budgetContingencyField.setVisible(false);
+    			budgetContingencyField.setText(null);
+    			budgetContingencyLabel.setVisible(true);
+    			budgetContingencyPercentLabel.setText(NumberFormat.getPercentInstance().format(cont.divide(Main.currNation.getGnp(), 2, RoundingMode.HALF_UP)));
+    			budgetContingencyPercentLabel.setVisible(true);
+    			updateAllocationChart();
+    		}    		
+    	}    
+    }
+    
+    @FXML
+    public void budgetCapitalGoodsFieldAction(ActionEvent event) {
+    	BigDecimal capt = new BigDecimal(budgetCapitalGoodsField.getText());
+    	if(capt!=null){
+    		if(Main.currNation.setCapitalGoodsAllocation(capt)){
+    			budgetCapitalGoodsLabel.setText(NumberFormat.getCurrencyInstance().format(capt));
+    			budgetCapitalGoodsField.setVisible(false);
+    			budgetCapitalGoodsField.setText(null);
+    			budgetCapitalGoodsLabel.setVisible(true);
+    			budgetCapitalGoodsPercentLabel.setText(NumberFormat.getPercentInstance().format(capt.divide(Main.currNation.getGnp(), 2, RoundingMode.HALF_UP)));
+    			budgetCapitalGoodsPercentLabel.setVisible(true);
+    			updateAllocationChart();    			
+    		}
+    	}    
     }
     
     public void clearAllocationChart(){
@@ -907,11 +1082,361 @@ public class UIController {
     				obsPieChartData.add(importsPiePiece);
     		}
     		
+    		if(Main.currNation.getRDSet()){
+    			totalAllocation = totalAllocation.add(Main.currNation.getRDAllocation());
+    			researchPiePiece.setPieValue(Main.currNation.getRDAllocation().doubleValue());
+    			if(!obsPieChartData.contains(researchPiePiece))
+    				obsPieChartData.add(researchPiePiece);
+    		}
+
+    		
+    		if(Main.currNation.getContingencySet()){
+    			totalAllocation = totalAllocation.add(Main.currNation.getContingencyAllocation());
+    			contingencyPiePiece.setPieValue(Main.currNation.getContingencyAllocation().doubleValue());
+    			if(!obsPieChartData.contains(contingencyPiePiece))
+    				obsPieChartData.add(contingencyPiePiece);
+    		}
+    		
+    		if(Main.currNation.getCapitalGoodsSet()){
+    			totalAllocation = totalAllocation.add(Main.currNation.getCapitalGoodsAllocation());
+    			capitalGoodsPiePiece.setPieValue(Main.currNation.getCapitalGoodsAllocation().doubleValue());
+    			if(!obsPieChartData.contains(capitalGoodsPiePiece))
+    				obsPieChartData.add(capitalGoodsPiePiece);
+    		}
+    		
     		if(totalAllocation.compareTo(Main.currNation.getGnp())<0){
     			unallocatedPiePiece.setPieValue(Main.currNation.getGnp().subtract(totalAllocation).doubleValue());
-    		}		
+    		}	
+    		else if(totalAllocation.compareTo(Main.currNation.getGnp())==0){
+    			unallocatedPiePiece.setPieValue(0);
+    			obsPieChartData.remove(unallocatedPiePiece);
+    		}
+    		
+    		for(PieChart.Data p:obsPieChartData){
+    			final Node n = p.getNode();
+    			if(n!=null){
+  
+    				final Glow glow = new Glow(.8);   
+    				n.setOnMouseEntered(new EventHandler<MouseEvent>() {
+    					@Override
+    					public void handle(MouseEvent e) {
+    						n.setEffect(glow);
+    						//n.setTranslateX(10);
+    						//Tooltip.install(path, new Tooltip(series.getName()));
+    					}
+    				});
+    				n.setOnMouseExited(new EventHandler<MouseEvent>() {
+    					@Override
+    					public void handle(MouseEvent e) {
+    						n.setEffect(null);
+    						//n.setTranslateX(0);
+    					}
+    				});
+    			}
+    		}
     	}
     }
+    
+    private void setBudgetData(){
+    	
+    	if(Main.currNation!=null){
+    		if(Main.currNation.getBasicGoodsSet()){
+    			budgetBasicGoodsField.setVisible(false);
+    			budgetBasicGoodsLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getBasicGoodsAllocation()));
+				budgetBasicGoodsField.setVisible(false);
+				budgetBasicGoodsLabel.setVisible(true);
+				budgetBasicGoodsPercentLabel.setText(NumberFormat.getPercentInstance().format(Main.currNation.getBasicGoodsAllocation().divide(Main.currNation.getGnp(), 2, RoundingMode.HALF_UP)));
+				budgetBasicGoodsPercentLabel.setVisible(true);
+    		}else{
+    			budgetBasicGoodsField.setVisible(true);
+    			budgetBasicGoodsLabel.setVisible(false);
+    			budgetBasicGoodsPercentLabel.setVisible(false);    		
+    		}
+    		
+    		if(Main.currNation.getConventionalForcesSet()){
+    			budgetConForcesLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getConventionalForcesAllocation()));
+				budgetConForcesField.setVisible(false);
+				budgetConForcesLabel.setVisible(true);
+				budgetConForcesPercentLabel.setText(NumberFormat.getPercentInstance().format(Main.currNation.getConventionalForcesAllocation().divide(Main.currNation.getGnp(), 2, RoundingMode.HALF_UP)));
+				budgetConForcesPercentLabel.setVisible(true);
+    			
+    		}else{
+    			budgetConForcesField.setVisible(true);
+    			budgetConForcesLabel.setVisible(false);
+    			budgetConForcesPercentLabel.setVisible(false);
+    		}
+    		
+    		if(Main.currNation.getNuclearForcesSet()){
+    			budgetNucForcesLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getNuclearForcesAllocation()));
+    			budgetNucForcesField.setVisible(false);
+    			budgetNucForcesLabel.setVisible(true);
+    			budgetNucForcesPercentLabel.setText(NumberFormat.getPercentInstance().format(Main.currNation.getNuclearForcesAllocation().divide(Main.currNation.getGnp(),2,RoundingMode.HALF_UP)));
+    			budgetNucForcesPercentLabel.setVisible(true);    			
+    		}else{
+    			budgetNucForcesField.setVisible(true);
+    			budgetNucForcesLabel.setVisible(false);
+    			budgetNucForcesPercentLabel.setVisible(false);    			
+    		}
+    		
+    		if(Main.currNation.getImportsSet()){
+    			budgetImportsLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getImportsAllocation()));
+    			budgetImportsField.setVisible(false);
+    			budgetImportsLabel.setVisible(true);
+    			budgetImportsPercentLabel.setText(NumberFormat.getPercentInstance().format(Main.currNation.getImportsAllocation().divide(Main.currNation.getGnp(),2,RoundingMode.HALF_UP)));
+    			budgetImportsPercentLabel.setVisible(true);    			
+    		}else{
+    			budgetImportsField.setVisible(true);
+    			budgetImportsLabel.setVisible(false);
+    			budgetImportsPercentLabel.setVisible(false);        			
+    		}
+    		
+    		if(Main.currNation.getMaxExportSet()){
+    			budgetExportsLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getMaxExports()));
+    			budgetExportsField.setVisible(false);
+    			budgetExportsLabel.setVisible(true);
+    		}else{
+    			budgetExportsField.setVisible(true);
+    			budgetExportsLabel.setVisible(false);
+    		}    		
+    		
+    		if(Main.currNation.getRDSet()){
+    			budgetRDLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getRDAllocation()));
+    			budgetRDField.setVisible(false);
+    			budgetRDLabel.setVisible(true);
+    			budgetRDPercentLabel.setText(NumberFormat.getPercentInstance().format(Main.currNation.getRDAllocation().divide(Main.currNation.getGnp(),2,RoundingMode.HALF_UP)));
+    			budgetRDPercentLabel.setVisible(true);    			
+    		}else{
+    			budgetRDField.setVisible(true);
+    			budgetRDLabel.setVisible(false);
+    			budgetRDPercentLabel.setVisible(false);    
+    		}
+    		
+    		if(Main.currNation.getContingencySet()){
+    			budgetContingencyLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getContingencyAllocation()));
+    			budgetContingencyField.setVisible(false);
+    			budgetContingencyLabel.setVisible(true);
+    			budgetContingencyPercentLabel.setText(NumberFormat.getPercentInstance().format(Main.currNation.getContingencyAllocation().divide(Main.currNation.getGnp(), 2, RoundingMode.HALF_UP)));
+    			budgetContingencyPercentLabel.setVisible(true);    			
+    		}else{
+    			budgetContingencyField.setVisible(true);
+    			budgetContingencyLabel.setVisible(false);
+    			budgetContingencyPercentLabel.setVisible(false);    			
+    		}
+    		
+    		if(Main.currNation.getCapitalGoodsSet()){
+    			budgetCapitalGoodsLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getCapitalGoodsAllocation()));
+    			budgetCapitalGoodsField.setVisible(false);
+    			budgetCapitalGoodsLabel.setVisible(true);
+    			budgetCapitalGoodsPercentLabel.setText(NumberFormat.getPercentInstance().format(Main.currNation.getCapitalGoodsAllocation().divide(Main.currNation.getGnp(), 2, RoundingMode.HALF_UP)));
+    			budgetCapitalGoodsPercentLabel.setVisible(true);    			
+    		}else{
+    			budgetCapitalGoodsField.setVisible(true);
+    			budgetCapitalGoodsLabel.setVisible(false);
+    			budgetCapitalGoodsPercentLabel.setVisible(false);  
+    		}    		    		
+    	}    	
+    	updateAllocationChart();
+    }
+    
+    @FXML
+    public void budgetPlusMinusBasicGoodsFieldAction(ActionEvent event) {
+    	BigDecimal bas = new BigDecimal(budgetPlusMinusBasicGoodsField.getText());
+    	if(bas!=null){
+    		if(bas.compareTo(Main.currNation.getBasicGoodsDepreciation())==0 || bas.negate().compareTo(Main.currNation.getBasicGoodsDepreciation())==0){
+    			budgetPlusMinusBasicGoodsLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getBasicGoodsDepreciation().negate()));
+    			budgetPlusMinusBasicGoodsField.setVisible(false);
+    			budgetPlusMinusBasicGoodsField.setText(null);
+    			budgetPlusMinusBasicGoodsLabel.setVisible(true);
+    			budgetPlusMinusBasicGoodsSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getBasicGoodsAllocation().subtract(Main.currNation.getBasicGoodsDepreciation())));
+    			budgetPlusMinusBasicGoodsSubTotalLabel.setVisible(true);
+    		}
+    	}      	
+    }
+    
+    @FXML
+    public void budgetPlusMinusConForcesFieldAction(ActionEvent event) {
+    	BigDecimal con = new BigDecimal(budgetPlusMinusConForcesField.getText());
+    	if(con!=null){
+    		if(con.compareTo(Main.currNation.getConventionalForcesDepreciation())==0 || con.negate().compareTo(Main.currNation.getConventionalForcesDepreciation())==0){
+    			budgetPlusMinusConForcesLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getConventionalForcesDepreciation().negate()));
+    			budgetPlusMinusConForcesField.setVisible(false);
+    			budgetPlusMinusConForcesField.setText(null);
+    			budgetPlusMinusConForcesLabel.setVisible(true);
+    			budgetPlusMinusConForcesSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getConventionalForcesAllocation().subtract(Main.currNation.getConventionalForcesDepreciation())));
+    			budgetPlusMinusConForcesSubTotalLabel.setVisible(true);
+    		}
+    	}      	
+    }
+    
+    @FXML
+    public void budgetPlusMinusNucForcesFieldAction(ActionEvent event) {
+    	BigDecimal nuc = new BigDecimal(budgetPlusMinusNucForcesField.getText());
+    	if(nuc!=null){
+    		if(nuc.compareTo(Main.currNation.getNuclearForcesDepreciation())==0 || nuc.negate().compareTo(Main.currNation.getNuclearForcesDepreciation())==0){
+    			budgetPlusMinusNucForcesLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getNuclearForcesDepreciation().negate()));
+    			budgetPlusMinusNucForcesField.setVisible(false);
+    			budgetPlusMinusNucForcesField.setText(null);
+    			budgetPlusMinusNucForcesLabel.setVisible(true);
+    			budgetPlusMinusNucForcesSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getNuclearForcesAllocation().subtract(Main.currNation.getNuclearForcesDepreciation())));
+    			budgetPlusMinusNucForcesSubTotalLabel.setVisible(true);
+    		}
+    	}      	
+    }
+    
+    @FXML
+    public void budgetPlusMinusImportsFieldAction(ActionEvent event) {
+    	BigDecimal imp = new BigDecimal(budgetPlusMinusImportsField.getText());
+    	if(imp!=null){
+    		BigDecimal currentImports = Main.currNation.getTotalCurrentImports();
+    		if(imp.compareTo(currentImports)==0 || imp.negate().compareTo(currentImports)==0){
+    			budgetPlusMinusImportsLabel.setText(NumberFormat.getCurrencyInstance().format(currentImports.negate()));
+    			budgetPlusMinusImportsField.setVisible(false);
+    			budgetPlusMinusImportsField.setText(null);
+    			budgetPlusMinusImportsLabel.setVisible(true);
+    			budgetPlusMinusImportsSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getImportsAllocation().subtract(currentImports)));
+    			budgetPlusMinusImportsSubTotalLabel.setVisible(true);
+    		}
+    	}      	
+    }
+    
+    @FXML
+    public void budgetPlusMinusExportsFieldAction(ActionEvent event) {
+    	BigDecimal exp = new BigDecimal(budgetPlusMinusExportsField.getText());
+    	if(exp!=null){
+    		BigDecimal currentExports = Main.currNation.getTotalCurrentExports();
+    		if(exp.compareTo(currentExports)==0){
+    			budgetPlusMinusExportsLabel.setText(NumberFormat.getCurrencyInstance().format(currentExports));
+    			budgetPlusMinusExportsField.setVisible(false);
+    			budgetPlusMinusExportsField.setText(null);
+    			budgetPlusMinusExportsLabel.setVisible(true);
+    			budgetPlusMinusExportsSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(currentExports));
+    			budgetPlusMinusExportsSubTotalLabel.setVisible(true);
+    		}
+    	}      
+    }
+    
+    @FXML
+    public void budgetPlusMinusRDFieldAction(ActionEvent event) {
+    	BigDecimal rd = new BigDecimal(budgetPlusMinusRDField.getText());
+    	if(rd!=null){
+    		if(rd.compareTo(BigDecimal.ZERO)>=0 && rd.compareTo(Main.currNation.getRDAllocation().multiply(new BigDecimal(".50")))<=0){
+    			budgetPlusMinusRDLabel.setText(NumberFormat.getCurrencyInstance().format(rd));
+    			budgetPlusMinusRDField.setVisible(false);
+    			budgetPlusMinusRDField.setText(null);
+    			budgetPlusMinusRDLabel.setVisible(true);
+    			budgetPlusMinusRDSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getRDAllocation().add(rd)));
+    			budgetPlusMinusRDSubTotalLabel.setVisible(true);
+    		}
+    	}      	
+    }
+    
+    @FXML
+    public void budgetPlusMinusCapitalGoodsFieldAction(ActionEvent event) {
+    	BigDecimal cg = new BigDecimal(budgetPlusMinusCapitalGoodsField.getText());
+    	if(cg!=null){
+    		if(cg.compareTo(Main.currNation.getCapitalGoodsAppreciation())==0){
+    			budgetPlusMinusCapitalGoodsLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getCapitalGoodsAppreciation()));
+    			budgetPlusMinusCapitalGoodsField.setVisible(false);
+    			budgetPlusMinusCapitalGoodsField.setText(null);
+    			budgetPlusMinusCapitalGoodsLabel.setVisible(true);
+    			budgetPlusMinusCapitalGoodsSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getCapitalGoodsAllocation().add(Main.currNation.getCapitalGoodsAppreciation())));
+    			budgetPlusMinusCapitalGoodsSubTotalLabel.setVisible(true);
+    		}
+    	}      	
+    }
+    
+    private void enableContingencyFund(){
+    	if(Main.currNation.contingencyAllocated()){
+    		budgetPlusMinusCapitalGoodsField.setDisable(false);
+    		budgetPlusMinusConFundLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getContingencyTotal()));
+    	}
+    }
+    
+    @FXML
+    public void budgetAidGivenFieldAction(ActionEvent event) {
+    	BigDecimal b = new BigDecimal(budgetAidGivenField.getText());
+    	if(b!=null){
+    		if(Main.currNation.setAidGiven(b)){
+    			budgetAidGivenLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getAidGiven()));
+    			budgetAidGivenField.setVisible(false);
+    			budgetAidGivenField.setText(null);
+    			budgetAidGivenLabel.setVisible(true);
+    		}
+    	}	
+    	enableContingencyFund();
+    }
+    
+    @FXML
+    public void budgetAidReceivedFieldAction(ActionEvent event) {
+    	BigDecimal b = new BigDecimal(budgetAidReceivedField.getText());
+    	if(b!=null){
+    		if(Main.currNation.setAidReceived(b)){
+    			budgetAidReceivedLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getAidReceived()));
+    			budgetAidReceivedField.setVisible(false);
+    			budgetAidReceivedField.setText(null);
+    			budgetAidReceivedLabel.setVisible(true);
+    		}
+    	}
+    	enableContingencyFund();
+    }
+    
+    @FXML
+    public void budgetLoanGivenFieldAction(ActionEvent event) {
+    	BigDecimal b = new BigDecimal(budgetLoanGivenField.getText());
+    	if(b!=null){
+    		if(Main.currNation.setLoanGiven(b)){
+    			budgetLoanGivenLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getLoanGiven()));
+    			budgetLoanGivenField.setVisible(false);
+    			budgetLoanGivenField.setText(null);
+    			budgetLoanGivenLabel.setVisible(true);
+    		}
+    	}   
+    	enableContingencyFund();
+    }
+    
+    @FXML
+    public void budgetLoanReceivedFieldAction(ActionEvent event) {
+    	BigDecimal b = new BigDecimal(budgetLoanReceivedField.getText());
+    	if(b!=null){
+    		if(Main.currNation.setLoanReceived(b)){
+    			budgetLoanReceivedLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getLoanReceived()));
+    			budgetLoanReceivedField.setVisible(false);
+    			budgetLoanReceivedField.setText(null);
+    			budgetLoanReceivedLabel.setVisible(true);
+    		}
+    	}   
+    	enableContingencyFund();        
+    }
+    
+    @FXML
+    public void budgetIMFGivenFieldAction(ActionEvent event) {
+    	BigDecimal b = new BigDecimal(budgetIMFGivenField.getText());
+    	if(b!=null){
+    		if(Main.currNation.setIMFGiven(b)){
+    			budgetIMFGivenLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getIMFGiven()));
+    			budgetIMFGivenField.setVisible(false);
+    			budgetIMFGivenField.setText(null);
+    			budgetIMFGivenLabel.setVisible(true);
+    		}
+    	}  
+    	enableContingencyFund();
+    }
+    
+    @FXML
+    public void budgetIMFReceivedFieldAction(ActionEvent event) {
+    	BigDecimal b = new BigDecimal(budgetIMFReceivedField.getText());
+    	if(b!=null){
+    		if(Main.currNation.setIMFReceived(b)){
+    			budgetIMFReceivedLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getIMFReceived()));
+    			budgetIMFReceivedField.setVisible(false);
+    			budgetIMFReceivedField.setText(null);
+    			budgetIMFReceivedLabel.setVisible(true);
+    		}
+    	}   
+    	enableContingencyFund();
+    }
+    
+    
     
 	
 	public void initializeBudgetTab(){
@@ -923,9 +1448,9 @@ public class UIController {
 		budgetPie.setAnimated(true);
 	}
 
-	/***********************************************
+	/*****************************************************************************************************************************
 	 * Leaderboard Tab
-	 ***********************************************/
+	 ****************************************************************************************************************************/
 	private ObservableList<Series<Number, Number>> obsRoundData;
 	private Hashtable <String, Series<Number,Number>> allSeries;
 
