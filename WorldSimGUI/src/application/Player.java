@@ -14,6 +14,7 @@ public class Player implements Serializable{
 	private String name;
 	private Nation nation;
 	private playerType type;
+	private Teacher teach;
 
 	Player(String n) {
 		name = n;
@@ -40,8 +41,12 @@ public class Player implements Serializable{
 		name = n;
 	}
 
-	public void setPeriod(int p) {
+	public void setPeriod(Integer p) {
 		period = p;
+	}
+	
+	public void setTeacher(Teacher t){
+		teach = t;
 	}
 
 	public void setNation(Nation n) {
@@ -56,8 +61,12 @@ public class Player implements Serializable{
 		return name;
 	}
 	
-	public int getPeriod(){
+	public Integer getPeriod(){
 		return period;
+	}
+	
+	public Teacher getTeacher(){
+		return teach;
 	}
 	
 	public String getPeriodString(){

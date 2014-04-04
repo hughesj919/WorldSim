@@ -16,13 +16,21 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Main extends Application {
 
 	public static Game currGame;
 	public static Player currPlayer;
 	public static Nation currNation;
+	public static Stage passwordStage;
+	public static Stage pStage;
+	public static boolean passwordOk;
+	public static Nation passwordNation;
+	public static PasswordController passwordController;
+	public static InternationalOrganization passwordOrg;
 
 	public static ArrayList<Game> allGames;
 
@@ -49,14 +57,6 @@ public class Main extends Application {
 				UICont.gameButtonClick(null);
 			} else
 				System.out.println("Loaded Game: " + lastGame);
-			
-			
-
-			/*Trade newTrade = new Trade(Main.currGame.getCommodities()
-					.get("FRU"), Main.currGame.getNations().get(4),
-					Main.currGame.getNations().get(56), "200.00");
-
-			UICont.obsNationImports.add(newTrade);*/
 
 			Scene scene = new Scene(page);
 			scene.getStylesheets().add(
@@ -66,9 +66,26 @@ public class Main extends Application {
 			// (int)Color.BLACK.getBlue(), .90);
 
 			// scene.setFill(c);
+			pStage = primaryStage;
 			primaryStage.setTitle("World Simulation");
 			primaryStage.setScene(scene);
+			primaryStage.centerOnScreen();
 			primaryStage.show();
+			
+			FXMLLoader fxmlLoader2 = new FXMLLoader();
+			URL location2 = Main.class.getResource("Password.fxml");
+			fxmlLoader2.setLocation(location2);
+			AnchorPane page2 = (AnchorPane) fxmlLoader2.load(Main.class.getResource("Password.fxml").openStream());
+			passwordController = fxmlLoader2.getController();
+			Scene Scene2 = new Scene(page2);
+
+			passwordStage = new Stage();
+			passwordStage.initStyle(StageStyle.TRANSPARENT);
+			passwordStage.initOwner(primaryStage);			
+			passwordStage.initModality(Modality.APPLICATION_MODAL);			
+			passwordStage.setScene(Scene2);
+			passwordStage.setResizable(false);
+			
 
 			// ArrayList<Nation> nations = currGame.getNations();
 
@@ -153,6 +170,8 @@ public class Main extends Application {
 
 		UI.setAllPlayers(g.getPlayers());
 		UI.setAllNations(g.getNations());
+		UI.setAllTeachers(g.getTeachers());
+		UI.setAllInternationalOrgs(g.getInternationalOrganizations());
 		UI.changeLeaderboard();
 
 	}

@@ -7,10 +7,8 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Hashtable;
-
-import javafx.scene.Node;
+import java.util.Random;
 
 public class Game implements Serializable{
 
@@ -20,7 +18,10 @@ public class Game implements Serializable{
 	private String saveName;
 	private Hashtable<String,Commodity> allCommodities;
 	private ArrayList<Player> allPlayers;
-	private Hashtable<String, Nation> allNations;
+	private Hashtable<String, Nation> allNations; //nations by country code
+	private Hashtable<String, Nation> allPasswords; //nations by password
+	private Hashtable<String,InternationalOrganization> allIntOrgs;
+	private ArrayList<Teacher> allTeachers;
 	private ArrayList<TradeData> currentTrades;
 	private ArrayList<Round> allRounds;
 	
@@ -31,6 +32,9 @@ public class Game implements Serializable{
 		allRounds = new ArrayList<Round>();
 		allCommodities = new Hashtable<String,Commodity>();
 		allNations = new Hashtable<String,Nation>();
+		allPasswords = new Hashtable<String,Nation>();
+		allIntOrgs = new Hashtable<String,InternationalOrganization>();
+		allTeachers = new ArrayList<Teacher>();
 		importCommodities();
 		importNations();
 		initializeRounds();
@@ -41,7 +45,7 @@ public class Game implements Serializable{
 	}
 
 	public void addNation(Nation n, String key) {
-		allNations.put(key, n);
+		allNations.put(key, n);	
 	}
 	
 	public void setSaveName(String filename){
@@ -79,6 +83,14 @@ public class Game implements Serializable{
 	public ArrayList<Round> getRounds(){
 		return allRounds;
 	}
+	
+	public ArrayList<Teacher> getTeachers(){
+		return allTeachers;
+	}
+	
+	public ArrayList<InternationalOrganization> getInternationalOrganizations(){
+		return new ArrayList<InternationalOrganization>(allIntOrgs.values());
+	}
 
 	public void addPlayer(Player p) {
 		allPlayers.add(p);
@@ -94,6 +106,23 @@ public class Game implements Serializable{
 	
 	public void removeTrade(TradeData t) {
 		currentTrades.remove(t);
+	}
+	
+	public void addInternationalOrganization(InternationalOrganization i){		
+		Random randomGenerator = new Random();
+		while(!allIntOrgs.containsValue(i)){
+			int randomHex1 = randomGenerator.nextInt(16);
+			int randomHex2 = randomGenerator.nextInt(16);
+			int randomHex3 = randomGenerator.nextInt(16);
+			int randomHex4 = randomGenerator.nextInt(16);
+			String pwd = String.format("%x%x%x%x",randomHex1,randomHex2,randomHex3,randomHex4);
+			allIntOrgs.put(pwd,i);
+			i.setPassword(pwd);
+		}
+	}
+	
+	public void removeInternationalOrganization(InternationalOrganization i){
+		allIntOrgs.remove(i);
 	}
 	
 	public int currentRound(){
@@ -141,6 +170,7 @@ public class Game implements Serializable{
 
 			BufferedReader br = new BufferedReader(new FileReader(
 					"NationsList.txt"));
+			Random randomGenerator = new Random();
 
 			while ((line = br.readLine()) != null) {
 				values = line.split(",");
@@ -167,8 +197,18 @@ public class Game implements Serializable{
 					else
 						System.out.println(values[1] + " invalid commodity: " + values[i]);
 				}
-
 				addNation(newNation,values[0]);
+				
+				while(!allPasswords.containsValue(newNation)){
+					int randomHex1 = randomGenerator.nextInt(16);
+					int randomHex2 = randomGenerator.nextInt(16);
+					int randomHex3 = randomGenerator.nextInt(16);
+					String pwd = String.format("%x%x%x",randomHex1,randomHex2,randomHex3);
+					allPasswords.put(pwd,newNation);
+					newNation.setPassword(pwd);
+				}
+				
+				
 			}
 			
 			br.close();
@@ -199,7 +239,7 @@ public class Game implements Serializable{
 					else
 						System.out.println("Error importing commodity: " + line);
 				
-					allCommodities.put(values[0], newCommod);
+					allCommodities.put(values[0], newCommod);				
 				}
 			}
 			br.close();

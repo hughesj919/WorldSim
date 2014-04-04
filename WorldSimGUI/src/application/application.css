@@ -9,3 +9,8 @@
 .tab-content-area {
     -fx-background-color: null;
 }
+/*
+.list-cell:empty{
+	-fx-background-color: null;
+	
+} */

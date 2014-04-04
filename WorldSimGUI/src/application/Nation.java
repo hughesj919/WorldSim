@@ -21,9 +21,12 @@ public class Nation implements Serializable {
 	private BigDecimal loanReceived;
 	private BigDecimal loanGiven;
 	private String name;
+	private String password;
 	private ArrayList<Commodity> availableExports;
 	private ArrayList<Commodity> requiredImports;
 	private ArrayList<Player> team;
+	private ArrayList<Relationship> currentRelationships;
+	private ArrayList<InternationalOrganization> currentOrgs;
 	private boolean maxExportSet;
 	private boolean basicGoodsSet;
 	private boolean conForcesSet;
@@ -44,6 +47,8 @@ public class Nation implements Serializable {
 		availableExports = new ArrayList<Commodity>();
 		requiredImports = new ArrayList<Commodity>();
 		team = new ArrayList<Player>();
+		currentRelationships = new ArrayList<Relationship>();
+		currentOrgs = new ArrayList<InternationalOrganization>();
 		gnp = BigDecimal.ZERO;
 		conventionalForces = BigDecimal.ZERO;
 		nuclearForces = BigDecimal.ZERO;
@@ -144,6 +149,10 @@ public class Nation implements Serializable {
 		name = n;
 	}
 	
+	public void setPassword(String n) {
+		password = n;
+	}
+	
 	public void setCountryCode(String c){
 		countryCode = c;
 	}
@@ -182,6 +191,10 @@ public class Nation implements Serializable {
 
 	public String getName() {
 		return name;
+	}
+	
+	public String getPassword() {
+		return password;
 	}
 	
 	public String getCountryCode(){
@@ -346,7 +359,7 @@ public class Nation implements Serializable {
 	
 	public boolean setRDAllocation(BigDecimal b){
 		Nation prev = getPreviousNation();
-		if(b!=null && b.compareTo(prev.getRDAllocation())>=0 && b.compareTo(BigDecimal.valueOf(3000)) >=0 && b.add(getBudgetCommitments()).compareTo(getGnp())<=0){
+		if(b!=null && b.compareTo(prev.getRDAllocation())>=0 && (b.compareTo(BigDecimal.valueOf(3000)) >=0 || b.compareTo(BigDecimal.ZERO) == 0) && b.add(getBudgetCommitments()).compareTo(getGnp())<=0){
 			researchAndDevelopment = b;
 			setRDSet(true);
 		}
@@ -651,6 +664,13 @@ public class Nation implements Serializable {
 		return totalContReceived.subtract(totalContGiven);
 	}
 	
+	public ArrayList<Relationship> getRelationships(){
+		return currentRelationships;
+	}
+	
+	public ArrayList<InternationalOrganization> getOrganizations(){
+		return currentOrgs;
+	}
 	
 	
 	

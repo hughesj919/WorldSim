@@ -1,12 +1,20 @@
 package application;
 
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.Hashtable;
 
+import javafx.beans.binding.StringBinding;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableObjectValue;
+import javafx.beans.value.ObservableValue;
+import javafx.beans.value.ObservableValueBase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -14,6 +22,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.VPos;
+import javafx.print.PrinterJob;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
@@ -24,6 +33,7 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TableCell;
@@ -34,6 +44,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
+import javafx.scene.control.TreeView;
+import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -42,6 +54,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Path;
 import javafx.util.Callback;
+import javafx.util.converter.BigDecimalStringConverter;
 
 public class UIController {
 
@@ -49,6 +62,8 @@ public class UIController {
 	 * Game Tab
 	 **********************************************/
 	private ObservableList<Game> obsGames;
+	private ObservableList<InternationalOrganization> obsOrgs;
+	private ObservableList<Teacher> obsTeachers;
 
 	@FXML
 	private Button gameButton;
@@ -64,6 +79,49 @@ public class UIController {
 
 	@FXML
 	private TextField newGameText;
+	
+	@FXML
+	private TableView<Nation> gameNationTable;
+	
+    @FXML
+    private TableColumn<Nation,String> gameNationColumn;
+
+    @FXML
+    private TableColumn<Nation,String> gamePasswordColumn;
+    
+    @FXML
+    private TableView<InternationalOrganization> gameIntOrgTable;
+    
+    @FXML
+    private TableColumn<InternationalOrganization,String> gameIntOrgNameColumn;
+
+    @FXML
+    private TableColumn<InternationalOrganization,String> gameIntOrgPasswordColumn;
+   
+    @FXML
+    private Button gamePrintPasswordButton;
+   
+    @FXML
+    private Button gameIntOrgAddButton;
+
+    @FXML
+    private Button gameIntOrgDeleteButton;
+
+    @FXML
+    private TextField gameIntOrgNameField;
+    
+    @FXML
+    private ListView<Teacher> gameTeacherList;
+    
+    @FXML
+    private TextField gameTeacherTextField;
+    
+    @FXML
+    private Button gameTeacherAddButton;
+    
+    @FXML
+    private Button gameTeacherDeleteButton;
+
 
 	@FXML
 	public void gameButtonClick(ActionEvent event) {
@@ -117,17 +175,120 @@ public class UIController {
 		}
 		return null;
 	}
+	
+	@FXML
+    void gameIntOrgAddButtonAction(ActionEvent event) {
+		String name = gameIntOrgNameField.getText();
+		if(name!=null){
+			InternationalOrganization newOrg = new InternationalOrganization(name, null);
+			Main.currGame.addInternationalOrganization(newOrg);
+			gameIntOrgNameField.setText(null);
+			obsOrgs.add(newOrg);
+		}
+    }
+
+    @FXML
+    void gameIntOrgDeleteButtonAction(ActionEvent event) {
+    	InternationalOrganization org = gameIntOrgTable.getSelectionModel().getSelectedItem();
+    	if(org!=null){
+    		Main.currGame.removeInternationalOrganization(org);
+    		obsOrgs.remove(org);
+    	}
+    }
+    
+    @FXML
+    void gamePrintPasswordButtonAction(ActionEvent event) {
+    	PrinterJob job = PrinterJob.createPrinterJob();
+    	if(job!=null){
+    		 boolean success = job.printPage(gameNationTable);
+    		    if (success) {
+    		        job.endJob();
+    		    }
+    	}
+    }
+    
+    @FXML
+    void gameTeacherAddButtonAction(ActionEvent event) {
+    	String name = gameTeacherTextField.getText();
+    	if(name!=null){
+    		Teacher newTeach = new Teacher(name);
+    		Main.currGame.getTeachers().add(newTeach);
+    		gameTeacherTextField.setText(null);
+    		obsTeachers.add(newTeach);
+    	}
+    }
+    
+    @FXML
+    void gameTeacherDeleteButtonAction(ActionEvent event) {
+    	Teacher teach = gameTeacherList.getSelectionModel().getSelectedItem();
+    	if(teach!=null){
+    		Main.currGame.getTeachers().remove(teach);
+    		obsTeachers.remove(teach);
+    	}    
+    }
+    
+    public void setAllTeachers(ArrayList<Teacher> tList){
+    	obsTeachers.setAll(tList);
+    }
+    
+    public void setAllInternationalOrgs(ArrayList<InternationalOrganization> orgsList){
+    	obsOrgs.setAll(orgsList);
+    }
+	
+	private void initializeGameTab(){
+		obsGames = FXCollections.observableArrayList();
+		obsInUseNations = FXCollections.observableArrayList();
+		obsInUseNationsMinusCurrent = FXCollections.observableArrayList();
+		obsOrgs = FXCollections.observableArrayList();
+		obsTeachers = FXCollections.observableArrayList();
+		
+		obsGames.setAll(Main.allGames);
+		gamesList.setItems(obsGames);
+		gameTeacherList.setItems(obsTeachers);
+		
+		gameNationTable.setItems(obsInUseNations);
+		gameNationColumn
+			.setCellValueFactory(new PropertyValueFactory<Nation, String>(
+				"name"));
+		gamePasswordColumn
+			.setCellValueFactory(new PropertyValueFactory<Nation, String>(
+				"password"));		
+		
+		gameIntOrgTable.setItems(obsOrgs);
+		gameIntOrgNameColumn
+			.setCellValueFactory(new PropertyValueFactory<InternationalOrganization, String>(
+			"name"));
+		gameIntOrgPasswordColumn
+		.setCellValueFactory(new PropertyValueFactory<InternationalOrganization, String>(
+			"password"));	
+		
+		
+		
+	}
 
 	/****************************************************************************************************************************
 	 * Nation Tab
 	 ****************************************************************************************************************************/
 	private ObservableList<Nation> obsInUseNations;
+	private ObservableList<Nation> obsInUseNationsMinusCurrent;
+	private ObservableList<Nation> obsPossibleAlliances;
+	private ObservableList<Nation> obsPossiblePacts;
+	private ObservableList<Nation> obsPossibleNeutralities;
+	private ObservableList<InternationalOrganization> obsPossibleOrgs;
 	private ObservableList<Nation> obsAvailableNations;
 	private ObservableList<Player> obsNationPlayers;
 	private ObservableList<Commodity> obsRequiredImports;
 	private ObservableList<Commodity> obsAvailableExports;
-	public ObservableList<Trade> obsNationImports;
-	public ObservableList<Trade> obsNationExports;
+	private ObservableList<Trade> obsNationImports;
+	private ObservableList<Trade> obsNationExports;
+	private ObservableList<Nation> obsAlliances;
+	private ObservableList<Nation> obsNeutrality;
+	private ObservableList<Nation> obsPacts;
+	private ObservableList<InternationalOrganization> obsNationOrgs;
+	private SimpleObjectProperty<BigDecimal> maxImports;
+	private SimpleObjectProperty<BigDecimal> maxExports;
+	private SimpleObjectProperty<BigDecimal> totalCurrentImports;
+	private SimpleObjectProperty<BigDecimal> totalCurrentExports;
 
 	@FXML
 	private Button nationButton;
@@ -200,6 +361,12 @@ public class UIController {
 
 	@FXML
 	private TableColumn<Player, String> nationPlayerPositionColumn;
+	
+	@FXML
+	private TableColumn<Player, Teacher> nationPlayerTeacherColumn;
+
+	@FXML
+	private TableColumn<Player, Integer> nationPlayerPeriodColumn;
 
 	@FXML
 	private ListView<Commodity> nationRequiredImports;
@@ -236,7 +403,23 @@ public class UIController {
 
 	@FXML
 	private TableColumn<Trade, String> nationExportTypeColumn;
-	
+
+    @FXML
+    private ListView<Nation> nationAlliancesList;
+    
+    @FXML
+    private ListView<Nation> nationNeutralitiesList;
+    
+    @FXML
+    private ListView<Nation> nationPactsList;
+    
+    @FXML
+    private ListView<InternationalOrganization> nationOrgsList;
+    
+    @FXML
+    private ListView<Nation> testListView;
+    
+   
 
 	@FXML
 	public void nationButtonClick(ActionEvent event) {
@@ -272,8 +455,15 @@ public class UIController {
 
 		Nation n = nationsInUseList.getSelectionModel().getSelectedItem();
 		if (n != null) {
-			
+
 			Main.currNation = n;
+			obsInUseNationsMinusCurrent.setAll(obsInUseNations);
+			obsInUseNationsMinusCurrent.remove(Main.currNation);
+			obsPossibleAlliances.setAll(obsInUseNationsMinusCurrent);
+			obsPossibleNeutralities.setAll(obsInUseNationsMinusCurrent);
+			obsPossiblePacts.setAll(obsInUseNationsMinusCurrent);
+			obsPossibleOrgs.setAll(obsOrgs);
+			
 			if(n.fullyAllocated())
 				nationTradePane.setDisable(false);		
 			else
@@ -282,8 +472,9 @@ public class UIController {
 			nationTeamMemberPane.setDisable(false);
 			nationPoliticalPane.setDisable(false);
 			
-			obsNationImports.clear();
-			obsNationExports.clear();
+			obsNationImports.removeAll(obsNationImports);
+			obsNationExports.removeAll(obsNationExports);
+			
 			
 			BigDecimal totalImports = BigDecimal.ZERO;
 			BigDecimal totalExports = BigDecimal.ZERO;
@@ -309,17 +500,45 @@ public class UIController {
 			if(!obsNationImports.contains(null))
 				obsNationImports.add(obsNationImports.size(), null);
 
+			
 			titleLabel.setText(n.getName().toLowerCase() + " | "
 					+ NumberFormat.getCurrencyInstance().format(n.getGnp()));
 			nationCurrGDPLabel.setText(NumberFormat.getCurrencyInstance()
 					.format(n.getGnp()));
 			nationStartGDPLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currGame.getRounds().get(0).getNation(Main.currNation.getCountryCode()).getGnp()));
-			nationRequiredImportsLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getImportsAllocation()));
-			nationTotalImportsLabel.setText(NumberFormat.getCurrencyInstance().format(totalImports));
-			nationMaxExportLabel.setText(NumberFormat.getCurrencyInstance().format(n.getMaxExports()));
-			nationTotalExportsLabel.setText(NumberFormat.getCurrencyInstance().format(totalExports));
+			maxImports.set(Main.currNation.getImportsAllocation());
+			totalCurrentImports.set(totalImports);
+			maxExports.set(Main.currNation.getMaxExports());
+			totalCurrentExports.set(totalExports);
 			nationConForcesLabel.setText(NumberFormat.getCurrencyInstance().format(n.getConventionalForcesAllocation()));
 			nationNucForcesLabel.setText(NumberFormat.getCurrencyInstance().format(n.getNuclearForcesAllocation()));
+			
+			obsAlliances.clear();
+			obsNeutrality.clear();
+			obsPacts.clear();
+			for(Relationship r:n.getRelationships()){
+				if(r instanceof Alliance){
+					obsAlliances.add(r.getOtherNation(n));
+					obsPossibleAlliances.remove(r.getOtherNation(n));
+				}else if(r instanceof Neutrality){
+					obsNeutrality.add(r.getOtherNation(n));
+					obsPossibleNeutralities.remove(r.getOtherNation(n));
+				}else if(r instanceof NonAggressionPact){
+					obsPacts.add(r.getOtherNation(n));
+					obsPossiblePacts.remove(r.getOtherNation(n));
+				}
+			}
+			obsAlliances.add(null);
+			obsNeutrality.add(null);
+			obsPacts.add(null);
+			
+			obsNationOrgs.clear();
+			for(InternationalOrganization org:n.getOrganizations()){
+				obsNationOrgs.add(org);		
+				obsPossibleOrgs.remove(org);
+			}
+			obsNationOrgs.add(null);
+			
 			
 			clearAllocationChart();
 			/*
@@ -342,12 +561,6 @@ public class UIController {
 		obsAvailableNations.add(nat);
 	}
 
-	public void setInUseNations(ArrayList<Nation> nats) {
-		for (Nation n : nats) {
-			obsInUseNations.add(n);
-			// obsNations.
-		}
-	}
 	
 
 	/*@FXML
@@ -379,10 +592,161 @@ public class UIController {
 		obsNationPlayers = FXCollections.observableArrayList();
 		obsNationImports = FXCollections.observableArrayList();
 		obsNationExports = FXCollections.observableArrayList();
-		obsInUseNations = FXCollections.observableArrayList();
-		obsAvailableNations = FXCollections.observableArrayList();
 		obsRequiredImports = FXCollections.observableArrayList();
 		obsAvailableExports = FXCollections.observableArrayList();
+		obsAvailableNations = FXCollections.observableArrayList();
+		obsAlliances = FXCollections.observableArrayList();
+		obsPossibleAlliances = FXCollections.observableArrayList();
+		obsPossibleOrgs = FXCollections.observableArrayList();
+		obsPacts = FXCollections.observableArrayList();
+		obsPossiblePacts = FXCollections.observableArrayList();
+		obsNeutrality = FXCollections.observableArrayList();
+		obsPossibleNeutralities = FXCollections.observableArrayList();
+		obsNationOrgs = FXCollections.observableArrayList();	
+		
+		maxImports = new SimpleObjectProperty<BigDecimal>(BigDecimal.ZERO);		
+		maxExports = new SimpleObjectProperty<BigDecimal>(BigDecimal.ZERO);		
+		totalCurrentImports = new SimpleObjectProperty<BigDecimal>(BigDecimal.ZERO);
+		totalCurrentExports = new SimpleObjectProperty<BigDecimal>(BigDecimal.ZERO);
+		nationRequiredImportsLabel.textProperty().bindBidirectional(maxImports, NumberFormat.getCurrencyInstance());
+		nationMaxExportLabel.textProperty().bindBidirectional(maxExports, NumberFormat.getCurrencyInstance());
+		nationTotalImportsLabel.textProperty().bindBidirectional(totalCurrentImports, NumberFormat.getCurrencyInstance());
+		nationTotalExportsLabel.textProperty().bindBidirectional(totalCurrentExports, NumberFormat.getCurrencyInstance());
+		
+		obsPacts.add(null);
+		obsNeutrality.add(null);
+		obsAlliances.add(null);
+		obsNationOrgs.add(null);
+		
+		nationNeutralitiesList.setItems(obsNeutrality);
+		nationPactsList.setItems(obsPacts);
+		nationOrgsList.setItems(obsNationOrgs);
+		nationAlliancesList.setItems(obsAlliances);	
+		
+		nationAlliancesList.setCellFactory(new Callback<ListView<Nation>,ListCell<Nation>>(){
+			@Override
+			public ListCell<Nation> call(ListView<Nation> arg0) {
+				return new ComboBoxListCell<Nation>(obsPossibleAlliances){
+					@Override
+					public void updateItem(Nation n, boolean empty){
+						super.updateItem(n, empty);
+						if(n!=null)
+							this.setEditable(false);
+						else
+							this.setEditable(true);
+					}					
+					@Override
+					public void commitEdit(Nation n){							
+						if(passwordDialog(n)){
+							super.commitEdit(n);
+							Alliance newAlliance = new Alliance(Main.currNation,n);
+							Main.currNation.getRelationships().add(newAlliance);
+							n.getRelationships().add(newAlliance);
+							obsAlliances.add(null);
+							obsPossibleAlliances.remove(n);
+						
+						}
+						else{
+							this.cancelEdit();
+						}
+					}
+					
+				};
+			}			
+		});
+		
+		nationNeutralitiesList.setCellFactory(new Callback<ListView<Nation>,ListCell<Nation>>(){
+			@Override
+			public ListCell<Nation> call(ListView<Nation> arg0) {
+				// TODO Auto-generated method stub
+				return new ComboBoxListCell<Nation>(obsPossibleNeutralities){
+					@Override
+					public void updateItem(Nation n, boolean empty){
+						super.updateItem(n, empty);
+						if(n!=null)
+							this.setEditable(false);
+						else
+							this.setEditable(true);
+					}					
+					
+					@Override
+					public void commitEdit(Nation n){							
+						if(passwordDialog(n)){
+							super.commitEdit(n);
+							Neutrality newNeutrality = new Neutrality(Main.currNation,n);
+							Main.currNation.getRelationships().add(newNeutrality);
+							n.getRelationships().add(newNeutrality);
+							obsNeutrality.add(null);
+							obsPossibleNeutralities.remove(n);
+						}
+						else{
+							this.cancelEdit();
+						}
+					}
+				};
+			}			
+		});
+		
+		nationPactsList.setCellFactory(new Callback<ListView<Nation>,ListCell<Nation>>(){
+			@Override
+			public ListCell<Nation> call(ListView<Nation> arg0) {
+				// TODO Auto-generated method stub
+				return new ComboBoxListCell<Nation>(obsPossiblePacts){
+					@Override
+					public void updateItem(Nation n, boolean empty){
+						super.updateItem(n, empty);
+						if(n!=null)
+							this.setEditable(false);
+						else
+							this.setEditable(true);
+					}					
+					@Override
+					public void commitEdit(Nation n){							
+						if(passwordDialog(n)){
+							super.commitEdit(n);
+							NonAggressionPact newPact= new NonAggressionPact(Main.currNation,n);
+							Main.currNation.getRelationships().add(newPact);
+							n.getRelationships().add(newPact);
+							obsPacts.add(null);
+							obsPossiblePacts.remove(n);
+						}
+						else{
+							this.cancelEdit();
+						}
+					}
+				};
+			}			
+		});	
+		
+		nationOrgsList.setCellFactory(new Callback<ListView<InternationalOrganization>,ListCell<InternationalOrganization>>(){
+			@Override
+			public ListCell<InternationalOrganization> call(ListView<InternationalOrganization> arg0) {
+				// TODO Auto-generated method stub
+				return new ComboBoxListCell<InternationalOrganization>(obsPossibleOrgs){
+					@Override
+					public void updateItem(InternationalOrganization o, boolean empty){
+						super.updateItem(o, empty);
+						if(o!=null)
+							this.setEditable(false);
+						else
+							this.setEditable(true);
+					}					
+					@Override
+					public void commitEdit(InternationalOrganization o){							
+						if(passwordDialog(o)){
+							super.commitEdit(o);
+							Main.currNation.getOrganizations().add(o);
+							obsNationOrgs.add(null);
+							obsPossibleOrgs.remove(o);
+						}
+						else{
+							this.cancelEdit();
+						}
+					}
+				};
+			}			
+		});	
+		
 
 		nationPlayerNameColumn
 				.setCellValueFactory(new PropertyValueFactory<Player, String>(
@@ -390,6 +754,8 @@ public class UIController {
 		nationPlayerPositionColumn
 				.setCellValueFactory(new PropertyValueFactory<Player, String>(
 						"typeString"));
+		nationPlayerTeacherColumn.setCellValueFactory(new PropertyValueFactory<Player, Teacher>("teacher"));
+		nationPlayerPeriodColumn.setCellValueFactory(new PropertyValueFactory<Player,Integer>("period"));
 		
 		/*
 		 * Current Imports Tab
@@ -402,30 +768,37 @@ public class UIController {
 			@Override
 			public TableCell<Trade, Nation> call(
 					TableColumn<Trade, Nation> param) {				
-				return new ComboBoxTableCell<Trade, Nation>(obsInUseNations){	
+				return new ComboBoxTableCell<Trade, Nation>(obsInUseNationsMinusCurrent){	
 					@Override public void updateItem(Nation n, boolean empty){
 						//send false because we really have no empty cells, blank cells should be changeable
-						super.updateItem(n, false);
+						super.updateItem(n, empty);
 					}
 					
 					
 					@Override public void commitEdit(Nation n){
-						super.commitEdit(n);
-						Trade t = null;
-					
+						Trade t = null;					
 						if(this.getIndex() < this.getTableView().getItems().size()){
 							t = this.getTableView().getItems().get(this.getIndex());
 							if(t == null){
-								
-								TradeData newTradeData = new TradeData(n.getAvailableExports().get(0),Main.currNation,n,BigDecimal.ZERO);
-								Trade newTrade = new Trade(newTradeData);
-								obsNationImports.remove(null);
-								obsNationImports.add(newTrade);
-								obsNationImports.add(null);
-								nationImportTable.getSelectionModel().select(this.getIndex());
+								if(passwordDialog(n)){
+									super.commitEdit(n);
+									TradeData newTradeData = new TradeData(n.getAvailableExports().get(0),Main.currNation,n,BigDecimal.ZERO);
+									Trade newTrade = new Trade(newTradeData);
+									obsNationImports.remove(null);
+									obsNationImports.add(newTrade);
+									obsNationImports.add(null);
+									nationImportTable.getSelectionModel().select(this.getIndex());
+								}else{
+									this.cancelEdit();
+								}
 							}else{  //if the nation changes, we need to reset the whole trade
-								t.setExporter(n);
-								t.setCommodity(n.getAvailableExports().get(0));
+								if(passwordDialog(n)){
+									super.commitEdit(n);
+									t.setExporter(n);
+									t.setCommodity(n.getAvailableExports().get(0));
+								}else{
+									this.cancelEdit();
+								}					
 							}
 						}						
 					}
@@ -472,7 +845,28 @@ public class UIController {
 		nationImportAmountColumn.setCellFactory(new Callback<TableColumn<Trade,BigDecimal>,TableCell<Trade,BigDecimal>>(){
 			@Override
 			public TableCell<Trade, BigDecimal> call(TableColumn<Trade, BigDecimal> arg0) {
-				return new CurrencyFieldTableCell<Trade,BigDecimal>();
+				return new CurrencyFieldTableCell<Trade,BigDecimal>(){
+					@Override 
+					public void commitEdit(BigDecimal amt){
+						Trade t = this.getTableView().getItems().get(this.getIndex());
+						if(t!=null){
+							//subtract prior trade amount from total
+							//TODO							
+							BigDecimal sumImport = totalCurrentImports.get().subtract(t.amountProperty().get());
+							BigDecimal sumExport= t.getExporter().getTotalCurrentExports().subtract(t.amountProperty().get());
+							if(sumImport.add(amt).compareTo(t.getImporter().getImportsAllocation())<=0 && sumExport.compareTo(t.getExporter().getMaxExports())<=0){
+								totalCurrentImports.set(sumImport.add(amt));
+								super.commitEdit(amt);
+								
+							}else{
+								this.cancelEdit();
+							}							
+						}else{
+							this.cancelEdit();
+						}
+						
+					}
+				};
 			}
 		});
 		
@@ -498,6 +892,8 @@ public class UIController {
 				return new CurrencyFieldTableCell<Trade,BigDecimal>();
 				}
 			});	
+		
+		
 		
 		nationsInUseList.setItems(obsInUseNations);
 		nationsAvailableList.setItems(obsAvailableNations);
@@ -538,6 +934,9 @@ public class UIController {
 
 	@FXML
 	private ComboBox<String> playerPosition;
+	
+	@FXML
+	private ComboBox<Teacher> playerTeacher;
 
 	@FXML
 	private ComboBox<Nation> playerNation;
@@ -559,6 +958,7 @@ public class UIController {
 		String pType = playerPosition.getValue();
 		int pPeriod = Integer.parseInt(playerPeriod.getText());
 		Nation pNation = playerNation.getValue();
+		Teacher pTeacher = playerTeacher.getValue();
 
 		Player newPlayer = findPlayer(pName);
 
@@ -606,6 +1006,8 @@ public class UIController {
 			newPlayer.setType(playerType.chiefOfState);
 		else if (pType.equals("Foreign Minister"))
 			newPlayer.setType(playerType.foreignMinister);
+		newPlayer.setTeacher(pTeacher);
+		
 
 		// save the state
 		Main.currGame.saveGame();
@@ -654,6 +1056,7 @@ public class UIController {
 				playerPosition.setValue("Chief of State");
 			else
 				playerPosition.setValue("Foreign Minister");
+			playerTeacher.setValue(p.getTeacher());
 		}
 	}
 
@@ -683,6 +1086,20 @@ public class UIController {
 		playerPeriod.setText(null);
 		playerNation.setValue(null);
 		playerPosition.setValue(null);
+		playerTeacher.setValue(null);
+	}
+	
+	private void initializePlayerTab(){
+		obsPlayers = FXCollections.observableArrayList();
+		obsAllNations = FXCollections.observableArrayList();
+		
+			
+		playerPosition.setItems(FXCollections.observableArrayList(
+				"Chief of State", "Foreign Minister"));
+
+		playersList.setItems(obsPlayers);
+		playerNation.setItems(obsAllNations);
+		playerTeacher.setItems(obsTeachers);
 	}
 
 	/***********************************************
@@ -1489,8 +1906,8 @@ public class UIController {
 		
 	}
 	
-	public void initializeLeaderBoardTab(){	
-
+	public void initializeLeaderBoardTab(){			
+		obsRoundData = FXCollections.observableArrayList();	
 		leaderboardChart.setTitle("GNP Per Round");
 		leaderboardChart.setData(obsRoundData);
 		final XYChart.Series<Number, Number> series = new XYChart.Series<>();
@@ -1528,7 +1945,6 @@ public class UIController {
 			});
 		}
 		
-		
 	}
 
 	/***********************************************
@@ -1541,27 +1957,49 @@ public class UIController {
 	public void advanceButtonClick(ActionEvent event) {
 
 	}
+	
+	final ObservableList data = 
+	        FXCollections.observableArrayList();
 
 	public void initialize() {
-		System.out.println("Initializing UI...");
-
-		obsPlayers = FXCollections.observableArrayList();
-		obsAllNations = FXCollections.observableArrayList();
-		obsGames = FXCollections.observableArrayList();
-		obsRoundData = FXCollections.observableArrayList();
-
-		obsGames.setAll(Main.allGames);
-		gamesList.setItems(obsGames);
-		playerPosition.setItems(FXCollections.observableArrayList(
-				"Chief of State", "Foreign Minister"));
-
-		playersList.setItems(obsPlayers);
-		playerNation.setItems(obsAllNations);
+		System.out.println("Initializing UI...");		
+		initializeGameTab();
 		initializeNationTab();
 		initializeLeaderBoardTab();
+		initializePlayerTab();
 		initializeBudgetTab();
 		gameButtonClick(null);
+		
 
+		testListView.setEditable(true);
+		final ObservableList names = 
+			        FXCollections.observableArrayList();
+		
+		names.addAll(
+	             "Adam", "Alex", "Alfred", "Albert",
+	             "Brenda", "Connie", "Derek", "Donny", 
+	             "Lynne", "Myrtle", "Rose", "Rudolph", 
+	             "Tony", "Trudy", "Williams", "Zach"
+	        );
+		
+		
+		 testListView.setItems(data);
+		testListView.setCellFactory(ComboBoxListCell.forListView(obsAvailableNations));
 	}
-
+	
+	private boolean passwordDialog(Nation n){
+		Main.passwordNation = n;
+		Main.passwordStage.setX(Main.pStage.getX() + Main.pStage.getWidth()/2 - Main.passwordController.passwordAnchorPane.getPrefWidth()/2);
+		Main.passwordStage.setY(Main.pStage.getY() + Main.pStage.getHeight()/2 - Main.passwordController.passwordAnchorPane.getPrefHeight()/2);
+		Main.passwordStage.showAndWait();
+		return Main.passwordOk;		
+	}
+	
+	private boolean passwordDialog(InternationalOrganization o){
+		Main.passwordOrg = o;
+		Main.passwordStage.setX(Main.pStage.getX() + Main.pStage.getWidth()/2 - Main.passwordController.passwordAnchorPane.getPrefWidth()/2);
+		Main.passwordStage.setY(Main.pStage.getY() + Main.pStage.getHeight()/2 - Main.passwordController.passwordAnchorPane.getPrefHeight()/2);
+		Main.passwordStage.showAndWait();
+		return Main.passwordOk;		
+	}
 }
