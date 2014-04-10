@@ -64,6 +64,7 @@ public class UIController {
 	private ObservableList<Game> obsGames;
 	private ObservableList<InternationalOrganization> obsOrgs;
 	private ObservableList<Teacher> obsTeachers;
+	private ObservableList<ContingencyTransaction> obsIMFTransactions;
 
 	@FXML
 	private Button gameButton;
@@ -121,6 +122,27 @@ public class UIController {
     
     @FXML
     private Button gameTeacherDeleteButton;
+    
+    @FXML
+    private Button gameIMFAddButton;
+    
+    @FXML
+    private Button gameIMFDeleteButton;
+    
+    @FXML
+    private TextField gameIMFAmountField;
+    
+    @FXML
+    private ComboBox<Nation> gameIMFNationDropDown;
+    
+	@FXML
+	private TableView<ContingencyTransaction> gameIMFTable;
+	
+	@FXML
+	private TableColumn<ContingencyTransaction,Nation> gameIMFNationColumn;
+
+	@FXML
+	private TableColumn<ContingencyTransaction,BigDecimal> gameIMFAmountColumn;
 
 
 	@FXML
@@ -227,12 +249,40 @@ public class UIController {
     	}    
     }
     
+    @FXML
+    void gameIMFAddButtonAction(ActionEvent event) {
+    	Nation nat = gameIMFNationDropDown.getValue();
+    	if(nat!=null){
+    		BigDecimal amt = new BigDecimal(gameIMFAmountField.getText());
+    		if(amt!=null){
+    			ContingencyTransaction cont = new ContingencyTransaction(ContingencyType.IMF,null,nat,amt);
+    			Main.currGame.getContingencyTransactions().add(cont);
+    			obsIMFTransactions.add(cont);
+    			gameIMFAmountField.setText(null);
+    			gameIMFNationDropDown.getSelectionModel().clearSelection();
+    		}
+    	}
+    }
+    
+    @FXML
+    void gameIMFDeleteButtonAction(ActionEvent event) {
+    	ContingencyTransaction cont = gameIMFTable.getSelectionModel().getSelectedItem();
+    	if(cont!=null){
+    		Main.currGame.getContingencyTransactions().remove(cont);
+    		obsIMFTransactions.remove(cont);
+    	}
+    }
+    
     public void setAllTeachers(ArrayList<Teacher> tList){
     	obsTeachers.setAll(tList);
     }
     
     public void setAllInternationalOrgs(ArrayList<InternationalOrganization> orgsList){
     	obsOrgs.setAll(orgsList);
+    }
+    
+    public void setAllIMFTransactions(ArrayList<ContingencyTransaction> imfList){
+    	obsIMFTransactions.setAll(imfList);
     }
 	
 	private void initializeGameTab(){
@@ -241,6 +291,7 @@ public class UIController {
 		obsInUseNationsMinusCurrent = FXCollections.observableArrayList();
 		obsOrgs = FXCollections.observableArrayList();
 		obsTeachers = FXCollections.observableArrayList();
+		obsIMFTransactions = FXCollections.observableArrayList();
 		
 		obsGames.setAll(Main.allGames);
 		gamesList.setItems(obsGames);
@@ -261,6 +312,20 @@ public class UIController {
 		gameIntOrgPasswordColumn
 		.setCellValueFactory(new PropertyValueFactory<InternationalOrganization, String>(
 			"password"));	
+		
+		gameIMFNationDropDown.setItems(obsInUseNations);
+		gameIMFTable.setItems(obsIMFTransactions);
+		gameIMFNationColumn.setCellValueFactory(new PropertyValueFactory<ContingencyTransaction, Nation>("receiver"));
+		gameIMFAmountColumn.setCellValueFactory(new PropertyValueFactory<ContingencyTransaction, BigDecimal>("amount"));
+		gameIMFAmountColumn.setCellFactory(new Callback<TableColumn<ContingencyTransaction,BigDecimal>,TableCell<ContingencyTransaction,BigDecimal>>(){
+			@Override
+			public TableCell<ContingencyTransaction, BigDecimal> call(
+					TableColumn<ContingencyTransaction, BigDecimal> param) {
+				// TODO Auto-generated method stub
+				return new CurrencyFieldTableCell<ContingencyTransaction,BigDecimal>();
+			}
+			
+		});
 		
 		
 		
@@ -284,11 +349,14 @@ public class UIController {
 	private ObservableList<Nation> obsAlliances;
 	private ObservableList<Nation> obsNeutrality;
 	private ObservableList<Nation> obsPacts;
+	private ObservableList<ContingencyType> obsContingencyTypes;
 	private ObservableList<InternationalOrganization> obsNationOrgs;
 	private SimpleObjectProperty<BigDecimal> maxImports;
 	private SimpleObjectProperty<BigDecimal> maxExports;
 	private SimpleObjectProperty<BigDecimal> totalCurrentImports;
 	private SimpleObjectProperty<BigDecimal> totalCurrentExports;
+	private ObservableList<ContingencyTransaction> obsContingencyGiven;
+	private ObservableList<ContingencyTransaction> obsContingencyReceived;
 
 	@FXML
 	private Button nationButton;
@@ -313,6 +381,9 @@ public class UIController {
 	 
 	@FXML
 	private TitledPane nationTradePane;
+	
+	@FXML
+	private TitledPane nationContingencyPane;
 
 	@FXML
 	private Label titleLabel;
@@ -417,6 +488,30 @@ public class UIController {
     private ListView<InternationalOrganization> nationOrgsList;
     
     @FXML
+    private TableView<ContingencyTransaction> nationContingencyGivenTable;
+    
+    @FXML
+    private TableColumn<ContingencyTransaction,BigDecimal> nationContingencyGivenAmountColumn;
+
+    @FXML
+    private TableColumn<ContingencyTransaction,Nation> nationContingencyGivenNationColumn;
+
+    @FXML
+    private TableColumn<ContingencyTransaction,ContingencyType> nationContingencyGivenTypeColumn;
+    
+    @FXML
+    private TableView<ContingencyTransaction> nationContingencyReceivedTable;
+
+    @FXML
+    private TableColumn<ContingencyTransaction,BigDecimal> nationContingencyReceivedAmountColumn;
+
+    @FXML
+    private TableColumn<ContingencyTransaction,Nation> nationContingencyReceivedNationColumn;
+
+    @FXML
+    private TableColumn<ContingencyTransaction,ContingencyType> nationContingencyReceivedTypeColumn;
+    
+    @FXML
     private ListView<Nation> testListView;
     
    
@@ -434,6 +529,7 @@ public class UIController {
 			nationTeamMemberPane.setDisable(true);
 			nationPoliticalPane.setDisable(true);
 			nationTradePane.setDisable(true);
+			nationContingencyPane.setDisable(true);
 		}
 	}
 	
@@ -464,13 +560,20 @@ public class UIController {
 			obsPossiblePacts.setAll(obsInUseNationsMinusCurrent);
 			obsPossibleOrgs.setAll(obsOrgs);
 			
-			if(n.fullyAllocated())
+			if(n.fullyAllocated()){
 				nationTradePane.setDisable(false);		
-			else
-				nationTradePane.setDisable(true);			
-			nationInfoPane.setDisable(false);
-			nationTeamMemberPane.setDisable(false);
-			nationPoliticalPane.setDisable(false);
+				nationContingencyPane.setDisable(false);
+				nationInfoPane.setDisable(false);
+				nationTeamMemberPane.setDisable(false);
+				nationPoliticalPane.setDisable(false);
+			}
+			else{
+				nationTradePane.setDisable(true);	
+				nationContingencyPane.setDisable(true);
+				nationInfoPane.setDisable(true);
+				nationTeamMemberPane.setDisable(true);
+				nationPoliticalPane.setDisable(true);
+			}		
 			
 			obsNationImports.removeAll(obsNationImports);
 			obsNationExports.removeAll(obsNationExports);
@@ -539,6 +642,18 @@ public class UIController {
 			}
 			obsNationOrgs.add(null);
 			
+			obsContingencyGiven.clear();
+			obsContingencyReceived.clear();
+			for(ContingencyTransaction t:Main.currGame.getContingencyTransactions()){
+				if(t.getGiver() == n){
+					obsContingencyGiven.add(t);
+				}
+				if(t.getReceiver() == n){
+					obsContingencyReceived.add(t);
+				}
+			}
+			obsContingencyGiven.add(null);
+			
 			
 			clearAllocationChart();
 			/*
@@ -603,6 +718,9 @@ public class UIController {
 		obsNeutrality = FXCollections.observableArrayList();
 		obsPossibleNeutralities = FXCollections.observableArrayList();
 		obsNationOrgs = FXCollections.observableArrayList();	
+		obsContingencyGiven = FXCollections.observableArrayList();
+		obsContingencyReceived = FXCollections.observableArrayList();
+		obsContingencyTypes = FXCollections.observableArrayList(ContingencyType.Aid,ContingencyType.Loan,ContingencyType.IMF);
 		
 		maxImports = new SimpleObjectProperty<BigDecimal>(BigDecimal.ZERO);		
 		maxExports = new SimpleObjectProperty<BigDecimal>(BigDecimal.ZERO);		
@@ -893,6 +1011,112 @@ public class UIController {
 				}
 			});	
 		
+		/*
+		 * Contingency Given Tab
+		 */
+		
+		nationContingencyGivenNationColumn.setCellValueFactory(new PropertyValueFactory<ContingencyTransaction,Nation>("receiver"));
+		nationContingencyGivenNationColumn.setCellFactory(new Callback<TableColumn<ContingencyTransaction,Nation>,TableCell<ContingencyTransaction,Nation>>(){
+			@Override
+			public TableCell<ContingencyTransaction, Nation> call(
+					TableColumn<ContingencyTransaction, Nation> param) {
+				// TODO Auto-generated method stub
+				return new ComboBoxTableCell<ContingencyTransaction, Nation>(obsInUseNationsMinusCurrent){	
+					//TODO
+					@Override
+					public void commitEdit(Nation n){
+						ContingencyTransaction t = this.getTableView().getItems().get(this.getIndex());
+						if(t == null){
+							if(passwordDialog(n)){
+								super.commitEdit(n);
+								ContingencyTransaction newCont = new ContingencyTransaction(ContingencyType.Aid,Main.currNation,n,BigDecimal.ZERO);
+								obsContingencyGiven.remove(null);
+								obsContingencyGiven.add(newCont);
+								obsContingencyGiven.add(null);
+								Main.currGame.getContingencyTransactions().add(newCont);
+								nationContingencyGivenTable.getSelectionModel().select(this.getIndex());
+							}else{
+								this.cancelEdit();
+							}
+						}else{  //if the nation changes, we need to reset the whole trade
+							if(t.getType()!=ContingencyType.IMF && passwordDialog(n)){
+								super.commitEdit(n);
+								t.setReceiver(n);
+							}else{
+								this.cancelEdit();
+							}					
+						}
+					}
+				};
+			}			
+		});
+		nationContingencyGivenTypeColumn.setCellValueFactory(new PropertyValueFactory<ContingencyTransaction,ContingencyType>("type"));
+		nationContingencyGivenTypeColumn.setCellFactory(new Callback<TableColumn<ContingencyTransaction,ContingencyType>,TableCell<ContingencyTransaction,ContingencyType>>(){
+			@Override
+			public TableCell<ContingencyTransaction, ContingencyType> call(
+					TableColumn<ContingencyTransaction, ContingencyType> param) {
+				// TODO Auto-generated method stub
+				return new ComboBoxTableCell<ContingencyTransaction, ContingencyType>(obsContingencyTypes){
+					@Override
+					public void commitEdit(ContingencyType type){
+						ContingencyTransaction trans = this.getTableView().getItems().get(this.getIndex());
+						if(trans == null && type == ContingencyType.IMF){
+							ContingencyTransaction newTrans = new ContingencyTransaction(ContingencyType.IMF,Main.currNation,null,BigDecimal.ZERO);
+							obsContingencyGiven.remove(null);
+							obsContingencyGiven.add(newTrans);
+							obsContingencyGiven.add(null);
+							Main.currGame.getContingencyTransactions().add(newTrans);
+							nationContingencyGivenTable.getSelectionModel().select(this.getIndex());
+						}else if(trans== null && type !=ContingencyType.IMF){
+							this.cancelEdit();
+						}else if(trans!=null){
+							super.commitEdit(type);
+							trans.setType(type);
+						}
+						
+					}
+				};
+			}
+		});
+		nationContingencyGivenAmountColumn.setCellValueFactory(new PropertyValueFactory<ContingencyTransaction,BigDecimal>("amount"));
+		nationContingencyGivenAmountColumn.setCellFactory(new Callback<TableColumn<ContingencyTransaction,BigDecimal>,TableCell<ContingencyTransaction,BigDecimal>>(){
+			@Override
+			public TableCell<ContingencyTransaction, BigDecimal> call(
+					TableColumn<ContingencyTransaction, BigDecimal> param) {
+				// TODO Auto-generated method stub
+				return new CurrencyFieldTableCell<ContingencyTransaction,BigDecimal>(){
+					@Override
+					public void commitEdit(BigDecimal amt){
+						super.commitEdit(amt);
+						ContingencyTransaction trans = this.getTableView().getItems().get(this.getIndex());
+						if(trans!=null){
+							trans.setAmount(amt);
+						}else{
+							this.cancelEdit();
+						}
+					}
+				};
+			}
+			
+		});
+		
+		/*
+		 * Contingency Received Tab
+		 */
+		
+		nationContingencyReceivedNationColumn.setCellValueFactory(new PropertyValueFactory<ContingencyTransaction,Nation>("giver"));
+		nationContingencyReceivedTypeColumn.setCellValueFactory(new PropertyValueFactory<ContingencyTransaction,ContingencyType>("type"));
+		nationContingencyReceivedAmountColumn.setCellValueFactory(new PropertyValueFactory<ContingencyTransaction,BigDecimal>("amount"));
+		nationContingencyReceivedAmountColumn.setCellFactory(new Callback<TableColumn<ContingencyTransaction,BigDecimal>,TableCell<ContingencyTransaction,BigDecimal>>(){
+			@Override
+			public TableCell<ContingencyTransaction, BigDecimal> call(
+					TableColumn<ContingencyTransaction, BigDecimal> param) {
+				// TODO Auto-generated method stub
+				return new CurrencyFieldTableCell<ContingencyTransaction,BigDecimal>();
+			}
+			
+		});
+		
 		
 		
 		nationsInUseList.setItems(obsInUseNations);
@@ -905,6 +1129,11 @@ public class UIController {
 		nationImportTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		nationExportTable.setItems(obsNationExports);
 		nationExportTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		
+		nationContingencyGivenTable.setItems(obsContingencyGiven);
+		nationContingencyReceivedTable.setItems(obsContingencyReceived);
+		
+		
 
 	}
 
@@ -1308,7 +1537,43 @@ public class UIController {
     private Label budgetIMFGivenLabel;
     
     @FXML
-    private Label budgetIMFReceivedLabel;   
+    private Label budgetIMFReceivedLabel;
+    
+    @FXML
+    private Label budgetIncomeTaxSubTotalLabel;
+    
+    @FXML
+    private Label budgetPoliticalTaxSubTotalLabel;
+    
+    @FXML
+    private Label budgetTradeTaxSubTotalLabel;
+    
+    @FXML
+    private Label budgetIMFTaxSubTotalLabel;
+    
+    @FXML
+    private Label budgetIncomeTaxPercentLabel;
+    
+    @FXML
+    private Label budgetPoliticalTaxPercentLabel;
+    
+    @FXML
+    private Label budgetTradeTaxPercentLabel;
+    
+    @FXML
+    private Label budgetIMFTaxPercentLabel;
+    
+    @FXML
+    private Label budgetIncomeTaxNewSubTotalLabel;
+    
+    @FXML
+    private Label budgetPoliticalTaxNewSubTotalLabel;
+    
+    @FXML
+    private Label budgetTradeTaxNewSubTotalLabel;
+    
+    @FXML
+    private Label budgetIMFTaxNewSubTotalLabel;
     
 	@FXML
 	public void budgetButtonClick(ActionEvent event) {
@@ -1474,35 +1739,35 @@ public class UIController {
     		if(Main.currNation.getBasicGoodsSet()){
     			totalAllocation = totalAllocation.add(Main.currNation.getBasicGoodsAllocation());
    				basicGoodsPiePiece.setPieValue(Main.currNation.getBasicGoodsAllocation().doubleValue());
-   				if(!obsPieChartData.contains(basicGoodsPiePiece))
+   				if(!obsPieChartData.contains(basicGoodsPiePiece)&& Main.currNation.getBasicGoodsAllocation().compareTo(BigDecimal.ZERO)!=0)
    					obsPieChartData.add(basicGoodsPiePiece);
     		}
     		
     		if(Main.currNation.getConventionalForcesSet()){
     			totalAllocation = totalAllocation.add(Main.currNation.getConventionalForcesAllocation());
     			conForcesPiePiece.setPieValue(Main.currNation.getConventionalForcesAllocation().doubleValue());
-    			if(!obsPieChartData.contains(conForcesPiePiece))
+    			if(!obsPieChartData.contains(conForcesPiePiece)&& Main.currNation.getConventionalForcesAllocation().compareTo(BigDecimal.ZERO)!=0)
     				obsPieChartData.add(conForcesPiePiece);
     		}
     		
     		if(Main.currNation.getNuclearForcesSet()){
     			totalAllocation = totalAllocation.add(Main.currNation.getNuclearForcesAllocation());
     			nuclearForcesPiePiece.setPieValue(Main.currNation.getNuclearForcesAllocation().doubleValue());
-    			if(!obsPieChartData.contains(nuclearForcesPiePiece))
+    			if(!obsPieChartData.contains(nuclearForcesPiePiece) && Main.currNation.getNuclearForcesAllocation().compareTo(BigDecimal.ZERO)!=0)
     				obsPieChartData.add(nuclearForcesPiePiece);
     		}
     		
     		if(Main.currNation.getImportsSet()){
     			totalAllocation = totalAllocation.add(Main.currNation.getImportsAllocation());
     			importsPiePiece.setPieValue(Main.currNation.getImportsAllocation().doubleValue());
-    			if(!obsPieChartData.contains(importsPiePiece))
+    			if(!obsPieChartData.contains(importsPiePiece)&& Main.currNation.getImportsAllocation().compareTo(BigDecimal.ZERO)!=0)
     				obsPieChartData.add(importsPiePiece);
     		}
     		
     		if(Main.currNation.getRDSet()){
     			totalAllocation = totalAllocation.add(Main.currNation.getRDAllocation());
     			researchPiePiece.setPieValue(Main.currNation.getRDAllocation().doubleValue());
-    			if(!obsPieChartData.contains(researchPiePiece))
+    			if(!obsPieChartData.contains(researchPiePiece)&& Main.currNation.getRDAllocation().compareTo(BigDecimal.ZERO)!=0)
     				obsPieChartData.add(researchPiePiece);
     		}
 
@@ -1510,14 +1775,14 @@ public class UIController {
     		if(Main.currNation.getContingencySet()){
     			totalAllocation = totalAllocation.add(Main.currNation.getContingencyAllocation());
     			contingencyPiePiece.setPieValue(Main.currNation.getContingencyAllocation().doubleValue());
-    			if(!obsPieChartData.contains(contingencyPiePiece))
+    			if(!obsPieChartData.contains(contingencyPiePiece)&& Main.currNation.getContingencyAllocation().compareTo(BigDecimal.ZERO)!=0)
     				obsPieChartData.add(contingencyPiePiece);
     		}
     		
     		if(Main.currNation.getCapitalGoodsSet()){
     			totalAllocation = totalAllocation.add(Main.currNation.getCapitalGoodsAllocation());
     			capitalGoodsPiePiece.setPieValue(Main.currNation.getCapitalGoodsAllocation().doubleValue());
-    			if(!obsPieChartData.contains(capitalGoodsPiePiece))
+    			if(!obsPieChartData.contains(capitalGoodsPiePiece)&& Main.currNation.getCapitalGoodsAllocation().compareTo(BigDecimal.ZERO)!=0)
     				obsPieChartData.add(capitalGoodsPiePiece);
     		}
     		
@@ -1762,7 +2027,7 @@ public class UIController {
     	}      	
     }
     
-    private void enableContingencyFund(){
+   /* private void enableContingencyFund(){
     	if(Main.currNation.contingencyAllocated()){
     		budgetPlusMinusCapitalGoodsField.setDisable(false);
     		budgetPlusMinusConFundLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getContingencyTotal()));
@@ -1851,6 +2116,48 @@ public class UIController {
     		}
     	}   
     	enableContingencyFund();
+    }*/
+    
+    private void showNewGDPCalculations(){
+    	budgetPlusMinusBasicGoodsLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getBasicGoodsDepreciation().negate()));
+    	budgetPlusMinusBasicGoodsSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getBasicGoodsSubTotal()));
+    	budgetPlusMinusConForcesLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getConventionalForcesDepreciation().negate()));
+		budgetPlusMinusConForcesSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getConventionalForcesSubTotal()));
+		budgetPlusMinusNucForcesLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getNuclearForcesDepreciation().negate()));
+		budgetPlusMinusNucForcesSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getNuclearForcesSubTotal()));
+		budgetPlusMinusImportsLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getTotalCurrentImports().negate()));
+		budgetPlusMinusImportsSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getImportsSubTotal()));
+		budgetPlusMinusExportsLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getTotalCurrentExports()));
+		budgetPlusMinusExportsSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getExportsSubTotal()));
+		budgetPlusMinusRDLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getRDAppreciation()));
+		budgetPlusMinusRDSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getRDSubTotal()));
+		budgetPlusMinusConFundLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getContingencyTotal()));		
+		budgetPlusMinusCapitalGoodsLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getCapitalGoodsAppreciation()));
+		budgetPlusMinusCapitalGoodsSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getCapitalGoodsSubTotal()));
+		
+		budgetAidGivenLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getAidGiven()));
+		budgetAidReceivedLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getAidReceived()));
+		budgetLoanGivenLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getLoanGiven()));
+		budgetLoanReceivedLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getLoanReceived()));
+		budgetIMFGivenLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getIMFGiven()));
+		budgetIMFReceivedLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getIMFReceived()));
+		
+		BigDecimal subTotal = Main.currNation.getNewGNPSubTotal();
+		budgetIncomeTaxSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal));
+		budgetPoliticalTaxSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal));
+		budgetTradeTaxSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal));
+		budgetIMFTaxSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal));
+		
+		budgetIncomeTaxSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal));
+		budgetPoliticalTaxSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal));
+		budgetTradeTaxSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal));
+		budgetIMFTaxSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal));
+		
+		budgetIncomeTaxPercentLabel.setText(NumberFormat.getPercentInstance().format(Main.currNation.getIncomeTaxPercent(subTotal)));
+		budgetPoliticalTaxPercentLabel.setText(NumberFormat.getPercentInstance().format(Main.currNation));
+
+		
+		
     }
     
     
@@ -2002,4 +2309,6 @@ public class UIController {
 		Main.passwordStage.showAndWait();
 		return Main.passwordOk;		
 	}
+	
+
 }

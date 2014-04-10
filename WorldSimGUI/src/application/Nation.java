@@ -2,7 +2,9 @@ package application;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Nation implements Serializable {
 
@@ -14,12 +16,7 @@ public class Nation implements Serializable {
 	private BigDecimal researchAndDevelopment;
 	private BigDecimal contingencyFund;
 	private BigDecimal capitalGoods;
-	private BigDecimal aidReceived;
-	private BigDecimal aidGiven;
-	private BigDecimal imfReceived;
-	private BigDecimal imfGiven;
-	private BigDecimal loanReceived;
-	private BigDecimal loanGiven;
+	private BigDecimal rdAppreciationRate;
 	private String name;
 	private String password;
 	private ArrayList<Commodity> availableExports;
@@ -35,12 +32,6 @@ public class Nation implements Serializable {
 	private boolean rdSet;
 	private boolean contingencySet;
 	private boolean capitalGoodsSet;
-	private boolean aidReceivedSet;
-	private boolean aidGivenSet;
-	private boolean imfReceivedSet;
-	private boolean imfGivenSet;
-	private boolean loanReceivedSet;
-	private boolean loanGivenSet;
 	
 
 	public Nation() {
@@ -55,12 +46,7 @@ public class Nation implements Serializable {
 		researchAndDevelopment = BigDecimal.ZERO;
 		contingencyFund = BigDecimal.ZERO;
 		capitalGoods = BigDecimal.ZERO;
-		aidReceived = BigDecimal.ZERO;
-		aidGiven = BigDecimal.ZERO;
-		loanReceived = BigDecimal.ZERO;
-		loanGiven = BigDecimal.ZERO;
-		imfReceived = BigDecimal.ZERO;
-		imfGiven = BigDecimal.ZERO;
+		rdAppreciationRate = BigDecimal.ZERO;
 		maxExportSet = false;
 		basicGoodsSet = false;
 		conForcesSet = false;
@@ -69,12 +55,6 @@ public class Nation implements Serializable {
 		rdSet = false;
 		contingencySet = false;
 		capitalGoodsSet = false;
-		aidReceivedSet = false;
-		aidGivenSet = false;
-		imfReceivedSet = false;
-		imfGivenSet = false;
-		loanReceivedSet = false;
-		loanGivenSet = false;
 	}
 	
 	/**
@@ -339,7 +319,7 @@ public class Nation implements Serializable {
 		else if(gnp.compareTo(new BigDecimal("25000")) < 0)
 			return gnp.multiply(new BigDecimal(".15"));				
 		else if(gnp.compareTo(new BigDecimal("50000")) < 0)
-			return gnp.multiply(new BigDecimal(".15"));					
+			return gnp.multiply(new BigDecimal(".10"));					
 		else if(gnp.compareTo(new BigDecimal("50000")) >= 0)
 			return gnp.multiply(new BigDecimal(".05"));
 		return null;
@@ -360,7 +340,22 @@ public class Nation implements Serializable {
 	public boolean setRDAllocation(BigDecimal b){
 		Nation prev = getPreviousNation();
 		if(b!=null && b.compareTo(prev.getRDAllocation())>=0 && (b.compareTo(BigDecimal.valueOf(3000)) >=0 || b.compareTo(BigDecimal.ZERO) == 0) && b.add(getBudgetCommitments()).compareTo(getGnp())<=0){
-			researchAndDevelopment = b;
+			researchAndDevelopment = b;			
+			if(prev.getRDAllocation().compareTo(BigDecimal.ZERO)==0 || prev.getRDAllocation().toBigInteger().mod(new BigInteger("3000")).compareTo(b.toBigInteger().mod(new BigInteger("3000")))!=0){
+				Random generator = new Random();
+				if((generator.nextInt(5)) ==0)
+					this.rdAppreciationRate = BigDecimal.ZERO;	
+				else if((generator.nextInt(5)) ==1)
+					this.rdAppreciationRate = new BigDecimal(".10");	
+				else if((generator.nextInt(5)) ==2)
+					this.rdAppreciationRate = new BigDecimal(".20");	
+				else if((generator.nextInt(5)) ==3)
+					this.rdAppreciationRate = new BigDecimal(".30");	
+				else if((generator.nextInt(5)) ==4)
+					this.rdAppreciationRate = new BigDecimal(".40");	
+				else if((generator.nextInt(6)) ==5)
+					this.rdAppreciationRate = new BigDecimal(".50");					
+			}			
 			setRDSet(true);
 		}
 		return rdSet;
@@ -520,7 +515,7 @@ public class Nation implements Serializable {
 		return totalExports;
 	}
 	
-	private void setAidReceivedSet(boolean t){
+	/*private void setAidReceivedSet(boolean t){
 		this.aidReceivedSet = t;
 	}
 	
@@ -647,6 +642,66 @@ public class Nation implements Serializable {
 	
 	public boolean contingencyAllocated(){
 		return this.getAidGivenSet() && this.getAidReceivedSet() && this.getLoanGivenSet() && this.getLoanReceivedSet() && this.getIMFGivenSet() && this.getIMFReceivedSet();
+	}*/
+	
+	public BigDecimal getAidReceived(){
+		BigDecimal aidReceived = BigDecimal.ZERO;
+		for(ContingencyTransaction t:Main.currGame.getContingencyTransactions()){
+			if(t.getReceiver() == this && t.getType() == ContingencyType.Aid){
+				aidReceived.add(t.getAmount());
+			}
+		}
+		return aidReceived;		
+	}
+	
+	public BigDecimal getAidGiven(){
+		BigDecimal aidReceived = BigDecimal.ZERO;
+		for(ContingencyTransaction t:Main.currGame.getContingencyTransactions()){
+			if(t.getGiver() == this && t.getType() == ContingencyType.Aid){
+				aidReceived.add(t.getAmount());
+			}
+		}
+		return aidReceived;		
+	}
+	
+	public BigDecimal getLoanReceived(){
+		BigDecimal aidReceived = BigDecimal.ZERO;
+		for(ContingencyTransaction t:Main.currGame.getContingencyTransactions()){
+			if(t.getReceiver() == this && t.getType() == ContingencyType.Loan){
+				aidReceived.add(t.getAmount());
+			}
+		}
+		return aidReceived;		
+	}
+	
+	public BigDecimal getLoanGiven(){
+		BigDecimal aidReceived = BigDecimal.ZERO;
+		for(ContingencyTransaction t:Main.currGame.getContingencyTransactions()){
+			if(t.getGiver() == this && t.getType() == ContingencyType.Loan){
+				aidReceived.add(t.getAmount());
+			}
+		}
+		return aidReceived;		
+	}
+	
+	public BigDecimal getIMFReceived(){
+		BigDecimal aidReceived = BigDecimal.ZERO;
+		for(ContingencyTransaction t:Main.currGame.getContingencyTransactions()){
+			if(t.getReceiver() == this && t.getType() == ContingencyType.IMF){
+				aidReceived.add(t.getAmount());
+			}
+		}
+		return aidReceived;		
+	}
+	
+	public BigDecimal getIMFGiven(){
+		BigDecimal aidReceived = BigDecimal.ZERO;
+		for(ContingencyTransaction t:Main.currGame.getContingencyTransactions()){
+			if(t.getGiver() == this && t.getType() == ContingencyType.IMF){
+				aidReceived.add(t.getAmount());
+			}
+		}
+		return aidReceived;		
 	}
 	
 	public BigDecimal getContingencyTotal(){
@@ -672,10 +727,156 @@ public class Nation implements Serializable {
 		return currentOrgs;
 	}
 	
+	public BigDecimal getNewGNPSubTotal(){
+		BigDecimal total = BigDecimal.ZERO;
+		total = total.add(getBasicGoodsSubTotal());
+		total = total.add(getConventionalForcesSubTotal());
+		total = total.add(getNuclearForcesSubTotal());
+		total = total.add(getImportsSubTotal());
+		total = total.add(getTotalCurrentExports());
+		total = total.add(getRDSubTotal());
+		total = total.add(getContingencyTotal());
+		total = total.add(getCapitalGoodsSubTotal());
+		
+		return total;
+	}
 	
+	public BigDecimal getBasicGoodsSubTotal(){
+		return getBasicGoodsAllocation().subtract(getBasicGoodsDepreciation());
+	}
 	
+	public BigDecimal getConventionalForcesSubTotal(){
+		return getConventionalForcesAllocation().subtract(getConventionalForcesDepreciation());
+	}
 	
+	public BigDecimal getNuclearForcesSubTotal(){
+		return getNuclearForcesAllocation().subtract(getNuclearForcesDepreciation());
+	}
 	
+	public BigDecimal getImportsSubTotal(){
+		return getImportsAllocation().subtract(getTotalCurrentImports());
+	}
 	
+	public BigDecimal getExportsSubTotal(){
+		return getTotalCurrentExports();
+	}
+	
+	public BigDecimal getRDAppreciation(){
+		return rdAppreciationRate.multiply(getRDAllocation());
+	}
+	
+	public BigDecimal getRDSubTotal(){
+		return getRDAppreciation().add(getRDAllocation());
+	}
+	
+	public BigDecimal getCapitalGoodsSubTotal(){
+		return getCapitalGoodsAllocation().add(getCapitalGoodsAppreciation());
+	}	
+	
+	public BigDecimal getIncomeTaxPercent(BigDecimal subTotal){
+		if(subTotal.compareTo(new BigDecimal("5000")) < 0)
+			return new BigDecimal(".10");	
+		else if(subTotal.compareTo(new BigDecimal("12000")) < 0)
+			return new BigDecimal(".12");					
+		else if(subTotal.compareTo(new BigDecimal("25000")) < 0)
+			return new BigDecimal(".15");				
+		else if(subTotal.compareTo(new BigDecimal("50000")) < 0)
+			return new BigDecimal(".20");					
+		else if(subTotal.compareTo(new BigDecimal("50000")) >= 0)
+			return new BigDecimal(".30");
+		return null;
+	}
+	
+	public Integer getPoliticalPoints(){
+		Integer points = 0;
+		for(TradeData t:Main.currGame.getTrades()){
+			if(t.getImporter() == this || t.getExporter() == this){
+				if(gnp.compareTo(new BigDecimal("50000"))>=0)
+					points = points+4;
+				else
+					points = points+3;
+			}
+		}
+		
+		for(Relationship r:this.getRelationships()){
+			if(r instanceof Alliance){
+				if(gnp.compareTo(new BigDecimal("5000")) < 0)
+					points = points+2;
+				else if(gnp.compareTo(new BigDecimal("12000")) < 0)
+					points = points+4;				
+				else if(gnp.compareTo(new BigDecimal("25000")) < 0)
+					points = points+4;			
+				else if(gnp.compareTo(new BigDecimal("50000")) < 0)
+					points = points+5;					
+				else if(gnp.compareTo(new BigDecimal("50000")) >= 0)
+					points = points+4;				
+			}else if(r instanceof Neutrality){
+				if(gnp.compareTo(new BigDecimal("5000")) < 0)
+					points = points+5;
+				else if(gnp.compareTo(new BigDecimal("12000")) < 0)
+					points = points+4;				
+				else if(gnp.compareTo(new BigDecimal("25000")) < 0)
+					points = points+2;		
+			}else if(r instanceof NonAggressionPact){
+				points = points+1;
+			}
+		}
+		
+		if(gnp.compareTo(new BigDecimal("5000")) < 0)
+			points = points + (currentOrgs.size()*5);
+		else if(gnp.compareTo(new BigDecimal("12000")) < 0)
+			points = points + (currentOrgs.size()*4);				
+		else if(gnp.compareTo(new BigDecimal("25000")) < 0)
+			points = points + (currentOrgs.size()*3);			
+		else if(gnp.compareTo(new BigDecimal("50000")) < 0)
+			points = points + (currentOrgs.size()*2);					
+		else if(gnp.compareTo(new BigDecimal("50000")) >= 0)
+			points = points + (currentOrgs.size()*4);		
+		
+		for(ContingencyTransaction t:Main.currGame.getContingencyTransactions()){
+			if(t.getGiver() == this && t.getType()!=ContingencyType.IMF){
+				if(gnp.compareTo(new BigDecimal("5000")) < 0)
+					points = points+1;
+				else if(gnp.compareTo(new BigDecimal("12000")) < 0)
+					points = points+2;				
+				else if(gnp.compareTo(new BigDecimal("25000")) < 0)
+					points = points+3;			
+				else if(gnp.compareTo(new BigDecimal("50000")) < 0)
+					points = points+4;					
+				else if(gnp.compareTo(new BigDecimal("50000")) >= 0)
+					points = points+5;	
+			}else if(t.getReceiver() == this && t.getType()!=ContingencyType.IMF){
+				if(gnp.compareTo(new BigDecimal("5000")) < 0)
+					points = points+4;
+				else if(gnp.compareTo(new BigDecimal("12000")) < 0)
+					points = points+3;				
+				else if(gnp.compareTo(new BigDecimal("25000")) < 0)
+					points = points+2;			
+				else if(gnp.compareTo(new BigDecimal("50000")) < 0)
+					points = points+1;					
+				else if(gnp.compareTo(new BigDecimal("50000")) >= 0)
+					points = points+1;	
+			}
+		}
+		
+		return points;		
+	}
+	
+	public BigDecimal getPoliticalTaxPercent(){
+		Integer points = this.getPoliticalPoints();
+		if(points >=0 && points <=15)
+			return BigDecimal.ZERO;
+		else if(points >=16 && points <=30)
+			return new BigDecimal(".05");
+		else if(points >=31 && points <=45)
+			return new BigDecimal(".10");
+		else if(points >=46 && points <=60)
+			return new BigDecimal(".20");
+		else if(points >=61 && points <=75)
+			return new BigDecimal(".25");
+		else if(points >=76)
+			return new BigDecimal(".30");
+		return BigDecimal.ZERO;		
+	}
 	
 }

@@ -23,11 +23,13 @@ public class Game implements Serializable{
 	private Hashtable<String,InternationalOrganization> allIntOrgs;
 	private ArrayList<Teacher> allTeachers;
 	private ArrayList<TradeData> currentTrades;
+	private ArrayList<ContingencyTransaction> currentContingencyTransactions;
 	private ArrayList<Round> allRounds;
 	
 	public Game(String n) {
 		name = n;
 		currentTrades = new ArrayList<TradeData>();
+		currentContingencyTransactions = new ArrayList<ContingencyTransaction>();
 		allPlayers = new ArrayList<Player>();
 		allRounds = new ArrayList<Round>();
 		allCommodities = new Hashtable<String,Commodity>();
@@ -86,6 +88,10 @@ public class Game implements Serializable{
 	
 	public ArrayList<Teacher> getTeachers(){
 		return allTeachers;
+	}
+	
+	public ArrayList<ContingencyTransaction> getContingencyTransactions(){
+		return currentContingencyTransactions;
 	}
 	
 	public ArrayList<InternationalOrganization> getInternationalOrganizations(){
