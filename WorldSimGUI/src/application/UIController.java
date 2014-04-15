@@ -2027,16 +2027,16 @@ public class UIController {
     	}      	
     }
     
-   /* private void enableContingencyFund(){
-    	if(Main.currNation.contingencyAllocated()){
+    private void enableContingencyFund(){
+    /*	if(Main.currNation.contingencyAllocated()){
     		budgetPlusMinusCapitalGoodsField.setDisable(false);
     		budgetPlusMinusConFundLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getContingencyTotal()));
-    	}
+    	}*/
     }
     
     @FXML
     public void budgetAidGivenFieldAction(ActionEvent event) {
-    	BigDecimal b = new BigDecimal(budgetAidGivenField.getText());
+    	/*BigDecimal b = new BigDecimal(budgetAidGivenField.getText());
     	if(b!=null){
     		if(Main.currNation.setAidGiven(b)){
     			budgetAidGivenLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getAidGiven()));
@@ -2045,12 +2045,12 @@ public class UIController {
     			budgetAidGivenLabel.setVisible(true);
     		}
     	}	
-    	enableContingencyFund();
+    	enableContingencyFund();*/
     }
     
     @FXML
     public void budgetAidReceivedFieldAction(ActionEvent event) {
-    	BigDecimal b = new BigDecimal(budgetAidReceivedField.getText());
+    	/*BigDecimal b = new BigDecimal(budgetAidReceivedField.getText());
     	if(b!=null){
     		if(Main.currNation.setAidReceived(b)){
     			budgetAidReceivedLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getAidReceived()));
@@ -2059,12 +2059,12 @@ public class UIController {
     			budgetAidReceivedLabel.setVisible(true);
     		}
     	}
-    	enableContingencyFund();
+    	enableContingencyFund();*/
     }
     
     @FXML
     public void budgetLoanGivenFieldAction(ActionEvent event) {
-    	BigDecimal b = new BigDecimal(budgetLoanGivenField.getText());
+    /*	BigDecimal b = new BigDecimal(budgetLoanGivenField.getText());
     	if(b!=null){
     		if(Main.currNation.setLoanGiven(b)){
     			budgetLoanGivenLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getLoanGiven()));
@@ -2073,12 +2073,12 @@ public class UIController {
     			budgetLoanGivenLabel.setVisible(true);
     		}
     	}   
-    	enableContingencyFund();
+    	enableContingencyFund();*/
     }
     
     @FXML
     public void budgetLoanReceivedFieldAction(ActionEvent event) {
-    	BigDecimal b = new BigDecimal(budgetLoanReceivedField.getText());
+    /*	BigDecimal b = new BigDecimal(budgetLoanReceivedField.getText());
     	if(b!=null){
     		if(Main.currNation.setLoanReceived(b)){
     			budgetLoanReceivedLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getLoanReceived()));
@@ -2087,12 +2087,12 @@ public class UIController {
     			budgetLoanReceivedLabel.setVisible(true);
     		}
     	}   
-    	enableContingencyFund();        
+    	enableContingencyFund();   */     
     }
     
     @FXML
     public void budgetIMFGivenFieldAction(ActionEvent event) {
-    	BigDecimal b = new BigDecimal(budgetIMFGivenField.getText());
+    	/*BigDecimal b = new BigDecimal(budgetIMFGivenField.getText());
     	if(b!=null){
     		if(Main.currNation.setIMFGiven(b)){
     			budgetIMFGivenLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getIMFGiven()));
@@ -2101,12 +2101,12 @@ public class UIController {
     			budgetIMFGivenLabel.setVisible(true);
     		}
     	}  
-    	enableContingencyFund();
+    	enableContingencyFund();*/
     }
     
     @FXML
     public void budgetIMFReceivedFieldAction(ActionEvent event) {
-    	BigDecimal b = new BigDecimal(budgetIMFReceivedField.getText());
+    /*	BigDecimal b = new BigDecimal(budgetIMFReceivedField.getText());
     	if(b!=null){
     		if(Main.currNation.setIMFReceived(b)){
     			budgetIMFReceivedLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getIMFReceived()));
@@ -2115,8 +2115,8 @@ public class UIController {
     			budgetIMFReceivedLabel.setVisible(true);
     		}
     	}   
-    	enableContingencyFund();
-    }*/
+    	enableContingencyFund();*/
+    }
     
     private void showNewGDPCalculations(){
     	budgetPlusMinusBasicGoodsLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getBasicGoodsDepreciation().negate()));
@@ -2135,6 +2135,7 @@ public class UIController {
 		budgetPlusMinusCapitalGoodsLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getCapitalGoodsAppreciation()));
 		budgetPlusMinusCapitalGoodsSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getCapitalGoodsSubTotal()));
 		
+		BigDecimal b = Main.currNation.getAidGiven();
 		budgetAidGivenLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getAidGiven()));
 		budgetAidReceivedLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getAidReceived()));
 		budgetLoanGivenLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getLoanGiven()));
@@ -2153,14 +2154,63 @@ public class UIController {
 		budgetTradeTaxSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal));
 		budgetIMFTaxSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal));
 		
-		budgetIncomeTaxPercentLabel.setText(NumberFormat.getPercentInstance().format(Main.currNation.getIncomeTaxPercent(subTotal)));
-		budgetPoliticalTaxPercentLabel.setText(NumberFormat.getPercentInstance().format(Main.currNation));
-
+		BigDecimal incomeTaxPercent = Main.currNation.getIncomeTaxPercent(subTotal);
+		BigDecimal politicalTaxPercent = Main.currNation.getPoliticalTaxPercent();
+		BigDecimal tradeTaxPercent = Main.currNation.getTradeTaxPercent();
+		BigDecimal imfTaxPercent = Main.currNation.getIMFTaxPercent();
+		budgetIncomeTaxPercentLabel.setText(NumberFormat.getPercentInstance().format(incomeTaxPercent));
+		budgetPoliticalTaxPercentLabel.setText(NumberFormat.getPercentInstance().format(politicalTaxPercent));
+		budgetTradeTaxPercentLabel.setText(NumberFormat.getPercentInstance().format(tradeTaxPercent));
+		budgetIMFTaxPercentLabel.setText(NumberFormat.getPercentInstance().format(imfTaxPercent));
 		
+		budgetIncomeTaxNewSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal.multiply(incomeTaxPercent)));
+		budgetPoliticalTaxNewSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal.multiply(politicalTaxPercent)));
+		budgetTradeTaxNewSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal.multiply(tradeTaxPercent)));
+		budgetIMFTaxNewSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal.multiply(imfTaxPercent)));
 		
+		setBudgetLabelVisibility(true);
     }
     
+    private void setBudgetLabelVisibility(boolean b){
+    	budgetPlusMinusBasicGoodsLabel.setVisible(b);
+    	budgetPlusMinusBasicGoodsSubTotalLabel.setVisible(b);
+    	budgetPlusMinusConForcesLabel.setVisible(b);
+    	budgetPlusMinusConForcesSubTotalLabel.setVisible(b);
+    	budgetPlusMinusNucForcesLabel.setVisible(b);
+    	budgetPlusMinusNucForcesSubTotalLabel.setVisible(b);
+    	budgetPlusMinusImportsLabel.setVisible(b);
+    	budgetPlusMinusImportsSubTotalLabel.setVisible(b);
+    	budgetPlusMinusExportsLabel.setVisible(b);
+    	budgetPlusMinusExportsSubTotalLabel.setVisible(b);
+    	budgetPlusMinusRDLabel.setVisible(b);
+    	budgetPlusMinusRDSubTotalLabel.setVisible(b);
+    	budgetPlusMinusConFundLabel.setVisible(b);
+    	budgetPlusMinusCapitalGoodsLabel.setVisible(b);
+    	budgetPlusMinusCapitalGoodsSubTotalLabel.setVisible(b);
+    	budgetAidGivenLabel.setVisible(b);
+    	budgetAidReceivedLabel.setVisible(b);
+    	budgetLoanGivenLabel.setVisible(b);
+    	budgetLoanReceivedLabel.setVisible(b);
+    	budgetIMFGivenLabel.setVisible(b);
+    	budgetIMFReceivedLabel.setVisible(b);
+    	budgetIncomeTaxSubTotalLabel.setVisible(b);
+    	budgetPoliticalTaxSubTotalLabel.setVisible(b);
+    	budgetTradeTaxSubTotalLabel.setVisible(b);
+    	budgetIMFTaxSubTotalLabel.setVisible(b);
+    	budgetIncomeTaxPercentLabel.setVisible(b);
+    	budgetPoliticalTaxPercentLabel.setVisible(b);
+    	budgetTradeTaxPercentLabel.setVisible(b);
+    	budgetIMFTaxPercentLabel.setVisible(b);
+    	budgetIncomeTaxNewSubTotalLabel.setVisible(b);
+    	budgetPoliticalTaxNewSubTotalLabel.setVisible(b);
+    	budgetTradeTaxNewSubTotalLabel.setVisible(b);
+    	budgetIMFTaxNewSubTotalLabel.setVisible(b);    	
+    }
     
+    @FXML
+    public void showCalculations(ActionEvent event) {
+    	showNewGDPCalculations();
+    }
     
 	
 	public void initializeBudgetTab(){
@@ -2217,7 +2267,7 @@ public class UIController {
 		obsRoundData = FXCollections.observableArrayList();	
 		leaderboardChart.setTitle("GNP Per Round");
 		leaderboardChart.setData(obsRoundData);
-		final XYChart.Series<Number, Number> series = new XYChart.Series<>();
+		/*final XYChart.Series<Number, Number> series = new XYChart.Series<>();
 		series.setName("Ghana");
 		series.getData().add(new Data<Number, Number>(3, 15));
 		series.getData().add(new Data<Number, Number>(4, 24));
@@ -2250,7 +2300,7 @@ public class UIController {
 					path.setEffect(null);
 				}
 			});
-		}
+		}*/
 		
 	}
 

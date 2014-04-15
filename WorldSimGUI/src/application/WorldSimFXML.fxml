@@ -683,7 +683,7 @@
                                         <Separator prefWidth="200.0" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" GridPane.valignment="TOP" />
                                         <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.rowSpan="2147483647" />
                                         <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.rowSpan="2147483647" />
-                                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.rowSpan="2147483647" /><Label fx:id="budgetIncomeTaxSubTotalLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" /><Label fx:id="budgetPoliticalTaxSubTotalLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" /><Label fx:id="budgetTradeTabSubTotalLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.rowSpan="2147483647" /><Label fx:id="budgetIncomeTaxSubTotalLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" /><Label fx:id="budgetPoliticalTaxSubTotalLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" /><Label fx:id="budgetTradeTaxSubTotalLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
 <Label fx:id="budgetIMFTaxSubTotalLabel" layoutX="94.0" layoutY="41.0" text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
 <Label fx:id="budgetIncomeTaxPercentLabel" layoutX="94.0" layoutY="41.0" text="Label" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
 <Label fx:id="budgetPoliticalTaxPercentLabel" layoutX="94.0" layoutY="41.0" text="Label" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
@@ -767,7 +767,7 @@
                                   </children>
                                 </AnchorPane>
                               </content>
-                            </TitledPane>
+                            </TitledPane><Button layoutX="74.1875" layoutY="609.5" mnemonicParsing="false" onAction="#showCalculations" text="Button" />
                           </children>
                         </AnchorPane>
                       </content>

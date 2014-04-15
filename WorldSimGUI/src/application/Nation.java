@@ -648,60 +648,60 @@ public class Nation implements Serializable {
 		BigDecimal aidReceived = BigDecimal.ZERO;
 		for(ContingencyTransaction t:Main.currGame.getContingencyTransactions()){
 			if(t.getReceiver() == this && t.getType() == ContingencyType.Aid){
-				aidReceived.add(t.getAmount());
+				aidReceived = aidReceived.add(t.getAmount());
 			}
 		}
 		return aidReceived;		
 	}
 	
 	public BigDecimal getAidGiven(){
-		BigDecimal aidReceived = BigDecimal.ZERO;
+		BigDecimal aidGiven = BigDecimal.ZERO;
 		for(ContingencyTransaction t:Main.currGame.getContingencyTransactions()){
 			if(t.getGiver() == this && t.getType() == ContingencyType.Aid){
-				aidReceived.add(t.getAmount());
+				aidGiven = aidGiven.add(t.getAmount());
 			}
 		}
-		return aidReceived;		
+		return aidGiven;		
 	}
 	
 	public BigDecimal getLoanReceived(){
-		BigDecimal aidReceived = BigDecimal.ZERO;
+		BigDecimal loanReceived = BigDecimal.ZERO;
 		for(ContingencyTransaction t:Main.currGame.getContingencyTransactions()){
 			if(t.getReceiver() == this && t.getType() == ContingencyType.Loan){
-				aidReceived.add(t.getAmount());
+				loanReceived = loanReceived.add(t.getAmount());
 			}
 		}
-		return aidReceived;		
+		return loanReceived;		
 	}
 	
 	public BigDecimal getLoanGiven(){
-		BigDecimal aidReceived = BigDecimal.ZERO;
+		BigDecimal loanGiven = BigDecimal.ZERO;
 		for(ContingencyTransaction t:Main.currGame.getContingencyTransactions()){
 			if(t.getGiver() == this && t.getType() == ContingencyType.Loan){
-				aidReceived.add(t.getAmount());
+				loanGiven = loanGiven.add(t.getAmount());
 			}
 		}
-		return aidReceived;		
+		return loanGiven;		
 	}
 	
 	public BigDecimal getIMFReceived(){
-		BigDecimal aidReceived = BigDecimal.ZERO;
+		BigDecimal imfReceived = BigDecimal.ZERO;
 		for(ContingencyTransaction t:Main.currGame.getContingencyTransactions()){
 			if(t.getReceiver() == this && t.getType() == ContingencyType.IMF){
-				aidReceived.add(t.getAmount());
+				imfReceived = imfReceived.add(t.getAmount());
 			}
 		}
-		return aidReceived;		
+		return imfReceived;		
 	}
 	
 	public BigDecimal getIMFGiven(){
-		BigDecimal aidReceived = BigDecimal.ZERO;
+		BigDecimal imfGiven = BigDecimal.ZERO;
 		for(ContingencyTransaction t:Main.currGame.getContingencyTransactions()){
 			if(t.getGiver() == this && t.getType() == ContingencyType.IMF){
-				aidReceived.add(t.getAmount());
+				imfGiven = imfGiven.add(t.getAmount());
 			}
 		}
-		return aidReceived;		
+		return imfGiven;		
 	}
 	
 	public BigDecimal getContingencyTotal(){
@@ -762,7 +762,8 @@ public class Nation implements Serializable {
 	}
 	
 	public BigDecimal getRDAppreciation(){
-		return rdAppreciationRate.multiply(getRDAllocation());
+		return BigDecimal.ZERO;
+		//return rdAppreciationRate.multiply(getRDAllocation());
 	}
 	
 	public BigDecimal getRDSubTotal(){
@@ -879,4 +880,119 @@ public class Nation implements Serializable {
 		return BigDecimal.ZERO;		
 	}
 	
+	public boolean getOilRequired(){
+		boolean oilRequired = false;
+		for(Commodity c:this.requiredImports){
+			if(c.getType() == CommodityType.Oil)
+				oilRequired = true;
+		}
+		return oilRequired;
+	}
+	
+	public boolean getFoodRequired(){
+		boolean foodRequired = false;
+		for(Commodity c:this.requiredImports){
+			if(c.getType() == CommodityType.Food)
+				foodRequired = true;
+		}
+		return foodRequired;
+	}
+	
+	public boolean getOtherRequired(){
+		boolean otherRequired = false;
+		for(Commodity c:this.requiredImports){
+			if(c.getType() == CommodityType.Other)
+				otherRequired = true;
+		}
+		return otherRequired;
+	}
+	
+	public boolean getOilImported(){
+		boolean oilImported = false;
+		for(TradeData t:Main.currGame.getTrades()){
+			if(t.getImporter() == this && t.getCommodity().getType() == CommodityType.Oil){
+				oilImported = true;
+			}
+		}
+		return oilImported;
+	}
+	
+	public boolean getFoodImported(){
+		boolean foodImported = false;
+		for(TradeData t:Main.currGame.getTrades()){
+			if(t.getImporter() == this && t.getCommodity().getType() == CommodityType.Food){
+				foodImported = true;
+			}
+		}
+		return foodImported;		
+	}
+	
+	public boolean getOtherImported(){
+		boolean otherImported = false;
+		for(TradeData t:Main.currGame.getTrades()){
+			if(t.getImporter() == this && t.getCommodity().getType() == CommodityType.Other){
+				otherImported = true;
+			}
+		}
+		return otherImported;		
+	}
+
+	
+	public BigDecimal getTradeTaxPercent(){
+		BigDecimal tradeTaxPercent = BigDecimal.ZERO;
+		if(getOilRequired()){
+			if(getOilImported()){
+				tradeTaxPercent = tradeTaxPercent.add(new BigDecimal(".05"));
+			}
+			else{
+				tradeTaxPercent = tradeTaxPercent.subtract(new BigDecimal(".05"));
+			}
+		}
+		if(getFoodRequired()){
+			if(getFoodImported()){
+				tradeTaxPercent = tradeTaxPercent.add(new BigDecimal(".05"));
+			}
+			else{
+				tradeTaxPercent = tradeTaxPercent.subtract(new BigDecimal(".05"));
+			}
+		}
+		if(getOtherRequired()){
+			if(getOtherImported()){
+				tradeTaxPercent = tradeTaxPercent.add(new BigDecimal(".05"));
+			}
+			else{
+				tradeTaxPercent = tradeTaxPercent.subtract(new BigDecimal(".05"));
+			}
+		}
+		
+		if(getTotalCurrentImports().compareTo(this.getImportsAllocation()) !=0){
+			tradeTaxPercent = tradeTaxPercent.subtract(new BigDecimal(".10"));
+		}		
+		
+		return tradeTaxPercent;		
+	}	
+	
+	public BigDecimal getTotalIMFContributions(){
+		BigDecimal total = BigDecimal.ZERO;
+		for(ContingencyTransaction t:Main.currGame.getContingencyTransactions()){
+			if(t.getGiver() == this && t.getType() == ContingencyType.IMF)
+				total = total.add(t.getAmount());
+		}
+		return total;
+	}
+	
+	public BigDecimal getIMFTaxPercent(){
+		BigDecimal total = getTotalIMFContributions();
+		if(total.compareTo(new BigDecimal("500")) <= 0)
+			return new BigDecimal(".03");
+		else if(total.compareTo(new BigDecimal("1000")) <= 0)
+			return new BigDecimal(".05");				
+		else if(total.compareTo(new BigDecimal("5000")) <= 0)
+			return new BigDecimal(".08");			
+		else if(total.compareTo(new BigDecimal("10000")) <= 0)
+			return new BigDecimal(".12");					
+		else if(total.compareTo(new BigDecimal("10000")) > 0)
+			return new BigDecimal(".15");	
+		return null;
+	}
 }
