@@ -39,7 +39,7 @@ public class Game implements Serializable{
 		allTeachers = new ArrayList<Teacher>();
 		importCommodities();
 		importNations();
-		initializeRounds();
+	//	initializeRounds();
 	}
 	
 	@Override public String toString(){
@@ -256,8 +256,18 @@ public class Game implements Serializable{
 		
 	}
 	
-	private void initializeRounds(){
-		Round firstRound = new Round(allNations, currentTrades);
+	/*private void initializeRounds(){
+		Round firstRound = new Round(allNations, currentTrades, currentContingencyTransactions);
 		allRounds.add(firstRound);	
+	}*/
+	
+	public void newRound(){
+		Round newRound = new Round(allNations, currentTrades, currentContingencyTransactions);
+		allRounds.add(newRound);
+		currentTrades.clear();
+		currentContingencyTransactions.clear();
+		for(Nation n: getNations()){
+				n.advanceRound();
+		}		
 	}
 }

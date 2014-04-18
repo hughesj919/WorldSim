@@ -93,6 +93,13 @@ public class Nation implements Serializable {
 		for(Player p:n.getTeam()){
 			newCopy.getTeam().add(p);
 		}		
+		for(Relationship r:n.getRelationships()){
+			newCopy.getRelationships().add(r);
+		}
+		for(InternationalOrganization o:n.getOrganizations()){
+			newCopy.getOrganizations().add(o);
+		}
+		
 		return newCopy;
 	}
 
@@ -254,7 +261,7 @@ public class Nation implements Serializable {
 	}
 	
 	public boolean setBasicGoodsAllocation(BigDecimal b){
-		if(b.compareTo(getBasicGoodsAllocation())==0)
+		if(b.compareTo(getBasicGoodsAllocation())==0 && checkLastAllocation(b))
 			basicGoodsSet = true;
 		return basicGoodsSet;
 	}
@@ -268,8 +275,11 @@ public class Nation implements Serializable {
 	}
 	
 	public boolean setConventionalForcesAllocation(BigDecimal b){
-		Nation prev = Main.currGame.getRounds().get(Main.currGame.currentRound()-1).getNation(countryCode);
-		if(prev!=null && b.compareTo(prev.getConventionalForcesAllocation())>=0 && b.compareTo(BigDecimal.valueOf(100))>=0 && b.add(getBudgetCommitments()).compareTo(getGnp())<=0){
+		
+		Nation prev = null;
+		if(Main.currGame.currentRound()>0)
+			prev = Main.currGame.getRounds().get(Main.currGame.currentRound()-1).getNation(countryCode);
+		if(((prev!=null && b.compareTo(prev.getConventionalForcesAllocation())>=0)||prev==null) && b.compareTo(BigDecimal.valueOf(100))>=0 && b.add(getBudgetCommitments()).compareTo(getGnp())<=0 && checkLastAllocation(b)){
 			conventionalForces = b;
 			setConForcesSet(true);
 		}
@@ -285,12 +295,15 @@ public class Nation implements Serializable {
 	}
 	
 	private Nation getPreviousNation(){
-		return Main.currGame.getRounds().get(Main.currGame.currentRound()-1).getNation(countryCode);
+		Nation prev = null;
+		if(Main.currGame.currentRound()>0)
+			prev = Main.currGame.getRounds().get(Main.currGame.currentRound()-1).getNation(countryCode);
+		return prev;
 	}
 	
 	public boolean setNuclearForcesAllocation(BigDecimal b){
 		Nation prev = getPreviousNation();
-		if(prev!=null && b.compareTo(prev.getNuclearForcesAllocation())>=0 && ((gnp.compareTo(BigDecimal.valueOf(25000))>=0 && b.compareTo(BigDecimal.valueOf(500)) >=0) || (gnp.compareTo(BigDecimal.valueOf(25000))<0 && b.compareTo(BigDecimal.ZERO)==0)) && b.add(getBudgetCommitments()).compareTo(getGnp())<=0){
+		if(((prev!=null && b.compareTo(prev.getNuclearForcesAllocation())>=0)||prev==null) && ((gnp.compareTo(BigDecimal.valueOf(25000))>=0 && b.compareTo(BigDecimal.valueOf(500)) >=0) || (gnp.compareTo(BigDecimal.valueOf(25000))<0 && b.compareTo(BigDecimal.ZERO)==0)) && b.add(getBudgetCommitments()).compareTo(getGnp())<=0 && checkLastAllocation(b)){
 			nuclearForces = b;
 			setNuclearForcesSet(true);
 		}
@@ -306,7 +319,7 @@ public class Nation implements Serializable {
 	}
 	
 	public boolean setImportsAllocation(BigDecimal b){		
-		if(b!=null && b.compareTo(getImportsAllocation())==0)
+		if(b!=null && b.compareTo(getImportsAllocation())==0 && checkLastAllocation(b))
 			importsSet = true;
 		return importsSet;
 	}
@@ -339,21 +352,22 @@ public class Nation implements Serializable {
 	
 	public boolean setRDAllocation(BigDecimal b){
 		Nation prev = getPreviousNation();
-		if(b!=null && b.compareTo(prev.getRDAllocation())>=0 && (b.compareTo(BigDecimal.valueOf(3000)) >=0 || b.compareTo(BigDecimal.ZERO) == 0) && b.add(getBudgetCommitments()).compareTo(getGnp())<=0){
+		if(((prev!=null && b!=null && b.compareTo(prev.getRDAllocation())>=0)||prev==null) && (b.compareTo(BigDecimal.valueOf(3000)) >=0 || b.compareTo(BigDecimal.ZERO) == 0) && b.add(getBudgetCommitments()).compareTo(getGnp())<=0 && checkLastAllocation(b)){
 			researchAndDevelopment = b;			
-			if(prev.getRDAllocation().compareTo(BigDecimal.ZERO)==0 || prev.getRDAllocation().toBigInteger().mod(new BigInteger("3000")).compareTo(b.toBigInteger().mod(new BigInteger("3000")))!=0){
+			if(prev==null || (prev.getRDAllocation().compareTo(BigDecimal.ZERO)==0 || prev.getRDAllocation().toBigInteger().mod(new BigInteger("3000")).compareTo(b.toBigInteger().mod(new BigInteger("3000")))!=0)){
 				Random generator = new Random();
-				if((generator.nextInt(5)) ==0)
+				Integer rand = generator.nextInt(5);
+				if(rand ==0)
 					this.rdAppreciationRate = BigDecimal.ZERO;	
-				else if((generator.nextInt(5)) ==1)
+				else if(rand ==1)
 					this.rdAppreciationRate = new BigDecimal(".10");	
-				else if((generator.nextInt(5)) ==2)
+				else if(rand ==2)
 					this.rdAppreciationRate = new BigDecimal(".20");	
-				else if((generator.nextInt(5)) ==3)
+				else if(rand ==3)
 					this.rdAppreciationRate = new BigDecimal(".30");	
-				else if((generator.nextInt(5)) ==4)
+				else if(rand ==4)
 					this.rdAppreciationRate = new BigDecimal(".40");	
-				else if((generator.nextInt(6)) ==5)
+				else if(rand ==5)
 					this.rdAppreciationRate = new BigDecimal(".50");					
 			}			
 			setRDSet(true);
@@ -374,7 +388,7 @@ public class Nation implements Serializable {
 	}
 	
 	public boolean setContingencyAllocation(BigDecimal b){
-		if(b!=null && b.compareTo(getGnp().multiply(BigDecimal.valueOf(.10)))<=0 && b.add(getBudgetCommitments()).compareTo(getGnp())<=0){
+		if(b!=null && b.compareTo(getGnp().multiply(BigDecimal.valueOf(.10)))<=0 && b.add(getBudgetCommitments()).compareTo(getGnp())<=0 && checkLastAllocation(b)){
 			contingencyFund = b;
 			setContingencySet(true);
 		}
@@ -394,7 +408,7 @@ public class Nation implements Serializable {
 	}
 	
 	public boolean setCapitalGoodsAllocation(BigDecimal b){
-		if(b!=null && b.add(getBudgetCommitments()).compareTo(getGnp())<=0){
+		if(b!=null && b.add(getBudgetCommitments()).compareTo(getGnp())<=0 && checkLastAllocation(b)){
 			capitalGoods = b;
 			setCapitalGoodsSet(true);
 		}
@@ -404,29 +418,29 @@ public class Nation implements Serializable {
 	private BigDecimal getBudgetCommitments(){
 		BigDecimal preAllocated = BigDecimal.ZERO;
 		Nation prev = this.getPreviousNation();
-		if(prev!=null){
-			preAllocated = preAllocated.add(getBasicGoodsAllocation());
-			preAllocated = preAllocated.add(getImportsAllocation());
-			if(this.conForcesSet)
-				preAllocated = preAllocated.add(this.conventionalForces);
-			else
-				preAllocated = preAllocated.add(prev.getConventionalForcesAllocation());
-			if(this.nuclearForcesSet)
-				preAllocated = preAllocated.add(this.nuclearForces);
-			else
-				preAllocated = preAllocated.add(prev.getNuclearForcesAllocation());
+
+		preAllocated = preAllocated.add(getBasicGoodsAllocation());
+		preAllocated = preAllocated.add(getImportsAllocation());
+		if(this.conForcesSet)
+			preAllocated = preAllocated.add(this.conventionalForces);
+		else if(prev!=null)
+			preAllocated = preAllocated.add(prev.getConventionalForcesAllocation());
+		if(this.nuclearForcesSet)
+			preAllocated = preAllocated.add(this.nuclearForces);
+		else if(prev!=null)
+			preAllocated = preAllocated.add(prev.getNuclearForcesAllocation());
 		
-			if(this.rdSet)
-				preAllocated = preAllocated.add(this.researchAndDevelopment);
-			else
-				preAllocated = preAllocated.add(prev.getRDAllocation());
+		if(this.rdSet)
+			preAllocated = preAllocated.add(this.researchAndDevelopment);
+		else if(prev!=null)
+			preAllocated = preAllocated.add(prev.getRDAllocation());
 		
-			if(this.contingencySet)
-				preAllocated = preAllocated.add(this.contingencyFund);
+		if(this.contingencySet)
+			preAllocated = preAllocated.add(this.contingencyFund);
 			
-			if(this.capitalGoodsSet)
-				preAllocated = preAllocated.add(this.capitalGoods);
-		}			
+		if(this.capitalGoodsSet)
+			preAllocated = preAllocated.add(this.capitalGoods);
+		
 		return preAllocated;		
 	}
 	
@@ -762,8 +776,7 @@ public class Nation implements Serializable {
 	}
 	
 	public BigDecimal getRDAppreciation(){
-		return BigDecimal.ZERO;
-		//return rdAppreciationRate.multiply(getRDAllocation());
+		return rdAppreciationRate.multiply(getRDAllocation());
 	}
 	
 	public BigDecimal getRDSubTotal(){
@@ -994,5 +1007,81 @@ public class Nation implements Serializable {
 		else if(total.compareTo(new BigDecimal("10000")) > 0)
 			return new BigDecimal(".15");	
 		return null;
+	}
+	
+	public BigDecimal getCurrentAllocations(){
+		
+		BigDecimal total = BigDecimal.ZERO;
+		if(basicGoodsSet)
+			total = total.add(this.getBasicGoodsAllocation());
+		if(conForcesSet)
+			total = total.add(this.getConventionalForcesAllocation());
+		if(nuclearForcesSet)
+			total = total.add(this.getNuclearForcesAllocation());
+		if(importsSet)
+			total = total.add(this.getImportsAllocation());
+		if(rdSet)
+			total = total.add(this.getRDAllocation());
+		if(contingencySet)
+			total = total.add(this.getContingencyAllocation());
+		if(capitalGoodsSet)
+			total = total.add(this.getCapitalGoodsAllocation());
+		return total;
+	}
+	
+	public boolean checkLastAllocation(BigDecimal b){
+		Integer numSet = 0;
+		if(basicGoodsSet)
+			numSet++;
+		if(conForcesSet)
+			numSet++;
+		if(nuclearForcesSet)
+			numSet++;
+		if(importsSet)
+			numSet++;
+		if(rdSet)
+			numSet++;
+		if(contingencySet)
+			numSet++;
+		if(capitalGoodsSet)
+			numSet++;
+		BigDecimal total = getCurrentAllocations();
+		if(numSet == 6 && gnp.compareTo(total.add(b))!=0) //last allocation
+			return false;
+		else
+			return true;
+	}
+	public BigDecimal getNewGNP(){
+		return getNewGNP(getNewGNPSubTotal());
+	}
+	
+	public BigDecimal getNewGNP(BigDecimal subTotal){
+		BigDecimal newGNP = subTotal.add(subTotal.multiply(getIncomeTaxPercent(subTotal)));
+		newGNP = newGNP.add(subTotal.multiply(getPoliticalTaxPercent()));
+		newGNP = newGNP.add(subTotal.multiply(getTradeTaxPercent()));
+		newGNP = newGNP.add(subTotal.multiply(getIMFTaxPercent()));
+		return newGNP;
+	}
+	
+	public void advanceRound(){
+		if(this.fullyAllocated()){
+			gnp = this.getNewGNP(this.getNewGNPSubTotal());
+		}		
+		currentOrgs.clear();
+		currentRelationships.clear();
+		conventionalForces = BigDecimal.ZERO;
+		nuclearForces = BigDecimal.ZERO;
+		researchAndDevelopment = BigDecimal.ZERO;
+		contingencyFund = BigDecimal.ZERO;
+		capitalGoods = BigDecimal.ZERO;
+		rdAppreciationRate = BigDecimal.ZERO;
+		maxExportSet = false;
+		basicGoodsSet = false;
+		conForcesSet = false;
+		nuclearForcesSet = false;
+		importsSet = false;
+		rdSet = false;
+		contingencySet = false;
+		capitalGoodsSet = false;		
 	}
 }

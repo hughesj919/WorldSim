@@ -172,7 +172,7 @@ public class Main extends Application {
 		UI.setAllNations(g.getNations());
 		UI.setAllTeachers(g.getTeachers());
 		UI.setAllInternationalOrgs(g.getInternationalOrganizations());
-		UI.changeLeaderboard();
+		UI.updateLeaderboard();
 		
 		ArrayList<ContingencyTransaction> imfTrans = new ArrayList<ContingencyTransaction>();
 		for(ContingencyTransaction t:currGame.getContingencyTransactions()){

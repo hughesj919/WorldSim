@@ -52,6 +52,8 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Path;
 import javafx.util.Callback;
 import javafx.util.converter.BigDecimalStringConverter;
@@ -511,10 +513,7 @@ public class UIController {
     @FXML
     private TableColumn<ContingencyTransaction,ContingencyType> nationContingencyReceivedTypeColumn;
     
-    @FXML
-    private ListView<Nation> testListView;
     
-   
 
 	@FXML
 	public void nationButtonClick(ActionEvent event) {
@@ -608,7 +607,10 @@ public class UIController {
 					+ NumberFormat.getCurrencyInstance().format(n.getGnp()));
 			nationCurrGDPLabel.setText(NumberFormat.getCurrencyInstance()
 					.format(n.getGnp()));
-			nationStartGDPLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currGame.getRounds().get(0).getNation(Main.currNation.getCountryCode()).getGnp()));
+			if(Main.currGame.getRounds().size()!=0)			
+				nationStartGDPLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currGame.getRounds().get(0).getNation(Main.currNation.getCountryCode()).getGnp()));
+			else
+				nationStartGDPLabel.setText(NumberFormat.getCurrencyInstance().format(n.getGnp()));
 			maxImports.set(Main.currNation.getImportsAllocation());
 			totalCurrentImports.set(totalImports);
 			maxExports.set(Main.currNation.getMaxExports());
@@ -1086,10 +1088,16 @@ public class UIController {
 				// TODO Auto-generated method stub
 				return new CurrencyFieldTableCell<ContingencyTransaction,BigDecimal>(){
 					@Override
-					public void commitEdit(BigDecimal amt){
-						super.commitEdit(amt);
+					public void commitEdit(BigDecimal amt){			
+						BigDecimal sumCont = BigDecimal.ZERO;
+						for(ContingencyTransaction t: this.getTableView().getItems()){
+							if(t!=null)
+								sumCont = sumCont.add(t.getAmount());
+						}				
 						ContingencyTransaction trans = this.getTableView().getItems().get(this.getIndex());
-						if(trans!=null){
+						
+						if(trans!=null && sumCont.add(amt).compareTo(trans.getGiver().getContingencyAllocation())<=0){
+							super.commitEdit(amt);
 							trans.setAmount(amt);
 						}else{
 							this.cancelEdit();
@@ -1354,7 +1362,7 @@ public class UIController {
 	private Button budgetButton;
 
 	@FXML
-	private PieChart budgetPie;
+	private PieChartNoCenter budgetPie;
 
 	@FXML
 	private Button budgetSaveButton;
@@ -1574,6 +1582,12 @@ public class UIController {
     
     @FXML
     private Label budgetIMFTaxNewSubTotalLabel;
+    
+    @FXML
+    private Label budgetContingencyAdditionLabel;
+    
+    @FXML
+    private Label budgetNewGNPLabel;
     
 	@FXML
 	public void budgetButtonClick(ActionEvent event) {
@@ -2118,7 +2132,7 @@ public class UIController {
     	enableContingencyFund();*/
     }
     
-    private void showNewGDPCalculations(){
+	private void showNewGDPCalculations(){
     	budgetPlusMinusBasicGoodsLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getBasicGoodsDepreciation().negate()));
     	budgetPlusMinusBasicGoodsSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getBasicGoodsSubTotal()));
     	budgetPlusMinusConForcesLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getConventionalForcesDepreciation().negate()));
@@ -2131,11 +2145,11 @@ public class UIController {
 		budgetPlusMinusExportsSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getExportsSubTotal()));
 		budgetPlusMinusRDLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getRDAppreciation()));
 		budgetPlusMinusRDSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getRDSubTotal()));
-		budgetPlusMinusConFundLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getContingencyTotal()));		
+		budgetPlusMinusConFundLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getContingencyTotal()));	
+		budgetContingencyAdditionLabel.setText("+"+NumberFormat.getCurrencyInstance().format(Main.currNation.getContingencyTotal()));
 		budgetPlusMinusCapitalGoodsLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getCapitalGoodsAppreciation()));
-		budgetPlusMinusCapitalGoodsSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getCapitalGoodsSubTotal()));
+		budgetPlusMinusCapitalGoodsSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getCapitalGoodsSubTotal().add(Main.currNation.getContingencyTotal())));
 		
-		BigDecimal b = Main.currNation.getAidGiven();
 		budgetAidGivenLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getAidGiven()));
 		budgetAidReceivedLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getAidReceived()));
 		budgetLoanGivenLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getLoanGiven()));
@@ -2167,6 +2181,8 @@ public class UIController {
 		budgetPoliticalTaxNewSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal.multiply(politicalTaxPercent)));
 		budgetTradeTaxNewSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal.multiply(tradeTaxPercent)));
 		budgetIMFTaxNewSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal.multiply(imfTaxPercent)));
+		
+		budgetNewGNPLabel.setText(NumberFormat.getCurrencyInstance().format(Main.currNation.getNewGNP()));
 		
 		setBudgetLabelVisibility(true);
     }
@@ -2205,14 +2221,18 @@ public class UIController {
     	budgetPoliticalTaxNewSubTotalLabel.setVisible(b);
     	budgetTradeTaxNewSubTotalLabel.setVisible(b);
     	budgetIMFTaxNewSubTotalLabel.setVisible(b);    	
+    	budgetContingencyAdditionLabel.setVisible(b);
+    	budgetNewGNPLabel.setVisible(b);    	
     }
     
     @FXML
     public void showCalculations(ActionEvent event) {
-    	showNewGDPCalculations();
+    	showNewGDPCalculations(); 
     }
     
-	
+   /* @FXML
+    private Circle budgetCircle;*/
+    
 	public void initializeBudgetTab(){
 	
 		obsPieChartData = FXCollections.observableArrayList();
@@ -2220,6 +2240,17 @@ public class UIController {
 
 		budgetPie.setData(obsPieChartData);
 		budgetPie.setAnimated(true);
+		
+	//	budgetPie.getLayoutX();
+	//	budgetPie.getLayoutY();
+		
+		//budgetCircle.setLayoutX(budgetPie.getLayoutX());
+		//budgetCircle.setLayoutY(budgetPie.getLayoutY());
+		
+		
+		gamePane.getBackground();
+
+		
 	}
 
 	/*****************************************************************************************************************************
@@ -2247,23 +2278,63 @@ public class UIController {
 
 	}
 	
-	public void changeLeaderboard(){
+	/*public void changeLeaderboard(){
 		
 		if(Main.currGame!=null){
 			
 			for(Nation nat:Main.currGame.getRounds().get(0).getNations()){
 				if(Main.currGame.getNation(nat.getCountryCode()).inUse()){
-					final XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
+					XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
 					newSeries.setName(nat.getName());
 					newSeries.getData().add(new Data<Number, Number>(0, nat.getGnp()));
 					obsRoundData.add(newSeries);
+					allSeries.put(nat.getCountryCode(), newSeries);
 				}
 			}
+			
 		}
 		
+	}*/
+	
+	public void updateLeaderboard(){
+		if(Main.currGame!=null){	
+			for(int i=0;i<Main.currGame.getRounds().size();i++){
+				Round r = Main.currGame.getRounds().get(i);
+				for(Nation n:r.getNations()){
+					if(Main.currGame.getNation(n.getCountryCode()).inUse()){
+						XYChart.Series<Number, Number> currSeries = allSeries.get(n.getCountryCode());						
+						if(currSeries != null){
+							currSeries.getData().add(new Data<Number, Number>(i,n.getGnp()));							
+						}else{
+							XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
+							newSeries.setName(n.getName());
+							newSeries.getData().add(new Data<Number, Number>(i, n.getGnp()));
+							obsRoundData.add(newSeries);
+							allSeries.put(n.getCountryCode(), newSeries);
+						}
+					}
+				}				
+			}
+			
+			for(Nation n:Main.currGame.getNations()){
+				if(n.inUse()){
+					XYChart.Series<Number, Number> currSeries = allSeries.get(n.getCountryCode());						
+					if(currSeries != null){
+						currSeries.getData().add(new Data<Number, Number>(Main.currGame.getRounds().size(),n.getGnp()));							
+					}else{
+						XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
+						newSeries.setName(n.getName());
+						newSeries.getData().add(new Data<Number, Number>(Main.currGame.getRounds().size(), n.getGnp()));
+						obsRoundData.add(newSeries);
+						allSeries.put(n.getCountryCode(), newSeries);
+					}
+				}
+			}			
+		}
 	}
 	
 	public void initializeLeaderBoardTab(){			
+		allSeries = new  Hashtable <String, Series<Number,Number>>();
 		obsRoundData = FXCollections.observableArrayList();	
 		leaderboardChart.setTitle("GNP Per Round");
 		leaderboardChart.setData(obsRoundData);
@@ -2312,11 +2383,11 @@ public class UIController {
 
 	@FXML
 	public void advanceButtonClick(ActionEvent event) {
-
+		
+		Main.currGame.newRound();
+		//changeLeaderboard();		
 	}
 	
-	final ObservableList data = 
-	        FXCollections.observableArrayList();
 
 	public void initialize() {
 		System.out.println("Initializing UI...");		
@@ -2326,22 +2397,6 @@ public class UIController {
 		initializePlayerTab();
 		initializeBudgetTab();
 		gameButtonClick(null);
-		
-
-		testListView.setEditable(true);
-		final ObservableList names = 
-			        FXCollections.observableArrayList();
-		
-		names.addAll(
-	             "Adam", "Alex", "Alfred", "Albert",
-	             "Brenda", "Connie", "Derek", "Donny", 
-	             "Lynne", "Myrtle", "Rose", "Rudolph", 
-	             "Tony", "Trudy", "Williams", "Zach"
-	        );
-		
-		
-		 testListView.setItems(data);
-		testListView.setCellFactory(ComboBoxListCell.forListView(obsAvailableNations));
 	}
 	
 	private boolean passwordDialog(Nation n){

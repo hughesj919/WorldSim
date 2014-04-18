@@ -25,6 +25,7 @@ public class ContingencyTransaction implements Serializable {
 		amount = amt;		
 	}
 	
+	
 	/*public String typeString(){
 		if(type == ContingencyType.Loan){
 			return "Loan";

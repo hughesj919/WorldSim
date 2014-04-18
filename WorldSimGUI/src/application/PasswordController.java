@@ -6,10 +6,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
 public class PasswordController {
 
+	
+	private double xOffset;
+	private double yOffset;
+	
 	
     @FXML
     private Label passwordLabel;
@@ -41,7 +46,23 @@ public class PasswordController {
     		}
     	}
 		Main.passwordStage.hide();
+		passwordTextField.setText(null);
     }	
+    
+    
+
+    @FXML
+    void passwordOnMousePressed(MouseEvent event) {
+    	xOffset = event.getSceneX();
+    	yOffset = event.getSceneY();
+    }
+    
+    @FXML
+    void passwordOnMouseDragged(MouseEvent event) {
+    	Main.passwordStage.setX(event.getScreenX()-xOffset);
+    	Main.passwordStage.setY(event.getScreenY()-yOffset);    	
+    }
+
 }
 //Timer t = new Timer();
 //t.scheduleAtFixedRate(new TimerTask(){
