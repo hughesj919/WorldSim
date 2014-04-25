@@ -261,13 +261,19 @@ public class Game implements Serializable{
 		allRounds.add(firstRound);	
 	}*/
 	
-	public void newRound(){
-		Round newRound = new Round(allNations, currentTrades, currentContingencyTransactions);
+	public void newRound(){			
+		Round newRound = new Round();
 		allRounds.add(newRound);
+		newRound.copyNationInfo(allNations); 		
+		for(Nation n: getNations()){
+			n.advanceRound();
+		}			
+		newRound.copyTradeInfo(currentTrades, currentContingencyTransactions);			
+		for(Nation n: getNations()){
+			n.getRelationships().clear();
+			n.getOrganizations().clear();
+		}
 		currentTrades.clear();
 		currentContingencyTransactions.clear();
-		for(Nation n: getNations()){
-				n.advanceRound();
-		}		
 	}
 }

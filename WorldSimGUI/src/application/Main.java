@@ -27,9 +27,12 @@ public class Main extends Application {
 	public static Nation currNation;
 	public static Stage passwordStage;
 	public static Stage pStage;
+	public static Stage advanceStage;
 	public static boolean passwordOk;
+	public static boolean advanceOk;
 	public static Nation passwordNation;
 	public static PasswordController passwordController;
+	public static AdvanceController advanceController;
 	public static InternationalOrganization passwordOrg;
 
 	public static ArrayList<Game> allGames;
@@ -85,6 +88,20 @@ public class Main extends Application {
 			passwordStage.initModality(Modality.APPLICATION_MODAL);			
 			passwordStage.setScene(Scene2);
 			passwordStage.setResizable(false);
+			
+			FXMLLoader fxmlLoader3 = new FXMLLoader();
+			URL location3 = Main.class.getResource("Advance.fxml");
+			fxmlLoader3.setLocation(location3);
+			AnchorPane page3 = (AnchorPane) fxmlLoader3.load(Main.class.getResource("Advance.fxml").openStream());
+			advanceController = fxmlLoader3.getController();
+			Scene Scene3 = new Scene(page3);
+			
+			advanceStage = new Stage();
+			advanceStage.initStyle(StageStyle.TRANSPARENT);
+			advanceStage.initOwner(primaryStage);			
+			advanceStage.initModality(Modality.APPLICATION_MODAL);			
+			advanceStage.setScene(Scene3);
+			advanceStage.setResizable(false);
 			
 
 			// ArrayList<Nation> nations = currGame.getNations();
@@ -176,7 +193,7 @@ public class Main extends Application {
 		
 		ArrayList<ContingencyTransaction> imfTrans = new ArrayList<ContingencyTransaction>();
 		for(ContingencyTransaction t:currGame.getContingencyTransactions()){
-			if(t.getType() == ContingencyType.IMF)
+			if(t.getType() == ContingencyType.IMF && t.getGiver()==null)
 				imfTrans.add(t);
 		}
 		UI.setAllIMFTransactions(imfTrans);

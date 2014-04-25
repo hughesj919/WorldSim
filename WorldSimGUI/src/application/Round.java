@@ -11,33 +11,12 @@ public class Round implements Serializable{
 	private ArrayList<TradeData> roundTrades;
 	private ArrayList<ContingencyTransaction> roundContingencyTransactions;
 	
-	public Round(Hashtable<String,Nation> nations, ArrayList<TradeData> trades, ArrayList<ContingencyTransaction> trans){
+	public Round(){
 		roundNations = new Hashtable<String,Nation>();
 		roundTrades = new ArrayList<TradeData>();
 		roundContingencyTransactions = new ArrayList<ContingencyTransaction>();
 		
-		for(Nation n:nations.values()){
-			Nation newNation = Nation.copyNation(n);
-			roundNations.put(n.getCountryCode(), newNation);
-		}
-		
-		for(Nation n:getNations()){
-			for(Relationship r:n.getRelationships()){
-				r.setFirstNation(roundNations.get(r.getFirstNation().getCountryCode()));
-				r.setSecondNation(roundNations.get(r.getSecondNation().getCountryCode()));
-			}
-		}
-		
-		for(TradeData t:trades){
-			t.setImporter(roundNations.get(t.getImporter().getCountryCode()));
-			t.setExporter(roundNations.get(t.getExporter().getCountryCode()));
-			roundTrades.add(t);
-		}		
-		for(ContingencyTransaction t:trans){
-			t.setGiver(roundNations.get(t.getGiver().getCountryCode()));
-			t.setReceiver(roundNations.get(t.getReceiver().getCountryCode()));
-			roundContingencyTransactions.add(t);
-		}		
+			
 	}
 	
 	public ArrayList<Nation> getNations(){
@@ -51,4 +30,35 @@ public class Round implements Serializable{
 	public ArrayList<TradeData> getTrades(){
 		return roundTrades;
 	}
+	
+	public void copyNationInfo(Hashtable<String,Nation> nations){
+		for(Nation n:nations.values()){
+			Nation newNation = Nation.copyNation(n);
+			roundNations.put(n.getCountryCode(), newNation);
+		}	
+		
+		for(Nation n:getNations()){
+			for(Relationship r:n.getRelationships()){
+				r.setFirstNation(roundNations.get(r.getFirstNation().getCountryCode()));
+				r.setSecondNation(roundNations.get(r.getSecondNation().getCountryCode()));
+			}
+		}
+	}
+	
+	public void copyTradeInfo(ArrayList<TradeData> trades, ArrayList<ContingencyTransaction> trans){	
+		for(TradeData t:trades){
+			t.setImporter(roundNations.get(t.getImporter().getCountryCode()));
+			t.setExporter(roundNations.get(t.getExporter().getCountryCode()));
+			roundTrades.add(t);
+		}		
+		for(ContingencyTransaction t:trans){
+			t.setGiver(roundNations.get(t.getGiver().getCountryCode()));
+			if(t.getReceiver()!=null)
+				t.setReceiver(roundNations.get(t.getReceiver().getCountryCode()));
+			else
+				t.setReceiver(null);
+			roundContingencyTransactions.add(t);
+		}	
+	}
+	
 }

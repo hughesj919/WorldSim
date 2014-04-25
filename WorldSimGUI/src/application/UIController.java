@@ -22,6 +22,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.VPos;
+import javafx.print.PageLayout;
+import javafx.print.PageOrientation;
+import javafx.print.Paper;
+import javafx.print.Printer;
 import javafx.print.PrinterJob;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
@@ -50,11 +54,14 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.effect.Glow;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Path;
+import javafx.scene.transform.Scale;
 import javafx.util.Callback;
 import javafx.util.converter.BigDecimalStringConverter;
 
@@ -551,7 +558,7 @@ public class UIController {
 		Nation n = nationsInUseList.getSelectionModel().getSelectedItem();
 		if (n != null) {
 
-			Main.currNation = n;
+			Main.currNation = n;			
 			obsInUseNationsMinusCurrent.setAll(obsInUseNations);
 			obsInUseNationsMinusCurrent.remove(Main.currNation);
 			obsPossibleAlliances.setAll(obsInUseNationsMinusCurrent);
@@ -656,16 +663,13 @@ public class UIController {
 			}
 			obsContingencyGiven.add(null);
 			
+			if(Main.currNation.getRDSet() && Main.currNation.getRDAllocation().compareTo(BigDecimal.ZERO)>0)
+				budgetRDTitleLabel.setText("R&D "+NumberFormat.getPercentInstance().format(Main.currNation.getRDAppreciationRate()));
+			else
+				budgetRDTitleLabel.setText("R&D");
 			
 			clearAllocationChart();
-			/*
-			 * playerName.setText(p.getName());
-			 * playerPeriod.setText(p.getPeriodString());
-			 * playerNation.setValue(p.getNation()); if(p.getType() ==
-			 * playerType.chiefOfState)
-			 * playerPosition.setValue("Chief of State"); else
-			 * playerPosition.setValue("Foreign Minister");
-			 */
+			setBudgetLabelVisibility(false);
 		}
 
 	}
@@ -1362,13 +1366,16 @@ public class UIController {
 	private Button budgetButton;
 
 	@FXML
-	private PieChartNoCenter budgetPie;
+	private PieChart budgetPie;
 
 	@FXML
 	private Button budgetSaveButton;
 	
 	@FXML
-	private GridPane budgetGrid;
+	private GridPane budgetGrid;	
+
+    @FXML
+    private Pane budgetNumbersPane;
 	
 	@FXML
 	private TextField budgetCapitalGoodsField;
@@ -1422,7 +1429,10 @@ public class UIController {
     private Label budgetImportsPercentLabel;
     
     @FXML
-    private Label budgetRDLabel;
+    private Label budgetRDLabel; 
+    
+    @FXML
+    private Label budgetRDTitleLabel; 
     
     @FXML
     private Label budgetRDPercentLabel;
@@ -1589,6 +1599,9 @@ public class UIController {
     @FXML
     private Label budgetNewGNPLabel;
     
+    @FXML
+    private Label budgetTitleLabel;
+    
 	@FXML
 	public void budgetButtonClick(ActionEvent event) {
 		gamePane.setVisible(false);
@@ -1693,6 +1706,7 @@ public class UIController {
     			budgetRDLabel.setVisible(true);
     			budgetRDPercentLabel.setText(NumberFormat.getPercentInstance().format(rd.divide(Main.currNation.getGnp(),2,RoundingMode.HALF_UP)));
     			budgetRDPercentLabel.setVisible(true);
+    			budgetRDTitleLabel.setText("R&D "+NumberFormat.getPercentInstance().format(Main.currNation.getRDAppreciationRate()));
     			updateAllocationChart();
     		}
     	}    
@@ -2162,12 +2176,7 @@ public class UIController {
 		budgetPoliticalTaxSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal));
 		budgetTradeTaxSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal));
 		budgetIMFTaxSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal));
-		
-		budgetIncomeTaxSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal));
-		budgetPoliticalTaxSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal));
-		budgetTradeTaxSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal));
-		budgetIMFTaxSubTotalLabel.setText(NumberFormat.getCurrencyInstance().format(subTotal));
-		
+				
 		BigDecimal incomeTaxPercent = Main.currNation.getIncomeTaxPercent(subTotal);
 		BigDecimal politicalTaxPercent = Main.currNation.getPoliticalTaxPercent();
 		BigDecimal tradeTaxPercent = Main.currNation.getTradeTaxPercent();
@@ -2235,6 +2244,7 @@ public class UIController {
     
 	public void initializeBudgetTab(){
 	
+		setBudgetLabelVisibility(false);
 		obsPieChartData = FXCollections.observableArrayList();
 		obsPieChartData.add(unallocatedPiePiece);
 
@@ -2297,6 +2307,8 @@ public class UIController {
 	}*/
 	
 	public void updateLeaderboard(){
+		obsRoundData.clear();
+		allSeries.clear();
 		if(Main.currGame!=null){	
 			for(int i=0;i<Main.currGame.getRounds().size();i++){
 				Round r = Main.currGame.getRounds().get(i);
@@ -2306,11 +2318,30 @@ public class UIController {
 						if(currSeries != null){
 							currSeries.getData().add(new Data<Number, Number>(i,n.getGnp()));							
 						}else{
-							XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
+							final XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
 							newSeries.setName(n.getName());
 							newSeries.getData().add(new Data<Number, Number>(i, n.getGnp()));
 							obsRoundData.add(newSeries);
 							allSeries.put(n.getCountryCode(), newSeries);
+							Node node = newSeries.getNode();
+							if (node != null && node instanceof Path) {
+								final Path path = (Path) node;
+								final Glow glow = new Glow(.8);
+								path.setEffect(null);
+								path.setOnMouseEntered(new EventHandler<MouseEvent>() {
+									@Override
+									public void handle(MouseEvent e) {
+										path.setEffect(glow);
+										Tooltip.install(path, new Tooltip(newSeries.getName()));
+									}
+								});
+								path.setOnMouseExited(new EventHandler<MouseEvent>() {
+									@Override
+									public void handle(MouseEvent e) {
+										path.setEffect(null);
+									}
+								});
+							}							
 						}
 					}
 				}				
@@ -2320,17 +2351,38 @@ public class UIController {
 				if(n.inUse()){
 					XYChart.Series<Number, Number> currSeries = allSeries.get(n.getCountryCode());						
 					if(currSeries != null){
-						currSeries.getData().add(new Data<Number, Number>(Main.currGame.getRounds().size(),n.getGnp()));							
+						currSeries.getData().add(new Data<Number, Number>(Main.currGame.getRounds().size(),n.getGnp()));	
 					}else{
-						XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
+						final XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
 						newSeries.setName(n.getName());
 						newSeries.getData().add(new Data<Number, Number>(Main.currGame.getRounds().size(), n.getGnp()));
 						obsRoundData.add(newSeries);
 						allSeries.put(n.getCountryCode(), newSeries);
+						Node node = newSeries.getNode();
+						if (node != null && node instanceof Path) {
+							final Path path = (Path) node;
+							final Glow glow = new Glow(.8);
+							path.setEffect(null);
+							path.setOnMouseEntered(new EventHandler<MouseEvent>() {
+								@Override
+								public void handle(MouseEvent e) {
+									path.setEffect(glow);
+									Tooltip.install(path, new Tooltip(newSeries.getName()));
+								}
+							});
+							path.setOnMouseExited(new EventHandler<MouseEvent>() {
+								@Override
+								public void handle(MouseEvent e) {
+									path.setEffect(null);
+								}
+							});
+						}
 					}
 				}
 			}			
 		}
+		
+		
 	}
 	
 	public void initializeLeaderBoardTab(){			
@@ -2384,8 +2436,40 @@ public class UIController {
 	@FXML
 	public void advanceButtonClick(ActionEvent event) {
 		
-		Main.currGame.newRound();
-		//changeLeaderboard();		
+		Main.advanceStage.setX(Main.pStage.getX() + Main.pStage.getWidth()/2 - Main.advanceController.advanceAnchorPane.getPrefWidth()/2);
+		Main.advanceStage.setY(Main.pStage.getY() + Main.pStage.getHeight()/2 - Main.advanceController.advanceAnchorPane.getPrefHeight()/2);
+		Main.advanceStage.showAndWait();
+		if(Main.advanceOk){
+			Printer printer = Printer.getDefaultPrinter();
+			PageLayout pageLayout = printer.createPageLayout(Paper.NA_LETTER, PageOrientation.LANDSCAPE, Printer.MarginType.DEFAULT);  
+			//Scale newsacle = new Scale(scaleX,scaleY);
+			//ImageView newImage = new ImageView();
+			//budgetPane.getTransforms().add(new Scale(scaleX, scaleY));
+			budgetPie.setVisible(false);
+			budgetTitleLabel.setVisible(true);
+			
+			PrinterJob job = PrinterJob.createPrinterJob();  
+			
+			for(Nation n:Main.currGame.getNations()){
+				if(n.inUse()){
+					nationsInUseList.getSelectionModel().select(n);
+					nationsInUseListMouseClick(null);
+					budgetButtonClick(null);
+					showNewGDPCalculations();
+					budgetTitleLabel.setText(n.getName() + " Round " + String.valueOf(Main.currGame.getRounds().size()+1) + " Results");
+					if(job!=null){						 
+						job.printPage(budgetNumbersPane); 
+			    	}						
+				}
+			}	
+			job.endJob();
+			leaderboardButtonClick(null);
+			Main.currGame.newRound();
+			updateLeaderboard();
+			budgetPie.setVisible(true);
+			budgetTitleLabel.setVisible(false);
+			setBudgetLabelVisibility(false);
+		}	
 	}
 	
 
